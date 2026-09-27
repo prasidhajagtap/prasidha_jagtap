@@ -4,94 +4,166 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Prasidha Jagtap</title>
-  <meta name="description" content="Prasidha Jagtap — short resume and contact details.">
+  <meta name="description" content="Prasidha Jagtap — technology, development and digital work at ABG.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Prasidha Jagtap">
+  <meta property="og:description" content="Technology, development and digital work at ABG.">
+  <meta property="og:image" content="assets/prasidha.webp">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='32' y='44' font-family='-apple-system,Helvetica,Arial' font-size='34' font-weight='700' fill='%23fff' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <main class="page">
 
-    <!-- ===== HEADER ===== -->
+  <!-- ===== TOP MENU (frosted glass) ===== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand">Prasidha</a>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- ===== HERO ===== -->
     <header class="hero">
-      <div class="avatar" aria-hidden="true">PJ</div>
-      <div>
-        <h1>Prasidha Jagtap</h1>
-        <!-- TODO: your job title / one-line headline -->
-        <p class="headline">[Your job title] · [City, Country]</p>
-        <ul class="contact">
-          <!-- TODO: fill in or delete the links you don't want to show -->
-          <li><a href="mailto:you@example.com">you@example.com</a></li>
-          <li><a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href="https://github.com/prasidhajagtap" target="_blank" rel="noopener">GitHub</a></li>
-        </ul>
+      <!-- TODO: your job title at ABG -->
+      <p class="eyebrow reveal">[Your role] · ABG</p>
+      <h1 class="reveal">Prasidha Jagtap.</h1>
+      <!-- TODO: one strong line about you -->
+      <p class="lead reveal">[One strong line — e.g. what you build and why it matters.]</p>
+      <div class="actions reveal">
+        <a class="btn btn-solid" href="assets/Prasidha-Jagtap-Resume.pdf" download data-resume>Download résumé</a>
+        <a class="btn-link" href="#contact">Get in touch <span aria-hidden="true">›</span></a>
       </div>
+      <figure class="portrait reveal">
+        <img src="assets/prasidha.webp" width="896" height="1040" alt="Portrait of Prasidha Jagtap">
+      </figure>
     </header>
 
     <!-- ===== ABOUT ===== -->
-    <section>
-      <h2>About</h2>
-      <!-- TODO: 2–3 lines about who you are and what you do -->
-      <p>[Write 2–3 short lines about you: what you do, what you are good at, and what you are looking for.]</p>
+    <section id="about" class="section">
+      <div class="wrap narrow">
+        <p class="kicker reveal">About</p>
+        <!-- TODO: 2–3 lines. Words inside <strong> show in full black, the rest in grey. -->
+        <p class="statement reveal">
+          <strong>[Start with who you are.]</strong>
+          [Then say what you do at ABG and the kind of tech you work with.]
+          <strong>[End with what drives you.]</strong>
+        </p>
+      </div>
     </section>
 
     <!-- ===== EXPERIENCE ===== -->
-    <section>
-      <h2>Experience</h2>
+    <section id="experience" class="section alt">
+      <div class="wrap">
+        <p class="kicker reveal">Experience</p>
+        <h2 class="reveal">Where I've built.</h2>
 
-      <!-- Copy this <article> block for each job. Newest job first. -->
-      <article class="item">
-        <div class="item-head">
-          <h3>[Job title] — <span>[Company]</span></h3>
-          <span class="date">[Start] – [End / Present]</span>
-        </div>
-        <ul>
-          <li>[One thing you did or achieved — use numbers if you can]</li>
-          <li>[Another thing you did or achieved]</li>
-        </ul>
-      </article>
+        <ol class="timeline">
+          <!-- Copy one <li> per role. Newest first. -->
+          <li class="reveal">
+            <div class="when">[Start] — Present</div>
+            <div class="what">
+              <h3>[Your role]</h3>
+              <p class="org">ABG · [Business / team] · [City]</p>
+              <ul>
+                <li>[Key win — what you built or changed, with a number if possible]</li>
+                <li>[Second key win]</li>
+              </ul>
+            </div>
+          </li>
 
-      <article class="item">
-        <div class="item-head">
-          <h3>[Job title] — <span>[Company]</span></h3>
-          <span class="date">[Start] – [End]</span>
-        </div>
-        <ul>
-          <li>[One thing you did or achieved]</li>
-        </ul>
-      </article>
+          <li class="reveal">
+            <div class="when">[Start] — [End]</div>
+            <div class="what">
+              <h3>[Previous role / development work]</h3>
+              <p class="org">[Company or project]</p>
+              <ul>
+                <li>[Key win]</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+      </div>
     </section>
 
     <!-- ===== SKILLS ===== -->
-    <section>
-      <h2>Skills</h2>
-      <!-- TODO: add / remove skill tags -->
-      <ul class="tags">
-        <li>[Skill 1]</li>
-        <li>[Skill 2]</li>
-        <li>[Skill 3]</li>
-        <li>[Skill 4]</li>
-      </ul>
+    <section id="skills" class="section">
+      <div class="wrap">
+        <p class="kicker reveal">Skills</p>
+        <h2 class="reveal">The toolkit.</h2>
+
+        <!-- TODO: rename groups and fill in your real skills -->
+        <div class="grid">
+          <article class="card reveal">
+            <h3>Development</h3>
+            <p>[Languages · Frameworks]</p>
+          </article>
+          <article class="card reveal">
+            <h3>Data &amp; Analytics</h3>
+            <p>[Databases · Reporting · BI tools]</p>
+          </article>
+          <article class="card reveal">
+            <h3>Cloud &amp; Platforms</h3>
+            <p>[Cloud · DevOps · Enterprise systems]</p>
+          </article>
+          <article class="card reveal">
+            <h3>Ways of working</h3>
+            <p>[Agile · Stakeholder management · etc.]</p>
+          </article>
+        </div>
+      </div>
     </section>
 
     <!-- ===== EDUCATION ===== -->
-    <section>
-      <h2>Education</h2>
-      <article class="item">
-        <div class="item-head">
-          <h3>[Degree] — <span>[College / University]</span></h3>
-          <span class="date">[Year]</span>
+    <section id="education" class="section alt">
+      <div class="wrap">
+        <p class="kicker reveal">Education</p>
+        <h2 class="reveal">Foundations.</h2>
+
+        <div class="rows">
+          <div class="row reveal">
+            <div>
+              <h3>[Degree]</h3>
+              <p class="org">[College / University]</p>
+            </div>
+            <span class="year">[Year]</span>
+          </div>
         </div>
-      </article>
+      </div>
     </section>
 
-    <footer>
-      <p>© <span id="year"></span> Prasidha Jagtap</p>
-      <button type="button" class="print" onclick="window.print()">Save as PDF</button>
-    </footer>
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" class="section dark">
+      <div class="wrap narrow center">
+        <h2 class="big reveal">Let's talk.</h2>
+        <p class="lead reveal">[One line — e.g. open to conversations about tech and new ideas.]</p>
+        <div class="actions reveal">
+          <!-- TODO: your real email and LinkedIn -->
+          <a class="btn btn-invert" href="mailto:you@example.com">Email me</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <footer class="footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> Prasidha Jagtap</p>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
 </body>
 </html>
