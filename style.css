@@ -188,6 +188,47 @@ h2 {
 .card h3 { font-size: 24px; font-weight: 600; }
 .card p { margin: 10px 0 0; color: var(--muted); }
 
+/* ============ Project cards ============ */
+.alt .card { background: var(--card); }
+.project { display: flex; flex-direction: column; }
+.status {
+  margin: 0 0 8px !important;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.native { font-weight: 500; color: var(--muted); font-size: 0.8em; }
+.stack {
+  list-style: none;
+  margin: auto 0 0;
+  padding: 18px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.stack li {
+  font-size: 12px;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 980px;
+  color: var(--muted);
+}
+.more { margin-top: 14px; font-weight: 500; }
+.more:hover { text-decoration: underline; }
+.what ul b { font-weight: 600; }
+.learning { margin: 28px 0 0; color: var(--muted); }
+.learning span {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 3px 10px;
+  border-radius: 980px;
+  background: var(--solid);
+  color: var(--solid-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* ============ Education rows ============ */
 .row {
   display: flex;
