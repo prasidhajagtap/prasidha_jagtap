@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prasidha Jagtap</title>
+  <meta name="description" content="Prasidha Jagtap — short resume and contact details.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="hero">
+      <div class="avatar" aria-hidden="true">PJ</div>
+      <div>
+        <h1>Prasidha Jagtap</h1>
+        <!-- TODO: your job title / one-line headline -->
+        <p class="headline">[Your job title] · [City, Country]</p>
+        <ul class="contact">
+          <!-- TODO: fill in or delete the links you don't want to show -->
+          <li><a href="mailto:you@example.com">you@example.com</a></li>
+          <li><a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/prasidhajagtap" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- ===== ABOUT ===== -->
+    <section>
+      <h2>About</h2>
+      <!-- TODO: 2–3 lines about who you are and what you do -->
+      <p>[Write 2–3 short lines about you: what you do, what you are good at, and what you are looking for.]</p>
+    </section>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <section>
+      <h2>Experience</h2>
+
+      <!-- Copy this <article> block for each job. Newest job first. -->
+      <article class="item">
+        <div class="item-head">
+          <h3>[Job title] — <span>[Company]</span></h3>
+          <span class="date">[Start] – [End / Present]</span>
+        </div>
+        <ul>
+          <li>[One thing you did or achieved — use numbers if you can]</li>
+          <li>[Another thing you did or achieved]</li>
+        </ul>
+      </article>
+
+      <article class="item">
+        <div class="item-head">
+          <h3>[Job title] — <span>[Company]</span></h3>
+          <span class="date">[Start] – [End]</span>
+        </div>
+        <ul>
+          <li>[One thing you did or achieved]</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section>
+      <h2>Skills</h2>
+      <!-- TODO: add / remove skill tags -->
+      <ul class="tags">
+        <li>[Skill 1]</li>
+        <li>[Skill 2]</li>
+        <li>[Skill 3]</li>
+        <li>[Skill 4]</li>
+      </ul>
+    </section>
+
+    <!-- ===== EDUCATION ===== -->
+    <section>
+      <h2>Education</h2>
+      <article class="item">
+        <div class="item-head">
+          <h3>[Degree] — <span>[College / University]</span></h3>
+          <span class="date">[Year]</span>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <p>© <span id="year"></span> Prasidha Jagtap</p>
+      <button type="button" class="print" onclick="window.print()">Save as PDF</button>
+    </footer>
+  </main>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
