@@ -67,11 +67,13 @@
   }
 
   // ---------- Résumé button: shown only when the PDF exists ----------
-  var resume = document.querySelector('[data-resume]');
-  if (resume && window.fetch && location.protocol.indexOf('http') === 0) {
-    fetch(resume.getAttribute('href'), { method: 'HEAD' }).then(function (r) {
+  var resumes = document.querySelectorAll('[data-resume]');
+  if (resumes.length && window.fetch && location.protocol.indexOf('http') === 0) {
+    fetch(resumes[0].getAttribute('href'), { method: 'HEAD' }).then(function (r) {
       var type = r.headers.get('content-type') || '';
-      if (r.ok && type.indexOf('pdf') !== -1) resume.classList.add('is-ready');
+      if (r.ok && type.indexOf('pdf') !== -1) {
+        for (var i = 0; i < resumes.length; i++) resumes[i].classList.add('is-ready');
+      }
     }).catch(function () {});
   }
 
