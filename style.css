@@ -627,3 +627,79 @@ h4.kicker { margin-bottom: 14px; }
   .role.social h3 { font-size: 22px; }
   .highlights summary { display: flex; justify-content: space-between; font-size: 15px; }
 }
+
+/* ==========================================================
+   macOS-style animations (buttons & controls only; layout unchanged)
+   ========================================================== */
+:root { --spring: cubic-bezier(.34, 1.56, .64, 1); }
+
+/* Buttons: gentle lift on hover, press down and spring back on click */
+.btn { transition: transform .45s var(--spring), opacity .2s, background .2s, box-shadow .3s; }
+.btn:hover { transform: translateY(-1px) scale(1.03); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12); }
+.btn:active { transform: scale(.94); box-shadow: none; transition-duration: .08s; }
+.btn-block:hover { transform: none; }
+.btn-block:active { transform: scale(.97); }
+
+/* "Get in touch ›" arrow nudges forward */
+.btn-link span { display: inline-block; transition: transform .45s var(--spring); }
+.btn-link:hover span { transform: translateX(4px); }
+
+/* Round icon buttons (theme, menu, back to top) */
+.icon-btn { transition: transform .45s var(--spring), background .2s, box-shadow .3s; }
+.icon-btn:hover { transform: scale(1.1); }
+.icon-btn:active { transform: scale(.86); transition-duration: .08s; }
+
+/* Sun / moon flips in with a spring when the theme changes */
+.theme-toggle svg { animation: icon-flip .6s var(--spring); }
+@keyframes icon-flip {
+  from { transform: rotate(-120deg) scale(.4); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* Back-to-top pops in like a macOS notification */
+.to-top { transform: translateY(16px) scale(.6); transition: opacity .3s ease, transform .5s var(--spring), visibility .3s, background .2s; }
+.to-top.show { transform: none; }
+.to-top.show:hover { transform: scale(1.1); }
+.to-top.show:active { transform: scale(.86); transition-duration: .08s; }
+
+/* "Key highlights" button: springy press, smooth open */
+.highlights summary { transition: transform .45s var(--spring), opacity .2s; }
+.highlights summary:hover { transform: scale(1.03); }
+.highlights summary:active { transform: scale(.95); transition-duration: .08s; }
+.highlights summary svg { transition: transform .5s var(--spring); }
+.highlights[open] .chips { animation: sheet-in .5s var(--spring); transform-origin: top left; }
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(-8px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Cards lift with a spring */
+.card { transition: transform .5s var(--spring), box-shadow .3s; }
+.card:hover { transform: translateY(-5px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08); }
+
+/* Contact form zooms in like a macOS sheet */
+.modal:not([hidden]) .modal-card { animation: sheet-zoom .45s var(--spring); }
+.modal:not([hidden]) .modal-backdrop { animation: fade-in .25s ease; }
+@keyframes sheet-zoom {
+  from { opacity: 0; transform: scale(.88) translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Menu links underline slides in */
+.nav ul a { position: relative; }
+@media (min-width: 735px) {
+  .nav ul a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px;
+    background: currentColor; transform: scaleX(0); transform-origin: left;
+    transition: transform .35s var(--spring);
+  }
+  .nav ul a:hover::after { transform: scaleX(1); }
+}
+
+/* Respect "reduce motion" */
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover, .btn:active, .icon-btn:hover, .icon-btn:active, .card:hover,
+  .highlights summary:hover, .highlights summary:active, .to-top, .to-top.show:hover { transform: none !important; }
+  .theme-toggle svg, .highlights[open] .chips, .modal:not([hidden]) .modal-card, .modal:not([hidden]) .modal-backdrop { animation: none !important; }
+}
