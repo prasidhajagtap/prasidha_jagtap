@@ -38,3 +38,17 @@ pick this repo → Framework preset **None**, build command **empty**, output di
 1. Add the site in **Google Search Console** (URL-prefix property) and submit `sitemap.xml`.
 2. Do the same in **Bing Webmaster Tools**.
 3. Link the site from your LinkedIn (Contact info + Featured) and GitHub profile.
+
+## Security
+
+- Strict Content-Security-Policy (in `index.html`): only this site's files and Google Fonts can load.
+- `theme-init.js` hides the page if another website tries to show it inside a frame.
+- Outgoing links use `noopener noreferrer`; no inline scripts or styles.
+- The email address is assembled by script (not written in the page) to keep it away from spam bots.
+- Right-click and view-source shortcuts are blocked as a light deterrent only; the code is still public in this repository.
+- Keep two-factor authentication on the GitHub account — account takeover is the main real risk for a static site.
+
+## Updating the site
+
+Every merge to `main` publishes automatically. If a change does not appear after ~2 minutes,
+open **Actions → pages build and deployment** and click **Re-run**, or push any small change.
