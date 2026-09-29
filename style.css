@@ -584,3 +584,46 @@ h4.kicker { margin-bottom: 14px; }
   .hero .portrait { margin: 0; max-width: none; }
   .stats-band { padding-top: 110px; }
 }
+
+/* ============ v7: social media block, collapsible highlights ============ */
+.role.social h3 { font-size: 26px; font-weight: 600; margin-top: 2px; }
+.role.social .role-intro { margin-top: 12px; }
+.mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
+  gap: 16px;
+  margin-top: 28px;
+}
+.mini-stats div { background: var(--bg-alt); border-radius: 18px; padding: 20px 22px; }
+.mini-stats strong { display: block; font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.mini-stats span { display: block; margin-top: 4px; font-size: 14px; color: var(--muted); }
+
+.highlights { border-top: 1px solid var(--line); padding-top: 24px; }
+.highlights summary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 980px;
+  background: var(--solid);
+  color: var(--solid-text);
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: opacity .2s;
+}
+.highlights summary::-webkit-details-marker { display: none; }
+.highlights summary::marker { content: ""; }
+.highlights summary:hover { opacity: .88; }
+.highlights summary svg { width: 18px; height: 18px; margin-left: 10px; transition: transform .25s ease; }
+.highlights[open] summary svg { transform: rotate(180deg); }
+.highlights .chips { margin-top: 18px; }
+
+@media (max-width: 734px) {
+  .mini-stats { grid-template-columns: 1fr; }
+  .role.social h3 { font-size: 22px; }
+  .highlights summary { display: flex; justify-content: space-between; font-size: 15px; }
+}
