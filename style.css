@@ -242,11 +242,12 @@ h2 {
 .stats-band { padding: 96px 0 0; }
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 24px;
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 40px 24px;
+  gap: 40px 24px;
   text-align: center;
 }
+.stat span { max-width: 240px; margin-left: auto !important; margin-right: auto !important; }
 .stat strong {
   display: block;
   font-size: 36px;
@@ -317,7 +318,32 @@ h4.kicker { margin-bottom: 14px; }
 }
 .moment figcaption { margin-top: 14px; font-size: 15px; line-height: 1.45; color: var(--muted); }
 .moment figcaption strong { color: var(--text); font-weight: 600; }
-#moments + #projects { padding-top: 0; }
+.alt .moment img { background: var(--card); }
+
+/* ============ v5: case studies, AI, certifications ============ */
+.section-lead { margin: -32px 0 40px; max-width: 640px; font-size: 21px; line-height: 1.4; color: var(--muted); }
+.areas.three { grid-template-columns: repeat(3, 1fr); grid-gap: 32px 36px; gap: 32px 36px; }
+.case h3 { font-size: 22px; line-height: 1.25; }
+.case .result {
+  margin-top: auto;
+  padding-top: 16px;
+  color: var(--text);
+  font-size: 15px;
+}
+.case { display: flex; flex-direction: column; }
+.case > p:not(.status):not(.result) { margin-bottom: 4px; }
+.case .result strong { font-weight: 700; }
+.earlier { margin-top: 40px; }
+.earlier .row h3 { font-size: 20px; }
+.earlier .kicker { margin-bottom: 4px; }
+.certs { display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 20px; gap: 20px; }
+.cert-group { background: var(--card); border-radius: 24px; padding: 32px 36px; }
+.cert-group h3 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+.cert-group ul { list-style: none; margin: 0; padding: 0; }
+.cert-group li { padding: 12px 0; border-top: 1px solid var(--line); }
+.cert-group li:first-child { border-top: 0; }
+.cert-group li strong { display: block; font-weight: 600; font-size: 16px; line-height: 1.35; }
+.cert-group li span { display: block; margin-top: 2px; font-size: 14px; color: var(--muted); }
 
 /* ============ Cards (projects & skills) ============ */
 .grid {
@@ -501,9 +527,13 @@ h4.kicker { margin-bottom: 14px; }
   .moments { display: block; margin: 0; }
   .moment { margin: 0 0 32px; }
   .moment img { border-radius: 18px; }
+  .areas.three { grid-template-columns: 1fr; grid-gap: 28px; gap: 28px; }
+  .certs { grid-template-columns: 1fr; }
+  .cert-group { padding: 24px 20px; border-radius: 20px; }
+  .section-lead { margin-top: -20px; font-size: 18px; }
   .modal { align-items: flex-end; padding: 0; }
   .modal-card { max-width: none; border-radius: 22px 22px 0 0; padding: 26px 20px 32px; max-height: 92%; }
 }
 @media (min-width: 735px) and (max-width: 1000px) {
-  .grid.three { grid-template-columns: repeat(2, 1fr); }
+  .grid.three, .areas.three { grid-template-columns: repeat(2, 1fr); }
 }
