@@ -44,6 +44,28 @@
     for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { setMenu(false); });
   }
 
+  // ---------- Back to top ----------
+  var toTop = document.querySelector('[data-to-top]');
+  if (toTop) {
+    var ticking = false;
+    var update = function () {
+      var y = window.pageYOffset || document.documentElement.scrollTop;
+      if (y > 700) toTop.classList.add('show'); else toTop.classList.remove('show');
+      ticking = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; (window.requestAnimationFrame || setTimeout)(update); }
+    }, { passive: true });
+    update();
+    toTop.addEventListener('click', function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      try { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); }
+      catch (e) { window.scrollTo(0, 0); }
+      var brand = document.querySelector('.brand');
+      if (brand) { try { brand.focus({ preventScroll: true }); } catch (e) {} }
+    });
+  }
+
   // ---------- Fade sections in as they scroll into view ----------
   var items = document.querySelectorAll('.reveal');
   function showAll() { for (var i = 0; i < items.length; i++) items[i].classList.add('in'); }
