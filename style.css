@@ -732,3 +732,58 @@ h4.kicker { margin-bottom: 14px; }
 @media (prefers-reduced-motion: reduce) {
   .nav ul a:hover, .nav ul a:active, .brand:hover, .brand:active { transform: none !important; }
 }
+
+/* Photo-row ratios as classes (no inline styles, for the security policy) */
+.r-1 { --r: 1; }
+.r-667 { --r: 0.667; }
+.r-75 { --r: 0.75; }
+
+/* ==========================================================
+   Readability & spacing: sizes adapt to every screen (default zoom)
+   ========================================================== */
+:root { --muted: #5f6066; }                        /* a little darker grey text = easier to read */
+:root[data-theme="dark"] { --muted: #b0b0b6; }
+.section { padding: clamp(56px, 7vw, 96px) 0; }
+h2 { margin-bottom: clamp(24px, 3.2vw, 44px); }
+.stats-band { padding-top: clamp(40px, 5vw, 72px); }
+.stat span { font-size: 15px; }
+.chips li { font-size: 15px; }
+.card p, .area ul, .plain, .org { font-size: 16.5px; line-height: 1.55; }
+.footer { font-size: 13px; }
+.earlier { margin-top: 32px; }
+.role + .role { margin-top: 28px; }
+.statement { line-height: 1.25; }
+
+@media (min-width: 1001px) {
+  .hero { padding-top: 56px; }
+}
+@media (min-width: 1440px) {
+  body { font-size: 18px; }
+  .wrap, .nav-inner, .hero { max-width: 1260px; }
+  .card p, .area ul, .plain, .org { font-size: 17.5px; }
+  .stat span { font-size: 16px; }
+}
+/* Tablets: a single leftover card fills the whole row instead of leaving a gap */
+@media (min-width: 735px) and (max-width: 1000px) {
+  .grid.three > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .hero { padding-top: 48px; }
+}
+@media (max-width: 734px) {
+  .section { padding: 56px 0; }
+  .hero { padding-top: 40px; }
+  .portrait { margin-top: 32px; }
+  .card, .cert-group { padding: 22px 20px; }
+  .role, .role.small { padding: 22px 18px; }
+  .card p, .area ul, .plain, .org { font-size: 16px; }
+  .statement { font-size: 23px; }
+  h2 { font-size: 32px; }
+  .big { font-size: 44px; }
+}
+.section-lead { margin: -8px 0 clamp(24px, 3.5vw, 40px); }
+
+/* Social media block: two stats + skill tags; awards app skill tags */
+.mini-stats.two { grid-template-columns: repeat(2, minmax(0, 260px)); }
+.skill-chips { margin-top: 18px; }
+.case .stack { margin: 6px -3px 0; padding-top: 6px; }
+.case > p strong { color: var(--text); }
+@media (max-width: 734px) { .mini-stats.two { grid-template-columns: 1fr 1fr; } }

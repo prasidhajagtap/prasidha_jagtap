@@ -204,4 +204,22 @@
     }, { rootMargin: '-45% 0px -50% 0px' });
     for (var id in navMap) { var sec = document.getElementById(id); if (sec) navSpy.observe(sec); }
   }
+
+  // ---------- Discourage casual copying: right-click, view-source shortcuts, image dragging ----------
+  // (Right-click still works inside the contact form so people can paste.)
+  var isField = function (el) { var t = el && el.tagName; return t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT'; };
+  document.addEventListener('contextmenu', function (e) { if (!isField(e.target)) e.preventDefault(); });
+  document.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });
+  document.addEventListener('keydown', function (e) {
+    var k = (e.key || '').toLowerCase();
+    var code = e.code || '';
+    if (code.indexOf('Key') === 0) k = code.slice(3).toLowerCase(); // physical key (Option changes e.key on Mac)
+    var mod = e.ctrlKey || e.metaKey;
+    if (k === 'f12' || e.keyCode === 123 ||
+        (mod && (k === 'u' || k === 's')) ||                                   // view source / save page
+        (mod && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) ||        // developer tools (Windows)
+        (e.metaKey && e.altKey && (k === 'i' || k === 'j' || k === 'c' || k === 'u'))) { // developer tools (Mac)
+      e.preventDefault();
+    }
+  });
 })();
