@@ -188,4 +188,20 @@
       });
     });
   }
+
+  // ---------- Header: highlight the link for the section being read ----------
+  if ('IntersectionObserver' in window) {
+    var navLinks = document.querySelectorAll('#nav-links a[href^="#"]');
+    var navMap = {};
+    for (var nl = 0; nl < navLinks.length; nl++) navMap[navLinks[nl].getAttribute('href').slice(1)] = navLinks[nl];
+    var navSpy = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (!entries[i].isIntersecting) continue;
+        for (var k in navMap) navMap[k].classList.remove('current');
+        var hit = navMap[entries[i].target.id];
+        if (hit) hit.classList.add('current');
+      }
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    for (var id in navMap) { var sec = document.getElementById(id); if (sec) navSpy.observe(sec); }
+  }
 })();
