@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://prasidhajagtap.github.io/projectP001/sitemap.xml
+Sitemap: https://prasidhajagtap.github.io/prasidha_jagtap/sitemap.xml
