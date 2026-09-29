@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Security: only this site's own files (plus Google Fonts) may load; no injected scripts, frames or plugins -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <!-- ===== SEO: main search result text ===== -->
   <!-- SITE ADDRESS: https://prasidhajagtap.github.io/projectP001/
@@ -41,12 +44,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=9">
-  <script>
-    // Runs before the page paints: light by default, dark only if the visitor chose it before
-    document.documentElement.className += ' js';
-    try { if (window.localStorage && localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {}
-  </script>
+  <link rel="stylesheet" href="style.css?v=11">
+  <script src="theme-init.js?v=11"></script>
 
   <!-- ===== Structured data: tells Google and AI search who this page is about ===== -->
   <script type="application/ld+json">
@@ -317,7 +316,7 @@
               <ul>
                 <li>Enhanced the login experience with enterprise single sign-on (SSO) — 15% fewer login issues.</li>
                 <li>Enhanced account recovery and multi-device notification flows for a safer, smoother experience.</li>
-                <li>Built the Geo-Attendance prototype on my own — now used by 5,000+ employees.</li>
+                <li>Built a geo-tagging attendance prototype on my own initiative — fully working.</li>
               </ul>
             </div>
             <div class="area">
@@ -358,7 +357,7 @@
             <div class="area">
               <h4>Training &amp; enablement</h4>
               <ul>
-                <li>495 employees trained in 7 sessions, rated 4.54 / 5.</li>
+                <li>5,000+ users trained on how the app works, including geo-fencing attendance.</li>
                 <li>Clear user guides and stakeholder documents — 20% more feature use. 10+ live demos.</li>
               </ul>
             </div>
@@ -378,7 +377,7 @@
             </summary>
             <ul class="chips">
               <li>Digital ID Card</li>
-              <li>Geo-Attendance</li>
+              <li>Geo-fencing attendance</li>
               <li>Enterprise SSO sign-in</li>
               <li>Account recovery (PIN reset)</li>
               <li>PIN &amp; biometric login</li>
@@ -399,14 +398,20 @@
 
         <!-- Social media, separate from the core role -->
         <article class="role social reveal">
-          <p class="kicker">Alongside the core role</p>
+          <p class="kicker">Skills beyond my day-to-day role</p>
           <h3>Social media &amp; employer branding</h3>
-          <p class="role-intro">I run the company LinkedIn page end to end — content planning, writing, engagement and tracking — turning technology, product and people stories into posts that grow an audience.</p>
-          <div class="mini-stats">
+          <p class="role-intro">I managed the company LinkedIn page end to end — content planning, writing, engagement and tracking — turning technology, product and people stories into posts that grew an audience.</p>
+          <div class="mini-stats two">
             <div><strong>3,500+</strong><span>followers, up from 1,376</span></div>
-            <div><strong>8,068</strong><span>average views, up from 5,430</span></div>
-            <div><strong>58,980+</strong><span>total views</span></div>
+            <div><strong>1,000+</strong><span>average impressions per post</span></div>
           </div>
+          <ul class="chips skill-chips">
+            <li>Content strategy</li>
+            <li>Copywriting</li>
+            <li>Employer branding</li>
+            <li>Community engagement</li>
+            <li>Performance tracking</li>
+          </ul>
         </article>
 
         <!-- Earlier experience -->
@@ -438,10 +443,11 @@
 
         <div class="grid cases">
           <article class="card case reveal">
-            <p class="status">Self-initiative · Now live</p>
-            <h3>Geo-Attendance: from my prototype to a live feature</h3>
-            <p>Teams needed attendance tied to location. On my own time and initiative, I built a complete working prototype. It became the blueprint for the live HR app feature, which our development partner then built into the app.</p>
-            <p class="result"><strong>Used by 5,000+ employees</strong> across multiple locations.</p>
+            <p class="status">Geo-Attendance · Two parts</p>
+            <h3>Geo-fencing training &amp; a geo-tagging prototype</h3>
+            <p><strong>Geo-fencing:</strong> trained business teams on the live geo-fencing attendance feature and on how the app works, end to end.</p>
+            <p><strong>Geo-tagging:</strong> on my own time and initiative, I designed and built a complete, working geo-tagging attendance prototype.</p>
+            <p class="result"><strong>Self-initiative</strong> working prototype · <strong>business teams</strong> trained on geo-fencing.</p>
           </article>
 
           <article class="card case reveal">
@@ -459,9 +465,10 @@
           </article>
 
           <article class="card case reveal">
-            <p class="status">Event app</p>
+            <p class="status">Event app · End-to-end owner</p>
             <h3>Group Awards App</h3>
-            <p>Handled solutioning, upkeep and on-ground support of the event app for a group-wide awards programme in FY 2025&#8209;26, on both iOS and Android.</p>
+            <p>Managed and handled the complete app for a group-wide awards programme in FY 2025&#8209;26 — from solutioning and setup to running it live throughout the event, with on-ground support for attendees on iOS and Android.</p>
+            <ul class="stack"><li>Event-day app operations</li><li>Live issue resolution</li><li>On-ground user support</li><li>Stakeholder coordination</li><li>Store &amp; release readiness</li></ul>
             <p class="result"><strong>1,060 downloads</strong> — 598 iOS, 462 Android.</p>
           </article>
 
@@ -476,7 +483,7 @@
             <p class="status">Enablement</p>
             <h3>Helping people actually use the app</h3>
             <p>Wrote clear user guides and stakeholder documents that make the app easy to use, created standard templates, ran live demos and trained employees.</p>
-            <p class="result"><strong>20% more</strong> feature use · <strong>495</strong> people trained · <strong>35%</strong> better audit readiness.</p>
+            <p class="result"><strong>20% more</strong> feature use · <strong>5,000+</strong> users trained · <strong>35%</strong> better audit readiness.</p>
           </article>
         </div>
       </div>
@@ -492,7 +499,7 @@
         <div class="grid">
           <article class="card reveal">
             <h3>Build with AI</h3>
-            <p>I build working products with AI as my development partner — Seamless Dash, Word Vibe, the Geo-Attendance prototype and this website, made with Claude Code.</p>
+            <p>I build working products with AI as my development partner — Seamless Dash, Word Vibe, the geo-tagging attendance prototype and this website, made with Claude Code.</p>
           </article>
           <article class="card reveal">
             <h3>Find the right use case</h3>
@@ -529,7 +536,7 @@
             <h3>Word Vibe</h3>
             <p>A browser word game taken from idea to product — concept, feature design, UI, database, security, testing and tuning.</p>
             <ul class="stack"><li>JavaScript</li><li>Responsive UI</li><li>Database</li><li>AI-assisted</li></ul>
-            <a class="more" href="https://prasidhajagtap.github.io/word_vibe/" target="_blank" rel="noopener">Play Word Vibe <span aria-hidden="true">›</span></a>
+            <a class="more" href="https://prasidhajagtap.github.io/word_vibe/" target="_blank" rel="noopener noreferrer">Play Word Vibe <span aria-hidden="true">›</span></a>
           </article>
 
           <article class="card project reveal">
@@ -549,23 +556,23 @@
         <h2 class="reveal">Beyond the desk.</h2>
 
         <div class="moments">
-          <figure class="moment reveal" style="--r: 1">
+          <figure class="moment reveal r-1">
             <picture>
               <source srcset="assets/moment-linkedin.webp" type="image/webp">
               <img src="assets/moment-linkedin.jpg" width="1000" height="1000" loading="lazy"
-                   alt="Prasidha Jagtap celebrating a LinkedIn follower milestone on the company LinkedIn page Prasidha manages">
+                   alt="Prasidha Jagtap celebrating a LinkedIn follower milestone on the company page">
             </picture>
-            <figcaption><strong>First milestone.</strong> Celebrating a follower milestone on the company LinkedIn page I manage — now 3,500+ followers.</figcaption>
+            <figcaption><strong>First milestone.</strong> Celebrating a follower milestone on the company LinkedIn page I managed — later grown to 3,500+ followers.</figcaption>
           </figure>
-          <figure class="moment reveal" style="--r: 0.667">
+          <figure class="moment reveal r-667">
             <picture>
               <source srcset="assets/moment-site-visit.webp" type="image/webp">
               <img src="assets/moment-site-visit.jpg" width="800" height="1200" loading="lazy"
-                   alt="Prasidha Jagtap on a site visit to one of the business units">
+                   alt="Prasidha Jagtap on site, training users on the HR app">
             </picture>
-            <figcaption><strong>On the ground.</strong> Visiting a business unit’s site to see how teams really work.</figcaption>
+            <figcaption><strong>On the ground.</strong> Training users on the HR app at a business unit’s site.</figcaption>
           </figure>
-          <figure class="moment reveal" style="--r: 0.75">
+          <figure class="moment reveal r-75">
             <picture>
               <source srcset="assets/moment-ai-summit.webp" type="image/webp">
               <img src="assets/moment-ai-summit.jpg" width="800" height="1067" loading="lazy"
@@ -688,7 +695,7 @@
         <p class="lead reveal">Open to conversations on product ownership, product consulting, digital transformation and AI enablement. Based in Navi Mumbai, from Nagpur.</p>
         <div class="actions reveal">
           <button type="button" class="btn btn-invert" data-contact-open>Email me</button>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/prasidhajagtap" target="_blank" rel="noopener me">LinkedIn</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/prasidhajagtap" target="_blank" rel="noopener noreferrer me">LinkedIn</a>
           <a class="btn btn-ghost" href="assets/Prasidha-Jagtap-Resume.pdf" download data-resume>Résumé</a>
         </div>
       </div>
@@ -749,6 +756,6 @@
     </div>
   </div>
 
-  <script src="main.js?v=9" defer></script>
+  <script src="main.js?v=11" defer></script>
 </body>
 </html>
