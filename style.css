@@ -703,3 +703,32 @@ h4.kicker { margin-bottom: 14px; }
   .highlights summary:hover, .highlights summary:active, .to-top, .to-top.show:hover { transform: none !important; }
   .theme-toggle svg, .highlights[open] .chips, .modal:not([hidden]) .modal-card, .modal:not([hidden]) .modal-backdrop { animation: none !important; }
 }
+
+/* ============ Header links behave like buttons on hover ============ */
+.nav ul li + li { margin-left: 4px; }
+.nav ul a {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 980px;
+  transition: background-color .25s ease, color .2s, transform .45s var(--spring), box-shadow .3s;
+}
+.nav ul a::after { display: none !important; }   /* replaces the thin underline */
+.nav ul a:hover {
+  color: var(--text);
+  background: rgba(127, 127, 127, 0.12);
+  transform: translateY(-1px) scale(1.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.nav ul a:active { transform: scale(.93); transition-duration: .08s; }
+.nav ul a.current { color: var(--text); background: rgba(127, 127, 127, 0.1); }
+.brand { display: inline-block; transition: transform .45s var(--spring); }
+.brand:hover { transform: scale(1.05); }
+.brand:active { transform: scale(.95); transition-duration: .08s; }
+@media (max-width: 734px) {
+  .nav ul li + li { margin-left: 0; }
+  .nav ul a { display: block; padding: 12px 14px; border-radius: 12px; }
+  .nav ul a:hover { transform: none; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav ul a:hover, .nav ul a:active, .brand:hover, .brand:active { transform: none !important; }
+}
