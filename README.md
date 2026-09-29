@@ -2,7 +2,7 @@
 
 A one-page, Apple-style personal site. Plain HTML + CSS + a little JavaScript, no build step.
 
-**Live (draft):** https://prasidhajagtap.github.io/projectP001/
+**Live (draft):** https://prasidhajagtap.github.io/prasidha_jagtap/
 
 ## Files
 
@@ -23,11 +23,11 @@ To show the **Download résumé** button, add `assets/Prasidha-Jagtap-Resume.pdf
 1. Merge the work into `main`.
 2. On GitHub: **Settings → Pages → Build and deployment**.
 3. Source: **Deploy from a branch** → Branch: `main` → Folder: `/ (root)` → **Save**.
-4. After 1–2 minutes it is live at https://prasidhajagtap.github.io/projectP001/
+4. After 1–2 minutes it is live at https://prasidhajagtap.github.io/prasidha_jagtap/
 
 ## Moving to another address later (e.g. Cloudflare Pages)
 
-Replace `https://prasidhajagtap.github.io/projectP001/` with the new address in:
+Replace `https://prasidhajagtap.github.io/prasidha_jagtap/` with the new address in:
 `index.html`, `robots.txt`, `sitemap.xml` and `404.html`.
 
 Cloudflare Pages steps: **Workers & Pages → Create application → Pages → Import an existing Git repository** →
