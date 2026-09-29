@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prasidhajagtap.github.io/projectP001/sitemap.xml
