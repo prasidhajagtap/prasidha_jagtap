@@ -44,8 +44,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=18">
-  <script src="theme-init.js?v=18"></script>
+  <link rel="stylesheet" href="style.css?v=19">
+  <script src="theme-init.js?v=19"></script>
 
   <!-- ===== Structured data: tells Google and AI search who this page is about ===== -->
   <script type="application/ld+json">
@@ -700,19 +700,25 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
-  <!-- ===== SECTION RAIL (right edge): milestones to jump to any heading ===== -->
-  <nav class="rail" aria-label="Jump to section" data-rail>
-    <ol>
-      <li><a href="#about"><span class="rail-label">About</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#experience"><span class="rail-label">Experience</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#work"><span class="rail-label">Problems solved</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#moments"><span class="rail-label">Moments</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#certifications"><span class="rail-label">Certifications</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#ai"><span class="rail-label">AI &amp; my work</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#skills"><span class="rail-label">Skills</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-      <li><a href="#contact"><span class="rail-label">Contact</span><span class="rail-dot" aria-hidden="true"></span></a></li>
-    </ol>
-  </nav>
+  <!-- ===== BOOKMARKS: small tab under the menu; lists only the headings already passed ===== -->
+  <div class="marks" data-marks>
+    <button type="button" class="icon-btn marks-btn" aria-expanded="false" aria-controls="marks-panel" aria-label="Jump back to a section" data-marks-btn>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4-5.5 4z"/></svg>
+    </button>
+    <nav class="marks-panel" id="marks-panel" aria-label="Sections you have passed" hidden>
+      <p class="marks-title">Jump back to</p>
+      <ol>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#work">Problems solved</a></li>
+        <li><a href="#moments">Moments</a></li>
+        <li><a href="#certifications">Certifications</a></li>
+        <li><a href="#ai">AI &amp; my work</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </nav>
+  </div>
 
   <!-- ===== LINKEDIN PROMPT (asks before opening the LinkedIn app) ===== -->
   <div class="modal" id="li-modal" hidden>
@@ -770,6 +776,6 @@
     </div>
   </div>
 
-  <script src="main.js?v=18" defer></script>
+  <script src="main.js?v=19" defer></script>
 </body>
 </html>

@@ -217,52 +217,44 @@
     for (var id in navMap) { var sec = document.getElementById(id); if (sec) navSpy.observe(sec); }
   }
 
-  // ---------- Section rail on the right: milestones to jump to any heading ----------
-  var rail = document.querySelector('[data-rail]');
-  if (rail) {
-    var railLinks = rail.querySelectorAll('a');
-    var railIds = [];
-    for (var rl = 0; rl < railLinks.length; rl++) railIds.push(railLinks[rl].getAttribute('href').slice(1));
-    var setRail = function (id) {
-      var idx = railIds.indexOf(id);
-      if (idx < 0) return;
-      for (var i = 0; i < railLinks.length; i++) {
-        var li = railLinks[i].parentNode;
-        if (i === idx) railLinks[i].setAttribute('aria-current', 'true'); else railLinks[i].removeAttribute('aria-current');
-        if (i < idx) li.classList.add('passed'); else li.classList.remove('passed');
-      }
+  // ---------- Bookmarks tab: jump back to any heading already passed ----------
+  // Opens only on click / tap (never on hover), so it can't get in the way.
+  var marks = document.querySelector('[data-marks]');
+  if (marks) {
+    var marksBtn = marks.querySelector('[data-marks-btn]');
+    var marksPanel = marks.querySelector('.marks-panel');
+    var markLinks = marksPanel.querySelectorAll('a');
+    var markSecs = [];
+    for (var mk = 0; mk < markLinks.length; mk++) markSecs.push(document.getElementById(markLinks[mk].getAttribute('href').slice(1)));
+    var setMarksOpen = function (open, focusBtn) {
+      marksPanel.hidden = !open;
+      marksBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) marks.classList.add('open'); else marks.classList.remove('open');
+      if (!open && focusBtn) marksBtn.focus();
     };
-    var hero = document.querySelector('.hero');
-    if ('IntersectionObserver' in window) {
-      var railSpy = new IntersectionObserver(function (en) {
-        for (var i = 0; i < en.length; i++) if (en[i].isIntersecting) setRail(en[i].target.id);
-      }, { rootMargin: '-40% 0px -55% 0px' });
-      for (var ri = 0; ri < railIds.length; ri++) { var rs = document.getElementById(railIds[ri]); if (rs) railSpy.observe(rs); }
-      if (hero) {
-        new IntersectionObserver(function (en) {
-          var e = en[en.length - 1];
-          if (!e.isIntersecting && e.boundingClientRect.top < 0) rail.classList.add('show');
-          else { rail.classList.remove('show'); rail.classList.remove('open'); }
-        }, { threshold: 0, rootMargin: '0px 0px -40% 0px' }).observe(hero);
+    var updateMarks = function () {
+      var line = window.innerHeight * 0.4, last = -1;
+      for (var i = 0; i < markSecs.length; i++) {
+        var passed = !!markSecs[i] && markSecs[i].getBoundingClientRect().top < line;
+        markLinks[i].parentNode.hidden = !passed;
+        if (passed) last = i;
       }
-    } else {
-      rail.classList.add('show');
-    }
-    // Touch screens have no hover: the first tap opens the labels, the next tap jumps
-    var touchOnly = window.matchMedia && window.matchMedia('(hover: none)').matches;
-    var railTimer = null;
-    var closeRail = function () { rail.classList.remove('open'); };
-    rail.addEventListener('click', function (e) {
-      if (touchOnly && !rail.classList.contains('open')) {
-        e.preventDefault(); e.stopPropagation();
-        rail.classList.add('open');
-        clearTimeout(railTimer); railTimer = setTimeout(closeRail, 5000);
-        return;
+      for (var j = 0; j < markLinks.length; j++) {
+        if (j === last) markLinks[j].setAttribute('aria-current', 'true'); else markLinks[j].removeAttribute('aria-current');
       }
-      clearTimeout(railTimer);
-      setTimeout(closeRail, 250);
-    }, true);
-    document.addEventListener('click', function (e) { if (!rail.contains(e.target)) closeRail(); });
+      if (last >= 0) marks.classList.add('show');
+      else { marks.classList.remove('show'); setMarksOpen(false); }
+    };
+    var marksTick = false;
+    window.addEventListener('scroll', function () {
+      if (!marksTick) { marksTick = true; (window.requestAnimationFrame || setTimeout)(function () { marksTick = false; updateMarks(); }); }
+    }, { passive: true });
+    window.addEventListener('resize', updateMarks);
+    marksBtn.addEventListener('click', function () { updateMarks(); setMarksOpen(marksPanel.hidden); });
+    for (var ml = 0; ml < markLinks.length; ml++) markLinks[ml].addEventListener('click', function () { setMarksOpen(false); });
+    document.addEventListener('click', function (e) { if (!marksPanel.hidden && !marks.contains(e.target)) setMarksOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !marksPanel.hidden) setMarksOpen(false, true); });
+    updateMarks();
   }
 
   // ---------- Discourage casual copying: right-click, view-source shortcuts, image dragging ----------
