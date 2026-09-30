@@ -222,4 +222,281 @@
       e.preventDefault();
     }
   });
+
+  // ==========================================================
+  // v14: stacked chapters, journey, rolling numbers, Cover Flow,
+  //      skill tabs and the LinkedIn app prompt
+  // ==========================================================
+  var noMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function closestAcc(el) { while (el && el !== document) { if (el.classList && el.classList.contains('acc')) return el; el = el.parentNode; } return null; }
+
+  // ---------- Accordion (several chapters can be open at once) ----------
+  function setAcc(acc, open) {
+    if (!acc) return;
+    var btn = acc.querySelector('.acc-btn');
+    if (open) acc.classList.add('open'); else acc.classList.remove('open');
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  var accBtns = document.querySelectorAll('.acc-btn');
+  for (var ab = 0; ab < accBtns.length; ab++) {
+    accBtns[ab].addEventListener('click', function () {
+      var acc = closestAcc(this);
+      var opening = !acc.classList.contains('open');
+      setAcc(acc, opening);
+      if (opening) rollIn(acc);
+      var fl = acc.querySelectorAll('[data-coverflow]');
+      for (var k = 0; k < fl.length; k++) if (fl[k].fitCards) fl[k].fitCards();
+    });
+  }
+  // Menu links and #links open the chapter they point to
+  function openForHash(hash) {
+    if (!hash || hash.length < 2) return;
+    var t = document.getElementById(hash.slice(1));
+    var acc = closestAcc(t);
+    if (acc && !acc.classList.contains('open')) setAcc(acc, true);
+  }
+  openForHash(location.hash);
+  window.addEventListener('hashchange', function () { openForHash(location.hash); });
+  var hashLinks = document.querySelectorAll('a[href^="#"]');
+  for (var hl = 0; hl < hashLinks.length; hl++) {
+    hashLinks[hl].addEventListener('click', function () { openForHash(this.getAttribute('href')); });
+  }
+
+  // ---------- "Know more" on the current role ----------
+  var moreBtn = document.querySelector('[data-more]');
+  if (moreBtn) {
+    var morePanel = document.getElementById(moreBtn.getAttribute('aria-controls'));
+    var moreLabel = moreBtn.querySelector('[data-more-label]');
+    moreBtn.addEventListener('click', function () {
+      var open = !morePanel.classList.contains('open');
+      if (open) morePanel.classList.add('open'); else morePanel.classList.remove('open');
+      moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (moreLabel) moreLabel.textContent = open ? 'Show less' : 'Know more';
+    });
+  }
+
+  // ---------- Journey timeline fills when it comes into view ----------
+  var journey = document.querySelector('[data-journey]');
+  if (journey) {
+    if (!('IntersectionObserver' in window) || noMotion) { journey.classList.add('run'); }
+    else {
+      var jo = new IntersectionObserver(function (en) {
+        for (var i = 0; i < en.length; i++) if (en[i].isIntersecting) { journey.classList.add('run'); jo.disconnect(); }
+      }, { threshold: 0.35 });
+      jo.observe(journey);
+    }
+  }
+
+  // ---------- Rolling numbers (bold figures count up on scroll) ----------
+  var NUM_SEL = '.stat strong, .mini-stats strong, .result strong, .tab-proof strong';
+  var numEls = document.querySelectorAll(NUM_SEL);
+  var canRoll = !!window.requestAnimationFrame;
+  function rollNumber(el) {
+    if (!canRoll) return;
+    var txt = el.getAttribute('data-final') || el.textContent;
+    var m = txt.match(/\d[\d,]*(\.\d+)?/);
+    if (!m) return;
+    el.setAttribute('data-final', txt);
+    var run = (+el.getAttribute('data-roll') || 0) + 1;   // a newer roll stops an older one
+    el.setAttribute('data-roll', run);
+    var pre = txt.slice(0, m.index), post = txt.slice(m.index + m[0].length);
+    var target = parseFloat(m[0].replace(/,/g, ''));
+    var decimals = m[1] ? m[1].length - 1 : 0, commas = m[0].indexOf(',') !== -1;
+    var fmt = function (v) {
+      var n = v.toFixed(decimals);
+      if (commas) n = Number(n).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+      return pre + n + post;
+    };
+    var start = null, dur = noMotion ? 500 : (target <= 10 ? 800 : 1600);
+    var step = function (ts) {
+      if (+el.getAttribute('data-roll') !== run) return;
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = p < 1 ? fmt(target * eased) : txt;
+      if (p < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+  }
+  // Replay the numbers inside a box (used when a chapter opens or a skill tab is picked)
+  function rollIn(box) {
+    if (!box) return;
+    var list = box.querySelectorAll(NUM_SEL);
+    for (var r = 0; r < list.length; r++) rollNumber(list[r]);
+  }
+  if (numEls.length && 'IntersectionObserver' in window && canRoll) {
+    var no = new IntersectionObserver(function (en) {
+      for (var i = 0; i < en.length; i++) if (en[i].isIntersecting) { rollNumber(en[i].target); no.unobserve(en[i].target); }
+    }, { threshold: 0.15 });
+    for (var ne = 0; ne < numEls.length; ne++) if (/\d/.test(numEls[ne].textContent)) no.observe(numEls[ne]);
+  }
+
+  // ---------- Cover Flow (iPod style): Moments, Problems solved, Things I've made ----------
+  function initCoverFlow(cf) {
+    var items = cf.querySelectorAll('.cf-item');
+    if (!items.length) return;
+    var mode = cf.getAttribute('data-cf-mode') || 'photos';
+    var cap = cf.querySelector('[data-cf-caption]');
+    var dotsBox = cf.querySelector('[data-cf-dots]');
+    var active = Math.floor((items.length - 1) / 2);            // start in the middle, like the iPod
+    var dots = [];
+    var go = function (i) { active = Math.max(0, Math.min(items.length - 1, i)); layout(); };
+    for (var d = 0; d < items.length; d++) {
+      if (dotsBox) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Item ' + (d + 1) + ' of ' + items.length);
+        (function (i) { dot.addEventListener('click', function () { go(i); }); })(d);
+        dotsBox.appendChild(dot); dots.push(dot);
+      }
+      (function (i) {
+        items[i].addEventListener('click', function (e) {
+          if (i !== active) { e.preventDefault(); go(i); }   // side items: bring to front first
+        });
+      })(d);
+    }
+    var layout = function () {
+      for (var i = 0; i < items.length; i++) {
+        var off = i - active, abs = Math.abs(off), sign = off < 0 ? -1 : 1;
+        var tx = abs ? sign * (58 + (abs - 1) * 14) : 0;          // tight stacks on both sides
+        var tz = abs ? -170 - (abs - 1) * 30 : 0;
+        var ry = abs ? -sign * 70 : 0;
+        items[i].style.transform = 'translateX(calc(-50% + ' + tx + '%)) translateZ(' + tz + 'px) rotateY(' + ry + 'deg)';
+        items[i].style.zIndex = String(100 - abs);
+        items[i].style.opacity = abs > 5 ? '0' : '1';
+        items[i].style.filter = abs ? 'brightness(' + Math.max(0.75, 0.92 - (abs - 1) * 0.06) + ')' : 'none';
+        items[i].setAttribute('aria-hidden', abs ? 'true' : 'false');
+        var focusables = items[i].querySelectorAll('a, button');
+        for (var f = 0; f < focusables.length; f++) focusables[f].tabIndex = abs ? -1 : 0;
+        if (dots[i]) dots[i].setAttribute('aria-current', i === active ? 'true' : 'false');
+      }
+      if (cap) {
+        cap.textContent = '';
+        if (mode === 'photos') {
+          var fc = items[active].querySelector('figcaption');
+          if (fc) { var clone = fc.cloneNode(true); while (clone.firstChild) cap.appendChild(clone.firstChild); }
+        } else {
+          cap.textContent = (active + 1) + ' of ' + items.length;
+        }
+      }
+      var prevB = cf.querySelector('[data-cf-prev]'), nextB = cf.querySelector('[data-cf-next]');
+      if (prevB) prevB.disabled = active === 0;
+      if (nextB) nextB.disabled = active === items.length - 1;
+    };
+    var prev = cf.querySelector('[data-cf-prev]'), next = cf.querySelector('[data-cf-next]');
+    if (prev) prev.addEventListener('click', function () { go(active - 1); });
+    if (next) next.addEventListener('click', function () { go(active + 1); });
+    cf.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(active - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(active + 1); }
+    });
+    var sx = null, sy = null;
+    cf.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; });
+    cf.addEventListener('pointerup', function (e) {
+      if (sx === null) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(active + (dx < 0 ? 1 : -1));
+    });
+    // Cards: make every card exactly as tall as the tallest text needs (no clipping, no extra gap)
+    var stage = cf.querySelector('.cf-stage');
+    var fit = function () {
+      if (mode !== 'cards' || !stage) return;
+      var max = 0, i;
+      for (i = 0; i < items.length; i++) items[i].style.height = 'auto';
+      for (i = 0; i < items.length; i++) max = Math.max(max, items[i].offsetHeight);
+      if (!max) return;                                          // chapter still closed
+      for (i = 0; i < items.length; i++) items[i].style.height = max + 'px';
+      stage.style.height = (max + 12) + 'px';
+    };
+    var fitTimer = null;
+    window.addEventListener('resize', function () { clearTimeout(fitTimer); fitTimer = setTimeout(fit, 150); });
+    cf.fitCards = fit;
+    cf.classList.add('cf-ready');
+    fit();
+    layout();
+  }
+  var flows = document.querySelectorAll('[data-coverflow]');
+  for (var fl = 0; fl < flows.length; fl++) initCoverFlow(flows[fl]);
+
+  // ---------- Skills tabs ----------
+  var tabsWrap = document.querySelector('[data-tabs]');
+  if (tabsWrap) {
+    var tabs = tabsWrap.querySelectorAll('[role="tab"]');
+    var selectTab = function (tab, focus) {
+      for (var i = 0; i < tabs.length; i++) {
+        var on = tabs[i] === tab;
+        tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
+        tabs[i].tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(tabs[i].getAttribute('aria-controls'));
+        if (panel) panel.hidden = !on;
+        if (panel && on) rollIn(panel);
+      }
+      if (focus) tab.focus();
+      if (tab.scrollIntoView) { try { tab.scrollIntoView({ block: 'nearest', inline: 'center', behavior: noMotion ? 'auto' : 'smooth' }); } catch (e) {} }
+    };
+    for (var tb = 0; tb < tabs.length; tb++) {
+      tabs[tb].addEventListener('click', function () { selectTab(this, false); });
+      tabs[tb].addEventListener('keydown', function (e) {
+        var i = Array.prototype.indexOf.call(tabs, this), n = null;
+        if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+        if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+        if (e.key === 'Home') n = 0;
+        if (e.key === 'End') n = tabs.length - 1;
+        if (n !== null) { e.preventDefault(); selectTab(tabs[n], true); }
+      });
+    }
+  }
+
+  // ---------- LinkedIn: ask first, then open the app where possible ----------
+  var LI_WEB = 'https://www.linkedin.com/in/prasidhajagtap';
+  var liModal = document.getElementById('li-modal');
+  var ua = navigator.userAgent || '';
+  var isAndroid = /Android/i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var liLast = null;
+  function liOpen() {
+    if (!liModal) return false;
+    liLast = document.activeElement;
+    var note = liModal.querySelector('[data-li-note]');
+    var appBtn = liModal.querySelector('[data-li-app]');
+    var webBtn = liModal.querySelector('[data-li-web]');
+    if (isAndroid || isIOS) {
+      note.textContent = 'View Prasidha’s profile in the LinkedIn app. If the app isn’t installed, the profile opens in your browser.';
+      appBtn.textContent = 'Open LinkedIn app'; webBtn.hidden = false;
+    } else {
+      note.textContent = 'This opens Prasidha’s LinkedIn profile in a new tab.';
+      appBtn.textContent = 'Open LinkedIn'; webBtn.hidden = true;
+    }
+    liModal.hidden = false;
+    root.classList.add('modal-open');
+    setTimeout(function () { appBtn.focus(); }, 50);
+    return true;
+  }
+  function liClose() {
+    if (!liModal || liModal.hidden) return;
+    liModal.hidden = true;
+    root.classList.remove('modal-open');
+    if (liLast && liLast.focus) liLast.focus();
+  }
+  function liApp() {
+    liClose();
+    if (isAndroid) {
+      window.location.href = 'intent://www.linkedin.com/in/prasidhajagtap/#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=' + encodeURIComponent(LI_WEB) + ';end';
+    } else if (isIOS) {
+      window.location.href = LI_WEB;               // iOS hands LinkedIn links to the app when it is installed
+    } else {
+      window.open(LI_WEB, '_blank', 'noopener,noreferrer');
+    }
+  }
+  var liLinks = document.querySelectorAll('[data-linkedin]');
+  for (var ll = 0; ll < liLinks.length; ll++) {
+    liLinks[ll].addEventListener('click', function (e) { if (liOpen()) e.preventDefault(); });
+  }
+  if (liModal) {
+    liModal.querySelector('[data-li-app]').addEventListener('click', liApp);
+    liModal.querySelector('[data-li-web]').addEventListener('click', function () { liClose(); window.open(LI_WEB, '_blank', 'noopener,noreferrer'); });
+    var liCloses = liModal.querySelectorAll('[data-li-close]');
+    for (var lc = 0; lc < liCloses.length; lc++) liCloses[lc].addEventListener('click', liClose);
+    document.addEventListener('keydown', function (e) { if ((e.key === 'Escape' || e.keyCode === 27)) liClose(); });
+  }
 })();
