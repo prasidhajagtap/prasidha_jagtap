@@ -1370,3 +1370,37 @@ h2 { margin-bottom: clamp(24px, 3.2vw, 44px); }
 @media (prefers-reduced-motion: reduce) {
   .rail, .rail-label, .rail-dot::after { transition: none !important; }
 }
+
+/* v18: rail spacing. Open = one frosted panel with roomy rows (no stacked pills) */
+.rail ol {
+  padding: 6px 0; border-radius: 20px;
+  transition: background-color .25s ease, box-shadow .25s ease, padding .35s var(--ease-out);
+}
+.rail a { min-height: 30px; transition: min-height .35s var(--ease-out); }
+.rail-dot { height: 30px; }
+.rail ol::before { top: 21px; bottom: 21px; transition: top .35s var(--ease-out), bottom .35s var(--ease-out); }
+.rail-label {
+  padding: 0 10px 0 0; border-radius: 0; background: none; box-shadow: none;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  font-size: 13px; color: var(--muted);
+}
+.rail a[aria-current="true"] .rail-label { color: var(--text); }
+.rail a:hover .rail-label { color: var(--text); }
+.rail:hover ol, .rail.open ol {
+  padding: 10px 0 10px 18px;
+  background: var(--nav);
+  -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+.rail:hover a, .rail.open a { min-height: 36px; }
+.rail:hover ol::before, .rail.open ol::before { top: 28px; bottom: 28px; }
+@media (max-width: 734px) {
+  .rail a { min-height: 30px; }
+  .rail-dot { height: 30px; }
+  .rail ol::before { top: 21px; bottom: 21px; }
+  .rail-label { font-size: 15px; padding: 0 12px 0 0; }
+  .rail.open { right: 10px; }
+  .rail.open ol { padding: 10px 4px 10px 20px; }
+  .rail.open a { min-height: 44px; }                /* comfortable finger size */
+  .rail.open ol::before { top: 32px; bottom: 32px; }
+}
