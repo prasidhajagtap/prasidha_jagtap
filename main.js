@@ -2,6 +2,8 @@
 // browsers and in-app browsers (LinkedIn, WhatsApp, Instagram, Gmail).
 (function () {
   var root = document.documentElement;
+  // Normally theme-init.js sets this; if that small file failed to load, set it here so the layout still works
+  if (!/(^|\s)js(\s|$)/.test(root.className)) root.className += ' js';
 
   function store(key, value) {
     try { window.localStorage.setItem(key, value); } catch (e) {}
