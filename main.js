@@ -45,6 +45,13 @@
     menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
     var links = document.querySelectorAll('#nav-links a');
     for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { setMenu(false); });
+    // Tap or click anywhere outside the menu closes it; so does Esc
+    document.addEventListener('click', function (e) {
+      if (nav.classList.contains('open') && !nav.contains(e.target)) setMenu(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); menuBtn.focus(); }
+    });
   }
 
   // ---------- Profile picture joins the name once the big photo scrolls away ----------
