@@ -1312,95 +1312,49 @@ h2 { margin-bottom: clamp(24px, 3.2vw, 44px); }
 }
 
 /* ==========================================================
-   v17: section rail on the right (milestones)
+   v19: bookmarks tab (replaces the side rail)
    ========================================================== */
-.rail {
-  position: fixed; z-index: 15; right: 14px; top: 50%;
-  transform: translate(12px, -50%); opacity: 0; visibility: hidden;
-  transition: opacity .35s ease, transform .5s var(--spring), visibility 0s .35s;
+.marks {
+  position: fixed; z-index: 18; top: 60px; right: 22px;
+  opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.8);
+  transition: opacity .3s ease, transform .45s var(--spring), visibility 0s .3s;
 }
-.rail.show { opacity: 1; visibility: visible; transform: translate(0, -50%); transition-delay: 0s; }
-.rail ol { position: relative; list-style: none; margin: 0; padding: 0; }
-/* the milestone line behind the dots */
-.rail ol::before {
-  content: ""; position: absolute; top: 14px; bottom: 14px; right: 13px; width: 2px;
-  border-radius: 2px; background: var(--line);
-}
-.rail li { position: relative; }
-.rail a {
-  display: flex; align-items: center; justify-content: flex-end;
-  min-height: 28px; padding: 0 0 0 8px; color: var(--muted);
-  -webkit-tap-highlight-color: transparent;
-}
-.rail-dot {
-  position: relative; flex: none; width: 28px; height: 28px;
-}
-.rail-dot::after {
-  content: ""; position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px;
-  border-radius: 50%; background: var(--bg); border: 2px solid var(--muted);
-  transition: transform .4s var(--spring), background .25s, border-color .25s;
-}
-.rail li.passed .rail-dot::after { background: var(--muted); }
-.rail a[aria-current="true"] .rail-dot::after { background: var(--text); border-color: var(--text); transform: scale(1.35); }
-.rail a:hover .rail-dot::after { transform: scale(1.35); border-color: var(--text); }
-.rail-label {
-  padding: 4px 10px; border-radius: 980px; white-space: nowrap;
-  font-size: 12px; font-weight: 500; color: var(--text);
+.marks.show { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.marks-btn {
+  width: 36px; height: 36px;
   background: var(--nav);
   -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: 0 0 0 1px var(--line), 0 4px 14px rgba(0, 0, 0, 0.08);
-  opacity: 0; transform: translateX(8px); pointer-events: none;
-  transition: opacity .25s ease, transform .4s var(--spring);
+  box-shadow: 0 0 0 1px var(--line), 0 4px 14px rgba(0, 0, 0, 0.1);
 }
-/* labels show when the rail is hovered, focused, or opened by a tap */
-.rail:hover .rail-label, .rail.open .rail-label, .rail a:focus-visible .rail-label { opacity: 1; transform: none; pointer-events: auto; }
-.rail a[aria-current="true"] .rail-label { font-weight: 700; }
-.rail a:focus-visible { outline: none; }
-.rail a:focus-visible .rail-dot::after { box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.5); }
-@media (max-width: 734px) {
-  .rail { right: 2px; }
-  .rail.show:not(.open) { opacity: .55; }
-  .rail a { min-height: 26px; }
-  .rail-dot { width: 24px; height: 26px; }
-  .rail ol::before { right: 11px; }
-  .rail-dot::after { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
-  .rail-label { font-size: 13px; padding: 5px 12px; }
-}
-@media print { .rail { display: none !important; } }
-@media (prefers-reduced-motion: reduce) {
-  .rail, .rail-label, .rail-dot::after { transition: none !important; }
-}
-
-/* v18: rail spacing. Open = one frosted panel with roomy rows (no stacked pills) */
-.rail ol {
-  padding: 6px 0; border-radius: 20px;
-  transition: background-color .25s ease, box-shadow .25s ease, padding .35s var(--ease-out);
-}
-.rail a { min-height: 30px; transition: min-height .35s var(--ease-out); }
-.rail-dot { height: 30px; }
-.rail ol::before { top: 21px; bottom: 21px; transition: top .35s var(--ease-out), bottom .35s var(--ease-out); }
-.rail-label {
-  padding: 0 10px 0 0; border-radius: 0; background: none; box-shadow: none;
-  -webkit-backdrop-filter: none; backdrop-filter: none;
-  font-size: 13px; color: var(--muted);
-}
-.rail a[aria-current="true"] .rail-label { color: var(--text); }
-.rail a:hover .rail-label { color: var(--text); }
-.rail:hover ol, .rail.open ol {
-  padding: 10px 0 10px 18px;
+.marks-btn svg { width: 17px; height: 17px; }
+.marks.open .marks-btn { background: var(--solid); color: var(--solid-text); }
+.marks-panel {
+  position: absolute; top: 44px; right: 0; min-width: 200px;
+  padding: 8px; border-radius: 18px;
   background: var(--nav);
   -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 0 1px var(--line), 0 14px 36px rgba(0, 0, 0, 0.16);
+  transform-origin: top right; animation: marks-in .35s var(--spring);
 }
-.rail:hover a, .rail.open a { min-height: 36px; }
-.rail:hover ol::before, .rail.open ol::before { top: 28px; bottom: 28px; }
+.marks-panel[hidden] { display: none; }
+@keyframes marks-in { from { opacity: 0; transform: scale(.9) translateY(-6px); } to { opacity: 1; transform: none; } }
+.marks-title { margin: 4px 12px 6px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.marks-panel ol { list-style: none; margin: 0; padding: 0; }
+.marks-panel li[hidden] { display: none; }
+.marks-panel a {
+  display: flex; align-items: center; min-height: 38px; padding: 0 12px; border-radius: 12px;
+  font-size: 15px; color: var(--text);
+}
+.marks-panel a::before {
+  content: ""; flex: none; width: 6px; height: 6px; margin-right: 12px; border-radius: 50%; background: var(--line);
+}
+.marks-panel a:hover { background: rgba(127, 127, 127, 0.12); }
+.marks-panel a[aria-current="true"] { font-weight: 600; }
+.marks-panel a[aria-current="true"]::before { background: var(--text); }
 @media (max-width: 734px) {
-  .rail a { min-height: 30px; }
-  .rail-dot { height: 30px; }
-  .rail ol::before { top: 21px; bottom: 21px; }
-  .rail-label { font-size: 15px; padding: 0 12px 0 0; }
-  .rail.open { right: 10px; }
-  .rail.open ol { padding: 10px 4px 10px 20px; }
-  .rail.open a { min-height: 44px; }                /* comfortable finger size */
-  .rail.open ol::before { top: 32px; bottom: 32px; }
+  .marks { top: 80px; right: 16px; }
+  .marks-panel { min-width: 220px; }
+  .marks-panel a { min-height: 44px; font-size: 16px; }   /* comfortable finger size */
 }
+@media print { .marks { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .marks, .marks-panel { transition: none !important; animation: none !important; } }
