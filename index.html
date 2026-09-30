@@ -44,8 +44,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=16">
-  <script src="theme-init.js?v=16"></script>
+  <link rel="stylesheet" href="style.css?v=17">
+  <script src="theme-init.js?v=17"></script>
 
   <!-- ===== Structured data: tells Google and AI search who this page is about ===== -->
   <script type="application/ld+json">
@@ -192,6 +192,11 @@
   <nav class="nav" aria-label="Main">
     <div class="nav-inner">
       <a href="#top" class="brand">
+        <!-- Small profile picture: slides in once the big photo has scrolled away -->
+        <span class="brand-pic" aria-hidden="true"><picture>
+          <source srcset="assets/prasidha-avatar.webp" type="image/webp">
+          <img src="assets/prasidha-avatar.jpg" width="64" height="64" alt="">
+        </picture></span>
         <span class="brand-name">Prasidha</span>
         <span class="brand-tag">
           <span class="bt-1">Turning Ideas Into Digital Products.</span>
@@ -207,6 +212,7 @@
           <li><a href="#skills">Skills</a></li>
           <li><a href="#certifications">Certifications</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li class="menu-only"><button type="button" class="menu-theme" data-theme-toggle><span class="mt-dark">Dark mode</span><span class="mt-light">Light mode</span></button></li>
         </ul>
         <button type="button" class="icon-btn theme-toggle" aria-label="Switch to dark mode" data-theme-toggle>
           <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -224,7 +230,7 @@
     <!-- ===== HERO ===== -->
     <header class="hero">
       <div class="hero-text">
-      <p class="eyebrow reveal">Technology Analyst · Product Delivery · AI</p>
+      <p class="eyebrow reveal">Technology Analyst</p>
       <h1 class="reveal">Prasidha Jagtap.</h1>
       <p class="lead reveal">I build and deliver enterprise digital products — connecting business needs, technology and user experience.</p>
       <div class="actions reveal">
@@ -246,7 +252,7 @@
         <div class="stat reveal"><strong>100%</strong><span>on-time delivery, every year since 2023</span></div>
         <div class="stat reveal"><strong>1 lakh+</strong><span>app downloads</span></div>
         <div class="stat reveal"><strong>54K+</strong><span>active app users</span></div>
-        <div class="stat reveal"><strong>6</strong><span>countries — Canada, USA, Sweden, Thailand, Indonesia &amp; China</span></div>
+        <div class="stat reveal"><strong>6</strong><span>countries the app launched in</span></div>
         <div class="stat reveal"><strong>100%</strong><span>security audit findings fixed</span></div>
         <div class="stat reveal"><strong>98%</strong><span>stable app releases, zero critical bugs</span></div>
       </div>
@@ -262,18 +268,6 @@
           from an idea to a working release, across countries, teams and partners.
           <strong>I pair my technology knowledge with AI as a tool — to solve bigger problems and get more done.</strong>
         </p>
-        <h2 class="sr-only">Focus areas</h2>
-        <ul class="chips focus reveal" aria-label="Focus areas">
-          <li>Product Delivery</li>
-          <li>Digital Transformation</li>
-          <li>Product Solutioning</li>
-          <li>Enterprise &amp; HR Tech</li>
-          <li>Mobile App Delivery</li>
-          <li>AI Enablement</li>
-          <li>UX &amp; User Journeys</li>
-          <li>Security &amp; Compliance</li>
-          <li>Stakeholder Management</li>
-        </ul>
       </div>
     </section>
 
@@ -301,8 +295,8 @@
                 <ol class="journey2" data-journey aria-label="Career journey">
                   <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2018</span><span class="j-label">Airline operations</span><span class="j-org">IndiGo Airlines</span></li>
                   <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2020</span><span class="j-label">Customer experience</span><span class="j-org">Amazon</span></li>
-                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2023</span><span class="j-label">Full-stack training → Technology Analyst</span><span class="j-org">CDAC Pune · Seamex</span></li>
-                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2024</span><span class="j-label">Assistant Manager</span><span class="j-org">Seamex · Aditya Birla Group</span></li>
+                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2023</span><span class="j-label">Full-stack training → Technology Analyst</span><span class="j-org">CDAC Pune</span></li>
+                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2024</span><span class="j-label">Assistant Manager</span><span class="j-org">Promoted</span></li>
                   <li class="j-now"><span class="j-dot" aria-hidden="true"></span><span class="j-year">2026</span><span class="j-label">Product delivery &amp; AI</span><span class="j-org">Now — and growing</span></li>
                 </ol>
 
@@ -319,11 +313,11 @@
                     <li><strong>Assistant Manager — Technology Analyst</strong><span>Jun 2024 — Present</span></li>
                     <li><strong>Technology Analyst Trainee</strong><span>Jun 2023 — Jun 2024</span></li>
                   </ol>
-                  <p class="role-intro">I look after an enterprise <strong>HR app</strong> for iOS and Android that handles most employee and manager transactions from hire to retire — from the first requirement to the store release and beyond.</p>
+                  <p class="role-intro">I own the <strong>HR app</strong> on iOS and Android — from the first requirement to the store release and beyond.</p>
                   <div class="mini-stats three">
-                    <div><strong>100%</strong><span>on-time delivery since 2023</span></div>
+                    <div><strong>3+</strong><span>years as a Technology Analyst</span></div>
                     <div><strong>5,000+</strong><span>users trained on the app</span></div>
-                    <div><strong>6</strong><span>countries launched</span></div>
+                    <div><strong>10+</strong><span>live demos run</span></div>
                   </div>
 
                   <button type="button" class="btn btn-solid know-more" aria-expanded="false" aria-controls="exp-more" data-more>
@@ -333,77 +327,21 @@
 
                   <div class="more-panel" id="exp-more">
                     <div class="more-inner">
-                      <div class="areas three">
-                        <div class="area">
-                          <h5>Product delivery</h5>
-                          <ul>
-                            <li>100% on-time delivery, every year since 2023.</li>
-                            <li>App launched in 6 countries, with private access for teams across 13+ regions.</li>
-                            <li>Daily check-ins with the development partner on progress, risks and dependencies.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Solutioning &amp; UX</h5>
-                          <ul>
-                            <li>Enhanced the login experience with enterprise single sign-on (SSO) — 15% fewer login issues.</li>
-                            <li>Enhanced account recovery and multi-device notification flows for a safer, smoother experience.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Requirements &amp; documentation</h5>
-                          <ul>
-                            <li>Business, functional and test documents, and SOPs.</li>
-                            <li>Standard templates for change requests, FAQs and user guides — 35% better audit readiness.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Quality &amp; releases</h5>
-                          <ul>
-                            <li>Every iOS and Android build tested before it ships.</li>
-                            <li>98% stable releases with zero critical bugs in the measured period.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Security &amp; compliance</h5>
-                          <ul>
-                            <li>Every security audit finding fixed, working with security and tech teams.</li>
-                            <li>Trained ISO 9001 internal auditor and ISO contact point.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Support &amp; operations</h5>
-                          <ul>
-                            <li>200+ app issues solved — 98% answered on time, every one closed.</li>
-                            <li>Spotting repeat issues and coaching first-line support — issues fixed 12% faster.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Data &amp; integration</h5>
-                          <ul>
-                            <li>Secure data transfers and master-data mapping between systems.</li>
-                            <li>100% data consistency across connected systems.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Training &amp; enablement</h5>
-                          <ul>
-                            <li>5,000+ users trained on how the app works, including geo-fencing attendance.</li>
-                            <li>Clear user guides and stakeholder documents — 20% more feature use. 10+ live demos.</li>
-                          </ul>
-                        </div>
-                        <div class="area">
-                          <h5>Cost optimisation</h5>
-                          <ul>
-                            <li>Infrastructure and storage cost analysis across three months of app usage.</li>
-                            <li>Planning better infrastructure use and budget efficiency with IT and the development partner.</li>
-                          </ul>
-                        </div>
-                      </div>
+                      <dl class="areas-list">
+                        <div><dt>Product delivery</dt><dd>Plan, track and release with the development partner — daily check-ins on progress, risks and dependencies.</dd></div>
+                        <div><dt>Solutioning &amp; UX</dt><dd>Turn business needs into simple, secure features and user journeys.</dd></div>
+                        <div><dt>Requirements &amp; documentation</dt><dd>Business, functional and test documents, SOPs, change-request templates, FAQs and user guides.</dd></div>
+                        <div><dt>Quality &amp; releases</dt><dd>Test every iOS and Android build before it ships.</dd></div>
+                        <div><dt>Security &amp; compliance</dt><dd>Close audit findings with security and tech teams. Trained ISO 9001 internal auditor.</dd></div>
+                        <div><dt>Support &amp; operations</dt><dd>Solve app issues and coach first-line support on repeat problems.</dd></div>
+                        <div><dt>Data &amp; integration</dt><dd>Secure data transfers and master-data mapping — 100% data consistency across systems.</dd></div>
+                        <div><dt>Training &amp; enablement</dt><dd>Train users, run demos and write guides that make the app easy to use.</dd></div>
+                        <div><dt>Cost optimisation</dt><dd>Infrastructure and storage cost analysis with IT and the development partner.</dd></div>
+                      </dl>
 
                       <h5 class="kicker">Key highlights of work done on the app</h5>
                       <ul class="chips">
                         <li>Digital ID Card</li>
-                        <li>Geo-fencing attendance</li>
                         <li>Enterprise SSO sign-in</li>
                         <li>Account recovery (PIN reset)</li>
                         <li>PIN &amp; biometric login</li>
@@ -461,19 +399,19 @@
                     <p class="status">App feature · Rollout &amp; training</p>
                     <h4>Geo-fencing attendance</h4>
                     <p>Supported the rollout of the app’s geo-fencing attendance feature and trained business teams on it — and on how the app works, end to end.</p>
-                    <p class="result"><strong>Business teams</strong> trained · part of <strong>5,000+</strong> users trained on the app.</p>
+                    <p class="result">Rolled out to <strong>business teams</strong> across sites.</p>
                   </article>
                   <article class="card case cf-item">
                     <p class="status">Global rollout</p>
                     <h4>Taking the HR app to new countries</h4>
-                    <p>Managed the app's launch end to end in Canada, parts of the USA, Sweden, Thailand, Indonesia and China, and set up private access for teams across 13+ regions — with daily check-ins on risks and progress.</p>
-                    <p class="result"><strong>6 countries</strong> · <strong>100%</strong> on-time delivery since 2023.</p>
+                    <p>Managed the app's launch end to end in Canada, parts of the USA, Sweden, Thailand, Indonesia and China — with daily check-ins on risks and progress.</p>
+                    <p class="result">Private access for teams across <strong>13+ regions</strong>.</p>
                   </article>
                   <article class="card case cf-item">
                     <p class="status">Sign-in &amp; security</p>
                     <h4>A simpler, safer login experience</h4>
-                    <p>Enhanced the app’s authentication with enterprise single sign-on (SSO), refreshed the login screen and user guides, improved account recovery, and closed every security audit finding.</p>
-                    <p class="result"><strong>15% fewer</strong> login issues · <strong>100%</strong> audit findings fixed.</p>
+                    <p>Enhanced the app’s authentication with enterprise single sign-on (SSO), refreshed the login screen and user guides, and improved account recovery and multi-device notifications.</p>
+                    <p class="result"><strong>15% fewer</strong> login issues.</p>
                   </article>
                   <article class="card case cf-item">
                     <p class="status">Event app · End-to-end owner</p>
@@ -486,13 +424,13 @@
                     <p class="status">Quality at scale</p>
                     <h4>Releases people can trust</h4>
                     <p>Tested every build, found the patterns behind repeat issues, and helped first-line support fix them faster.</p>
-                    <p class="result"><strong>98%</strong> stable releases · <strong>12% faster</strong> fixes · <strong>200+</strong> issues solved.</p>
+                    <p class="result"><strong>12% faster</strong> fixes · <strong>200+</strong> issues solved, <strong>98%</strong> answered on time.</p>
                   </article>
                   <article class="card case cf-item">
                     <p class="status">Enablement</p>
                     <h4>Helping people actually use the app</h4>
-                    <p>Wrote clear user guides and stakeholder documents that make the app easy to use, created standard templates, ran live demos and trained employees.</p>
-                    <p class="result"><strong>20% more</strong> feature use · <strong>5,000+</strong> users trained · <strong>35%</strong> better audit readiness.</p>
+                    <p>Wrote clear user guides and stakeholder documents, and created standard templates for change requests and FAQs.</p>
+                    <p class="result"><strong>20% more</strong> feature use · <strong>35%</strong> better audit readiness.</p>
                   </article>
                   </div>
                   <p class="cf-caption" aria-live="polite" data-cf-caption></p>
@@ -525,7 +463,7 @@
                         <img src="assets/moment-linkedin.jpg" width="1000" height="1000" loading="lazy"
                              alt="Prasidha Jagtap celebrating a LinkedIn follower milestone on the company page">
                       </picture>
-                      <figcaption><strong>First milestone.</strong> Celebrating a follower milestone on the company LinkedIn page I managed — later grown to 3,500+ followers.</figcaption>
+                      <figcaption><strong>First milestone.</strong> Celebrating a follower milestone on the company LinkedIn page I managed.</figcaption>
                     </figure>
                     <figure class="cf-item cf-site">
                       <picture>
@@ -541,7 +479,7 @@
                         <img src="assets/moment-ai-summit.jpg" width="800" height="1067" loading="lazy"
                              alt="Prasidha Jagtap at the ServiceNow AI Summit">
                       </picture>
-                      <figcaption><strong>Always learning.</strong> At the ServiceNow AI Summit, following how AI is changing enterprise technology.</figcaption>
+                      <figcaption><strong>Keeping up.</strong> At the ServiceNow AI Summit, following how AI is changing enterprise technology.</figcaption>
                     </figure>
                   </div>
                   <p class="cf-caption" aria-live="polite" data-cf-caption></p>
@@ -560,7 +498,7 @@
             <h3 class="acc-h">
               <button type="button" class="acc-btn" id="acc-cert-btn" aria-expanded="false" aria-controls="acc-cert">
                 <span class="acc-num">04</span>
-                <span class="acc-text"><span class="acc-title">Certifications &amp; Education</span><span class="acc-sub">Always learning</span></span>
+                <span class="acc-text"><span class="acc-title">Certifications &amp; Education</span><span class="acc-sub">2 qualifications · 13 certificates</span></span>
                 <svg class="acc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
               </button>
             </h3>
@@ -625,69 +563,59 @@
       </div>
     </section>
 
-    <!-- ===== AI & THINGS I'VE BUILT (separate, featured) ===== -->
+    <!-- ===== AI & THINGS I'VE BUILT: one curved ring of cards ===== -->
     <section id="ai" class="section">
       <div class="wrap">
         <p class="kicker reveal">AI &amp; my work</p>
         <h2 class="reveal">AI, put to work.</h2>
         <p class="section-lead reveal">I don't just talk about AI — I use it to build, and I help teams find where it fits.</p>
 
-        <div class="grid ai-grid">
-          <article class="card reveal">
-            <h3>Build with AI</h3>
-            <p>I build working products with AI as my development partner — the geo-tagging attendance prototype, Seamless Dash, Word Vibe and this website, made with Claude Code.</p>
-          </article>
-          <article class="card reveal">
-            <h3>Find the right use case</h3>
-            <p>I frame business problems as AI problems — for example, using classification, prediction and grouping to improve HR app adoption — and have worked on AI-powered development suggestions in the app.</p>
-          </article>
-          <article class="card reveal">
-            <h3>Prompts, RAG &amp; models</h3>
-            <p>Prompt engineering, in-context learning and retrieval-augmented generation (RAG), and multi-model AI with automatic fallback.</p>
-          </article>
-          <article class="card reveal">
-            <h3>Always learning</h3>
-            <p>AI Essentials (University of Pennsylvania), Advanced Prompt Engineering and Prompt Engineering for ChatGPT (Vanderbilt University), and the ServiceNow AI Summit.</p>
-          </article>
-        </div>
-
-        <div id="projects" class="built">
-          <p class="kicker reveal">Built by me</p>
-          <h3 class="built-title reveal">Things I've made.</h3>
-          <div class="coverflow cf-dark cf-cards" data-coverflow data-cf-mode="cards" aria-roledescription="carousel" aria-label="Things I've made">
-            <div class="cf-stage">
-            <article class="card project cf-item">
-              <p class="status">Own initiative · Working prototype · Live feature in progress</p>
-              <h4>Geo-Tagging Attendance</h4>
-              <p>A GPS-based attendance web app I designed and built on my own — sign-in, shift start, live location capture and a submission summary, working on phones, tablets and desktop. It is the working prototype on which the live feature is now being built into the main HR app.</p>
-              <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Supabase</li><li>Geolocation</li></ul>
-            </article>
-            <article class="card project cf-item">
-              <p class="status">Personal · Working prototype</p>
-              <h4>Seamless Dash</h4>
-              <p>A mobile-first endless-runner game I designed and built to show how play can drive app adoption — employee ID login, saved sessions, top-5 scores, power-ups, levels, trivia, sound and haptics.</p>
-              <ul class="stack"><li>HTML5 Canvas</li><li>JavaScript</li><li>Database</li><li>Analytics</li></ul>
-            </article>
-            <article class="card project cf-item">
-              <p class="status">Live · Built with AI</p>
-              <h4>Word Vibe</h4>
-              <p>A browser word game taken from idea to product — concept, feature design, UI, database, security, testing and tuning.</p>
-              <ul class="stack"><li>JavaScript</li><li>Responsive UI</li><li>Database</li><li>AI-assisted</li></ul>
-              <a class="more" href="https://prasidhajagtap.github.io/word_vibe/" target="_blank" rel="noopener noreferrer">Play Word Vibe <span aria-hidden="true">›</span></a>
-            </article>
-            <article class="card project cf-item">
-              <p class="status">Live · You're on it</p>
-              <h4>This website</h4>
-              <p>Designed and shipped with Claude Code — light and dark mode, search-ready, tested across phones, tablets and in-app browsers.</p>
-              <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Claude Code</li></ul>
-            </article>
+        <!-- Curved 3D ring of cards: drag, swipe, arrows or click a side card -->
+        <div class="ring" data-ring aria-roledescription="carousel" aria-label="AI and things I've made">
+          <div class="ring-stage">
+            <div class="ring-track">
+              <article class="card ring-card">
+                <p class="status">AI · Use cases</p>
+                <h3>Find the right use case</h3>
+                <p>I frame business problems as AI problems — like using classification, prediction and grouping to lift HR app adoption — and have worked on AI-powered development suggestions in the app.</p>
+              </article>
+              <article class="card ring-card">
+                <p class="status">AI · Methods</p>
+                <h3>Prompts, RAG &amp; models</h3>
+                <p>Prompt engineering, in-context learning and retrieval-augmented generation. Multi-model AI with automatic fallback, and AI-assisted coding.</p>
+                <ul class="stack"><li>Generative AI</li><li>LLMs</li><li>OpenRouter</li></ul>
+              </article>
+              <article class="card ring-card" id="projects">
+                <p class="status">Built by me · Prototype → live feature</p>
+                <h3>Geo-Tagging Attendance</h3>
+                <p>A GPS attendance web app I designed and built — sign-in, shift start, live location and a summary, on any device. The working prototype for the live feature now being built into the HR app.</p>
+                <ul class="stack"><li>JavaScript</li><li>Supabase</li><li>Geolocation</li></ul>
+              </article>
+              <article class="card ring-card">
+                <p class="status">Built by me · Working prototype</p>
+                <h3>Seamless Dash</h3>
+                <p>An endless-runner game that shows how play can drive app adoption — employee ID login, top-5 scores, power-ups, levels and trivia.</p>
+                <ul class="stack"><li>HTML5 Canvas</li><li>JavaScript</li><li>Analytics</li></ul>
+              </article>
+              <article class="card ring-card">
+                <p class="status">Built with AI · Live</p>
+                <h3>Word Vibe</h3>
+                <p>A browser word game taken from idea to product — design, UI, database, security, testing and tuning.</p>
+                <a class="more" href="https://prasidhajagtap.github.io/word_vibe/" target="_blank" rel="noopener noreferrer">Play Word Vibe <span aria-hidden="true">›</span></a>
+              </article>
+              <article class="card ring-card">
+                <p class="status">Built with AI · You're on it</p>
+                <h3>This website</h3>
+                <p>Designed and shipped with Claude Code — light and dark mode, search-ready, tested on phones, tablets and in-app browsers.</p>
+                <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+              </article>
             </div>
-            <p class="cf-caption" aria-live="polite" data-cf-caption></p>
-            <div class="cf-controls">
-              <button type="button" class="icon-btn" data-cf-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
-              <div class="cf-dots" data-cf-dots></div>
-              <button type="button" class="icon-btn" data-cf-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-            </div>
+          </div>
+          <p class="cf-caption" aria-live="polite" data-ring-caption></p>
+          <div class="cf-controls">
+            <button type="button" class="icon-btn" data-ring-prev aria-label="Previous card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <div class="cf-dots" data-ring-dots></div>
+            <button type="button" class="icon-btn" data-ring-next aria-label="Next card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
           </div>
         </div>
       </div>
@@ -704,50 +632,38 @@
             <button type="button" role="tab" id="tab-delivery" aria-controls="panel-delivery" aria-selected="true">Product delivery</button>
             <button type="button" role="tab" id="tab-ux" aria-controls="panel-ux" aria-selected="false" tabindex="-1">Solutioning &amp; UX</button>
             <button type="button" role="tab" id="tab-quality" aria-controls="panel-quality" aria-selected="false" tabindex="-1">Requirements &amp; quality</button>
-            <button type="button" role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1">AI &amp; emerging tech</button>
             <button type="button" role="tab" id="tab-platforms" aria-controls="panel-platforms" aria-selected="false" tabindex="-1">Enterprise platforms</button>
             <button type="button" role="tab" id="tab-build" aria-controls="panel-build" aria-selected="false" tabindex="-1">Build &amp; data</button>
             <button type="button" role="tab" id="tab-social" aria-controls="panel-social" aria-selected="false" tabindex="-1">Social media</button>
           </div>
 
           <div class="tab-panel" role="tabpanel" id="panel-delivery" aria-labelledby="tab-delivery" tabindex="0">
-            <h3>Product delivery</h3>
+            <h3 class="sr-only">Product delivery</h3>
             <p>Taking features from plan to store release, across countries, teams and partners.</p>
             <ul class="chips"><li>Project planning &amp; tracking</li><li>Release management</li><li>International rollouts</li><li>Agile ways of working</li><li>Risk &amp; dependency tracking</li><li>Vendor &amp; stakeholder management</li></ul>
-            <p class="tab-proof"><strong>100%</strong> on-time delivery since 2023 · app launched in <strong>6</strong> countries</p>
           </div>
           <div class="tab-panel" role="tabpanel" id="panel-ux" aria-labelledby="tab-ux" tabindex="0" hidden>
-            <h3>Solutioning &amp; UX</h3>
+            <h3 class="sr-only">Solutioning &amp; UX</h3>
             <p>Designing features and user journeys that are simple, secure and easy to adopt.</p>
             <ul class="chips"><li>Feature solutioning</li><li>User journeys</li><li>Login &amp; security flows</li><li>UX design basics</li><li>User guides &amp; stakeholder documents</li><li>Demos &amp; walkthroughs</li></ul>
-            <p class="tab-proof"><strong>15%</strong> fewer login issues after the SSO upgrade · <strong>10+</strong> live demos</p>
           </div>
           <div class="tab-panel" role="tabpanel" id="panel-quality" aria-labelledby="tab-quality" tabindex="0" hidden>
-            <h3>Requirements &amp; quality</h3>
+            <h3 class="sr-only">Requirements &amp; quality</h3>
             <p>Clear requirements in, stable releases out — with support that learns from every issue.</p>
             <ul class="chips"><li>Requirements analysis</li><li>BRD / FRD</li><li>Test documents</li><li>UAT &amp; SIT</li><li>Incident &amp; request management</li><li>SOPs &amp; user guides</li></ul>
-            <p class="tab-proof"><strong>98%</strong> stable releases · <strong>200+</strong> issues solved · <strong>35%</strong> better audit readiness</p>
-          </div>
-          <div class="tab-panel" role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" tabindex="0" hidden>
-            <h3>AI &amp; emerging tech</h3>
-            <p>Using AI as a tool — to build faster, and to find where it truly helps a business.</p>
-            <ul class="chips"><li>Generative AI</li><li>Prompt engineering</li><li>RAG</li><li>LLMs</li><li>AI-assisted development (Claude Code)</li><li>Multi-model AI (OpenRouter)</li></ul>
-            <p class="tab-proof"><strong>4</strong> products built with AI as a partner · <strong>3</strong> AI certifications</p>
           </div>
           <div class="tab-panel" role="tabpanel" id="panel-platforms" aria-labelledby="tab-platforms" tabindex="0" hidden>
-            <h3>Enterprise platforms</h3>
+            <h3 class="sr-only">Enterprise platforms</h3>
             <p>Day-to-day work across the systems behind a large enterprise HR app.</p>
             <ul class="chips"><li>Microsoft Azure</li><li>Azure AD / SSO</li><li>AWS</li><li>PeopleSoft</li><li>SharePoint</li><li>Google Play Console</li><li>Apple App Store Connect</li></ul>
-            <p class="tab-proof">An enterprise HR app with <strong>54K+</strong> active users and <strong>1 lakh+</strong> downloads</p>
           </div>
           <div class="tab-panel" role="tabpanel" id="panel-build" aria-labelledby="tab-build" tabindex="0" hidden>
-            <h3>Build &amp; data</h3>
+            <h3 class="sr-only">Build &amp; data</h3>
             <p>Hands-on enough to prototype my own ideas and talk shop with developers.</p>
             <ul class="chips"><li>JavaScript</li><li>React</li><li>Node.js</li><li>Java</li><li>SQL</li><li>HTML5 / CSS</li><li>Supabase</li><li>Firebase</li><li>Python (basic)</li><li>Power BI</li><li>Excel</li><li>Jira</li></ul>
-            <p class="tab-proof">Full-stack training at CDAC Pune (PG-DAC) · <strong>4</strong> working products built</p>
           </div>
           <div class="tab-panel" role="tabpanel" id="panel-social" aria-labelledby="tab-social" tabindex="0" hidden>
-            <h3>Social media &amp; employer branding</h3>
+            <h3 class="sr-only">Social media &amp; employer branding</h3>
             <p>A skill beyond my day-to-day role: I managed the company LinkedIn page end to end — content planning, writing, engagement and tracking — turning technology, product and people stories into posts that grew an audience.</p>
             <div class="mini-stats two">
               <div><strong>3,500+</strong><span>followers, up from 1,376</span></div>
@@ -783,6 +699,20 @@
   <button type="button" class="icon-btn to-top" aria-label="Back to top" data-to-top>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
+
+  <!-- ===== SECTION RAIL (right edge): milestones to jump to any heading ===== -->
+  <nav class="rail" aria-label="Jump to section" data-rail>
+    <ol>
+      <li><a href="#about"><span class="rail-label">About</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#experience"><span class="rail-label">Experience</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#work"><span class="rail-label">Problems solved</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#moments"><span class="rail-label">Moments</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#certifications"><span class="rail-label">Certifications</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#ai"><span class="rail-label">AI &amp; my work</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#skills"><span class="rail-label">Skills</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+      <li><a href="#contact"><span class="rail-label">Contact</span><span class="rail-dot" aria-hidden="true"></span></a></li>
+    </ol>
+  </nav>
 
   <!-- ===== LINKEDIN PROMPT (asks before opening the LinkedIn app) ===== -->
   <div class="modal" id="li-modal" hidden>
@@ -840,6 +770,6 @@
     </div>
   </div>
 
-  <script src="main.js?v=16" defer></script>
+  <script src="main.js?v=17" defer></script>
 </body>
 </html>

@@ -995,7 +995,7 @@ h2 { margin-bottom: clamp(24px, 3.2vw, 44px); }
 }
 .tab-list [role="tab"]:hover { color: var(--text); background: rgba(127, 127, 127, 0.1); }
 .tab-list [role="tab"]:active { transform: scale(.94); }
-.tab-list [role="tab"][aria-selected="true"] { background: var(--ipod); color: #fff; box-shadow: 0 4px 12px rgba(28, 104, 216, 0.3); }
+.tab-list [role="tab"][aria-selected="true"] { background: var(--solid); color: var(--solid-text); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14); }
 .tab-panel {
   padding: clamp(22px, 3vw, 34px);
   background: var(--card);
@@ -1176,7 +1176,7 @@ h2 { margin-bottom: clamp(24px, 3.2vw, 44px); }
 .bt-2 .nw { white-space: nowrap; }
 
 /* Middle widths: the links move into the menu button so the tagline has room */
-@media (min-width: 735px) and (max-width: 979px) {
+@media (min-width: 735px) and (max-width: 1023px) {
   .menu-toggle { display: flex; }
   .nav ul {
     display: none;
@@ -1201,4 +1201,172 @@ h2 { margin-bottom: clamp(24px, 3.2vw, 44px); }
   .brand-tag { margin: 4px 0 0; padding: 0; border: 0; max-width: 100%; }
   .bt-1 { font-size: clamp(10.5px, 3vw, 12px); }
   .bt-2 { font-size: clamp(9px, 2.6vw, 11px); white-space: normal; }
+}
+
+/* ==========================================================
+   v17: profile picture in the header after the big photo
+   ========================================================== */
+.brand-pic {
+  display: block; flex: none; align-self: center;
+  width: 0; height: 30px; margin-right: 0;
+  border-radius: 50%; overflow: hidden; opacity: 0;
+  transform: scale(.3) translateY(10px);
+  box-shadow: 0 0 0 1px var(--line), 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: width .5s var(--spring), margin .5s var(--spring), opacity .3s ease, transform .55s var(--spring);
+}
+.brand-pic picture, .brand-pic img { display: block; width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.nav.has-pic .brand-pic { width: 30px; margin-right: 10px; opacity: 1; transform: none; }
+
+/* Theme switch inside the phone menu (the round button is hidden there to make room) */
+.menu-only { display: none; }
+.menu-theme {
+  display: block; width: 100%; padding: 12px 14px; border: 0; border-radius: 12px;
+  background: none; color: var(--text); font: inherit; font-size: 17px; text-align: left; cursor: pointer;
+}
+.menu-theme:hover { background: rgba(127, 127, 127, 0.12); }
+.menu-theme .mt-light, [data-theme="dark"] .menu-theme .mt-dark { display: none; }
+[data-theme="dark"] .menu-theme .mt-light { display: inline; }
+
+@media (max-width: 734px) {
+  .nav-right > .theme-toggle { display: none; }
+  .menu-only { display: block; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); }
+  .brand {
+    display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
+  }
+  .brand-pic { grid-row: 1 / span 2; height: 38px; }
+  .brand-pic picture, .brand-pic img { width: 38px; height: 38px; }
+  .nav.has-pic .brand-pic { width: 38px; margin-right: 10px; }
+  .brand-name, .brand-tag { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-pic { transition: opacity .2s ease; transform: none; }
+}
+
+/* "Know more": one short line per area */
+.areas-list {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 14px 32px; gap: 14px 32px;
+  margin: 8px 0 28px; padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.areas-list dt { font-size: 15px; font-weight: 600; color: var(--text); }
+.areas-list dd { margin: 2px 0 0; font-size: 15px; line-height: 1.45; color: var(--muted); }
+@media (min-width: 1001px) { .areas-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 734px) { .areas-list { grid-template-columns: 1fr; grid-gap: 12px; gap: 12px; } }
+
+/* ==========================================================
+   v17: curved 3D ring of cards (AI & things I've made)
+   ========================================================== */
+.ring { margin-top: 8px; }
+/* Without JavaScript: a simple grid */
+.ring-track { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); grid-gap: 16px; gap: 16px; }
+.ring-card { display: flex; flex-direction: column; padding: 26px 24px; border-radius: 18px; }
+:root:not([data-theme="dark"]) .ring-card { background: #fff; }
+.ring-card h3 { font-size: 20px; letter-spacing: -0.01em; }
+.ring-card p { font-size: 15px; line-height: 1.5; }
+.ring-card .status { font-size: 11px; }
+.ring-card .stack li { font-size: 11px; padding: 2px 8px; }
+.ring-card .more { margin-top: auto; padding-top: 14px; }
+.ring .cf-controls { display: none; }
+
+.js .ring .cf-controls { display: flex; margin-top: 4px; }
+.js .ring .cf-caption { margin: 18px auto 4px; min-height: 0; font-size: 15px; }
+.js .ring-stage {
+  position: relative;
+  height: 470px;
+  overflow: hidden;
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
+  touch-action: pan-y;
+  -webkit-user-select: none; user-select: none;
+  cursor: grab;
+  /* side cards fade out softly at the edges, like the reference */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+.js .ring.dragging .ring-stage { cursor: grabbing; }
+.js .ring-track {
+  display: block; position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+  transform-style: preserve-3d;
+  transition: transform .8s var(--ease-out);
+}
+.js .ring-card {
+  position: absolute; left: -140px; width: 280px;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 14px 34px rgba(0, 0, 0, 0.12);
+  transition: opacity .5s ease, filter .5s ease, box-shadow .3s;
+}
+.js .ring-card:hover { transform: none; }
+.js .ring-card:not(.is-front) { cursor: pointer; }
+.js .ring-card.is-front { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 14px 30px rgba(0, 0, 0, 0.13); }
+[data-theme="dark"].js .ring-card { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.7); }
+.js .ring-card:focus-within { outline: 2px solid #0071e3; outline-offset: 3px; }
+
+@media (max-width: 734px) {
+  .js .ring-card { width: 72vw; left: -36vw; padding: 22px 20px; }
+  /* use the full screen width so side cards and shadows are not cut by the page margin */
+  .js .ring-stage { margin: 0 -16px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .ring-track, .js .ring-card { transition: none !important; }
+}
+
+/* ==========================================================
+   v17: section rail on the right (milestones)
+   ========================================================== */
+.rail {
+  position: fixed; z-index: 15; right: 14px; top: 50%;
+  transform: translate(12px, -50%); opacity: 0; visibility: hidden;
+  transition: opacity .35s ease, transform .5s var(--spring), visibility 0s .35s;
+}
+.rail.show { opacity: 1; visibility: visible; transform: translate(0, -50%); transition-delay: 0s; }
+.rail ol { position: relative; list-style: none; margin: 0; padding: 0; }
+/* the milestone line behind the dots */
+.rail ol::before {
+  content: ""; position: absolute; top: 14px; bottom: 14px; right: 13px; width: 2px;
+  border-radius: 2px; background: var(--line);
+}
+.rail li { position: relative; }
+.rail a {
+  display: flex; align-items: center; justify-content: flex-end;
+  min-height: 28px; padding: 0 0 0 8px; color: var(--muted);
+  -webkit-tap-highlight-color: transparent;
+}
+.rail-dot {
+  position: relative; flex: none; width: 28px; height: 28px;
+}
+.rail-dot::after {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px;
+  border-radius: 50%; background: var(--bg); border: 2px solid var(--muted);
+  transition: transform .4s var(--spring), background .25s, border-color .25s;
+}
+.rail li.passed .rail-dot::after { background: var(--muted); }
+.rail a[aria-current="true"] .rail-dot::after { background: var(--text); border-color: var(--text); transform: scale(1.35); }
+.rail a:hover .rail-dot::after { transform: scale(1.35); border-color: var(--text); }
+.rail-label {
+  padding: 4px 10px; border-radius: 980px; white-space: nowrap;
+  font-size: 12px; font-weight: 500; color: var(--text);
+  background: var(--nav);
+  -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 0 0 1px var(--line), 0 4px 14px rgba(0, 0, 0, 0.08);
+  opacity: 0; transform: translateX(8px); pointer-events: none;
+  transition: opacity .25s ease, transform .4s var(--spring);
+}
+/* labels show when the rail is hovered, focused, or opened by a tap */
+.rail:hover .rail-label, .rail.open .rail-label, .rail a:focus-visible .rail-label { opacity: 1; transform: none; pointer-events: auto; }
+.rail a[aria-current="true"] .rail-label { font-weight: 700; }
+.rail a:focus-visible { outline: none; }
+.rail a:focus-visible .rail-dot::after { box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.5); }
+@media (max-width: 734px) {
+  .rail { right: 2px; }
+  .rail.show:not(.open) { opacity: .55; }
+  .rail a { min-height: 26px; }
+  .rail-dot { width: 24px; height: 26px; }
+  .rail ol::before { right: 11px; }
+  .rail-dot::after { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
+  .rail-label { font-size: 13px; padding: 5px 12px; }
+}
+@media print { .rail { display: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .rail, .rail-label, .rail-dot::after { transition: none !important; }
 }

@@ -12,17 +12,20 @@
   if (year) year.textContent = new Date().getFullYear();
 
   // ---------- Light / dark toggle (light is the default; the choice is remembered) ----------
-  var themeBtn = document.querySelector('[data-theme-toggle]');
+  // (one round button in the header; on phones the same switch sits in the menu)
+  var themeBtns = document.querySelectorAll('[data-theme-toggle]');
   var themeMeta = document.querySelector('meta[name="theme-color"]');
   function isDark() { return root.getAttribute('data-theme') === 'dark'; }
   function applyTheme(dark) {
     if (dark) root.setAttribute('data-theme', 'dark'); else root.removeAttribute('data-theme');
-    if (themeBtn) themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    for (var t = 0; t < themeBtns.length; t++) {
+      if (themeBtns[t].classList.contains('theme-toggle')) themeBtns[t].setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
     if (themeMeta) themeMeta.setAttribute('content', dark ? '#000000' : '#ffffff');
   }
   applyTheme(isDark());
-  if (themeBtn) {
-    themeBtn.addEventListener('click', function () {
+  for (var tb0 = 0; tb0 < themeBtns.length; tb0++) {
+    themeBtns[tb0].addEventListener('click', function () {
       var dark = !isDark();
       applyTheme(dark);
       store('theme', dark ? 'dark' : 'light');
@@ -42,6 +45,15 @@
     menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
     var links = document.querySelectorAll('#nav-links a');
     for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { setMenu(false); });
+  }
+
+  // ---------- Profile picture joins the name once the big photo scrolls away ----------
+  var portrait = document.querySelector('.hero .portrait');
+  if (nav && portrait && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) {
+      var e = en[en.length - 1];
+      if (!e.isIntersecting && e.boundingClientRect.top < 0) nav.classList.add('has-pic'); else nav.classList.remove('has-pic');
+    }, { rootMargin: '-60px 0px 0px 0px' }).observe(portrait);
   }
 
   // ---------- Back to top ----------
@@ -203,6 +215,54 @@
       }
     }, { rootMargin: '-45% 0px -50% 0px' });
     for (var id in navMap) { var sec = document.getElementById(id); if (sec) navSpy.observe(sec); }
+  }
+
+  // ---------- Section rail on the right: milestones to jump to any heading ----------
+  var rail = document.querySelector('[data-rail]');
+  if (rail) {
+    var railLinks = rail.querySelectorAll('a');
+    var railIds = [];
+    for (var rl = 0; rl < railLinks.length; rl++) railIds.push(railLinks[rl].getAttribute('href').slice(1));
+    var setRail = function (id) {
+      var idx = railIds.indexOf(id);
+      if (idx < 0) return;
+      for (var i = 0; i < railLinks.length; i++) {
+        var li = railLinks[i].parentNode;
+        if (i === idx) railLinks[i].setAttribute('aria-current', 'true'); else railLinks[i].removeAttribute('aria-current');
+        if (i < idx) li.classList.add('passed'); else li.classList.remove('passed');
+      }
+    };
+    var hero = document.querySelector('.hero');
+    if ('IntersectionObserver' in window) {
+      var railSpy = new IntersectionObserver(function (en) {
+        for (var i = 0; i < en.length; i++) if (en[i].isIntersecting) setRail(en[i].target.id);
+      }, { rootMargin: '-40% 0px -55% 0px' });
+      for (var ri = 0; ri < railIds.length; ri++) { var rs = document.getElementById(railIds[ri]); if (rs) railSpy.observe(rs); }
+      if (hero) {
+        new IntersectionObserver(function (en) {
+          var e = en[en.length - 1];
+          if (!e.isIntersecting && e.boundingClientRect.top < 0) rail.classList.add('show');
+          else { rail.classList.remove('show'); rail.classList.remove('open'); }
+        }, { threshold: 0, rootMargin: '0px 0px -40% 0px' }).observe(hero);
+      }
+    } else {
+      rail.classList.add('show');
+    }
+    // Touch screens have no hover: the first tap opens the labels, the next tap jumps
+    var touchOnly = window.matchMedia && window.matchMedia('(hover: none)').matches;
+    var railTimer = null;
+    var closeRail = function () { rail.classList.remove('open'); };
+    rail.addEventListener('click', function (e) {
+      if (touchOnly && !rail.classList.contains('open')) {
+        e.preventDefault(); e.stopPropagation();
+        rail.classList.add('open');
+        clearTimeout(railTimer); railTimer = setTimeout(closeRail, 5000);
+        return;
+      }
+      clearTimeout(railTimer);
+      setTimeout(closeRail, 250);
+    }, true);
+    document.addEventListener('click', function (e) { if (!rail.contains(e.target)) closeRail(); });
   }
 
   // ---------- Discourage casual copying: right-click, view-source shortcuts, image dragging ----------
@@ -417,6 +477,111 @@
   }
   var flows = document.querySelectorAll('[data-coverflow]');
   for (var fl = 0; fl < flows.length; fl++) initCoverFlow(flows[fl]);
+
+  // ---------- Curved card ring (AI & things I've made) ----------
+  // Cards sit on the inside of a big cylinder: the front card is flat, side cards
+  // curve towards you. Drag, swipe, arrows, dots or click a side card to turn it.
+  function initRing(ring) {
+    var stage = ring.querySelector('.ring-stage'), track = ring.querySelector('.ring-track');
+    var cards = ring.querySelectorAll('.ring-card');
+    if (!stage || !track || !cards.length) return;
+    var n = cards.length, active = Math.floor((n - 1) / 2), step = 24, R = 700, GAP = 18;
+    var cap = ring.querySelector('[data-ring-caption]'), dotsBox = ring.querySelector('[data-ring-dots]'), dots = [];
+    var prevB = ring.querySelector('[data-ring-prev]'), nextB = ring.querySelector('[data-ring-next]');
+
+    function turn(deg, animate) {
+      track.style.transition = animate ? '' : 'none';
+      track.style.transform = 'translateZ(' + R + 'px) rotateY(' + deg + 'deg)';
+    }
+    function measure() {
+      var w = window.innerWidth, i, max = 0;
+      step = w < 735 ? 40 : (w < 1024 ? 30 : 24);
+      var cw = cards[0].offsetWidth || 280;
+      R = Math.round((cw + GAP) / (2 * Math.tan(step * Math.PI / 360)));
+      for (i = 0; i < n; i++) cards[i].style.height = 'auto';
+      for (i = 0; i < n; i++) max = Math.max(max, cards[i].offsetHeight);
+      for (i = 0; i < n; i++) {
+        cards[i].style.height = max + 'px';
+        cards[i].style.top = (-max / 2) + 'px';
+        cards[i].style.transform = 'rotateY(' + (-i * step) + 'deg) translateZ(' + (-R) + 'px)';
+      }
+      // room for the nearer (slightly larger) side cards and the shadows
+      var z2 = R * (1 - Math.cos((w < 735 ? 1 : 2) * step * Math.PI / 180));   // nearest cards still on screen
+      stage.style.height = Math.round(max * 1800 / (1800 - Math.min(z2, 900)) + 60) + 'px';
+    }
+    function layout(animate) {
+      turn(active * step, animate !== false);
+      for (var i = 0; i < n; i++) {
+        var off = Math.abs(i - active), front = off === 0;
+        cards[i].style.opacity = off * step > 100 ? '0' : '1';
+        cards[i].style.filter = front ? 'none' : 'brightness(' + Math.max(0.82, 0.95 - (off - 1) * 0.05) + ')';
+        cards[i].setAttribute('aria-hidden', front ? 'false' : 'true');
+        if (front) cards[i].classList.add('is-front'); else cards[i].classList.remove('is-front');
+        var focusables = cards[i].querySelectorAll('a, button');
+        for (var f = 0; f < focusables.length; f++) focusables[f].tabIndex = front ? 0 : -1;
+        if (dots[i]) dots[i].setAttribute('aria-current', front ? 'true' : 'false');
+      }
+      if (cap) cap.textContent = (active + 1) + ' of ' + n;
+      if (prevB) prevB.disabled = active === 0;
+      if (nextB) nextB.disabled = active === n - 1;
+    }
+    function go(i) { active = Math.max(0, Math.min(n - 1, i)); layout(true); }
+
+    for (var d = 0; d < n; d++) {
+      if (dotsBox) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Card ' + (d + 1) + ' of ' + n);
+        (function (i) { dot.addEventListener('click', function () { go(i); }); })(d);
+        dotsBox.appendChild(dot); dots.push(dot);
+      }
+      (function (i) {
+        cards[i].addEventListener('click', function (e) { if (i !== active) { e.preventDefault(); go(i); } });
+      })(d);
+    }
+    if (prevB) prevB.addEventListener('click', function () { go(active - 1); });
+    if (nextB) nextB.addEventListener('click', function () { go(active + 1); });
+    ring.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(active - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(active + 1); }
+    });
+
+    // Drag (mouse) or swipe (touch): the ring follows the finger, then settles on a card
+    var startX = null, startDeg = 0, moved = false;
+    function degFor(dx) {
+      var deg = startDeg - dx / (R * Math.PI / 180);
+      return Math.max(-step * 0.6, Math.min((n - 1 + 0.6) * step, deg));
+    }
+    stage.addEventListener('pointerdown', function (e) {
+      if (e.button > 0) return;
+      startX = e.clientX; startDeg = active * step; moved = false;
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (startX === null) return;
+      var dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) < 8) return;
+      moved = true; ring.classList.add('dragging');
+      turn(degFor(dx), false);
+    });
+    function endDrag(e) {
+      if (startX === null) return;
+      var dx = (e && e.clientX != null ? e.clientX : startX) - startX;
+      startX = null; ring.classList.remove('dragging');
+      if (moved) go(Math.round(degFor(dx) / step));
+    }
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', function () { if (startX !== null) { startX = null; ring.classList.remove('dragging'); layout(true); } });
+    stage.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+
+    var t = null;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { measure(); layout(false); }, 150); });
+    window.addEventListener('load', function () { measure(); layout(false); });
+    ring.classList.add('ring-ready');
+    measure();
+    layout(false);
+  }
+  var rings = document.querySelectorAll('[data-ring]');
+  for (var rg = 0; rg < rings.length; rg++) initRing(rings[rg]);
 
   // ---------- Skills tabs ----------
   var tabsWrap = document.querySelector('[data-tabs]');
