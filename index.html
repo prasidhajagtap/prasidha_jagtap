@@ -44,8 +44,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=13">
-  <script src="theme-init.js?v=13"></script>
+  <link rel="stylesheet" href="style.css?v=16">
+  <script src="theme-init.js?v=16"></script>
 
   <!-- ===== Structured data: tells Google and AI search who this page is about ===== -->
   <script type="application/ld+json">
@@ -191,7 +191,13 @@
   <!-- ===== TOP MENU (frosted glass) ===== -->
   <nav class="nav" aria-label="Main">
     <div class="nav-inner">
-      <a href="#top" class="brand">Prasidha</a>
+      <a href="#top" class="brand">
+        <span class="brand-name">Prasidha</span>
+        <span class="brand-tag">
+          <span class="bt-1">Turning Ideas Into Digital Products.</span>
+          <span class="bt-2"><span class="nw">Product delivery |</span> <span class="nw">Enterprise Technology |</span> <span class="nw">HR Tech | AI</span></span>
+        </span>
+      </a>
       <div class="nav-right">
         <ul id="nav-links">
           <li><a href="#about">About</a></li>
@@ -271,233 +277,365 @@
       </div>
     </section>
 
-    <!-- ===== EXPERIENCE ===== -->
-    <section id="experience" class="section alt">
+    <!-- ===== EXPLORE: stacked chapters (accordion) ===== -->
+    <section id="explore" class="section alt">
       <div class="wrap">
-        <p class="kicker reveal">Experience</p>
-        <h2 class="reveal">From operations to product.</h2>
+        <p class="kicker reveal">Explore</p>
+        <h2 class="reveal">My story, in chapters.</h2>
 
-        <ol class="journey reveal" aria-label="Career path">
-          <li><span>2017</span>Engineering</li>
-          <li><span>2018</span>Airline operations</li>
-          <li><span>2020</span>Customer experience</li>
-          <li><span>2023</span>Full-stack training</li>
-          <li><span>2023 →</span>Enterprise tech &amp; product</li>
-        </ol>
+        <div class="stack-acc" data-accordion>
 
-        <!-- Seamex -->
-        <article class="role reveal">
-          <div class="role-head">
-            <div>
-              <h3>Seamex · Aditya Birla Group</h3>
-              <p class="org">HR Shared Services Centre · Navi Mumbai</p>
-            </div>
-            <span class="year">Jun 2023 — Present</span>
-          </div>
+          <!-- 01 Experience -->
+          <article class="acc" id="experience">
+            <h3 class="acc-h">
+              <button type="button" class="acc-btn" id="acc-exp-btn" aria-expanded="false" aria-controls="acc-exp">
+                <span class="acc-num">01</span>
+                <span class="acc-text"><span class="acc-title">Experience</span><span class="acc-sub">From operations to product · 2018 – now</span></span>
+                <svg class="acc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </h3>
+            <div class="acc-panel" id="acc-exp" role="region" aria-labelledby="acc-exp-btn">
+              <div class="acc-inner">
 
-          <ol class="steps">
-            <li><strong>Assistant Manager — Technology Analyst</strong><span>Jun 2024 — Present</span></li>
-            <li><strong>Technology Analyst Trainee</strong><span>Jun 2023 — Jun 2024</span></li>
-          </ol>
+                <!-- Journey timeline: fills up on scroll, 2026 keeps pulsing -->
+                <ol class="journey2" data-journey aria-label="Career journey">
+                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2018</span><span class="j-label">Airline operations</span><span class="j-org">IndiGo Airlines</span></li>
+                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2020</span><span class="j-label">Customer experience</span><span class="j-org">Amazon</span></li>
+                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2023</span><span class="j-label">Full-stack training → Technology Analyst</span><span class="j-org">CDAC Pune · Seamex</span></li>
+                  <li><span class="j-dot" aria-hidden="true"></span><span class="j-year">2024</span><span class="j-label">Assistant Manager</span><span class="j-org">Seamex · Aditya Birla Group</span></li>
+                  <li class="j-now"><span class="j-dot" aria-hidden="true"></span><span class="j-year">2026</span><span class="j-label">Product delivery &amp; AI</span><span class="j-org">Now — and growing</span></li>
+                </ol>
 
-          <p class="role-intro">I look after an enterprise <strong>HR app</strong> for iOS and Android that handles most employee and manager transactions from hire to retire — leave, payroll, performance, learning, documents, rewards and more. I take it from the first requirement to the store release and beyond.</p>
+                <!-- Current role: short summary + "Know more" -->
+                <article class="role current-role">
+                  <div class="role-head">
+                    <div>
+                      <h4 class="role-name">Seamex · Aditya Birla Group</h4>
+                      <p class="org">HR Shared Services Centre · Navi Mumbai</p>
+                    </div>
+                    <span class="year">Jun 2023 — Present</span>
+                  </div>
+                  <ol class="steps">
+                    <li><strong>Assistant Manager — Technology Analyst</strong><span>Jun 2024 — Present</span></li>
+                    <li><strong>Technology Analyst Trainee</strong><span>Jun 2023 — Jun 2024</span></li>
+                  </ol>
+                  <p class="role-intro">I look after an enterprise <strong>HR app</strong> for iOS and Android that handles most employee and manager transactions from hire to retire — from the first requirement to the store release and beyond.</p>
+                  <div class="mini-stats three">
+                    <div><strong>100%</strong><span>on-time delivery since 2023</span></div>
+                    <div><strong>5,000+</strong><span>users trained on the app</span></div>
+                    <div><strong>6</strong><span>countries launched</span></div>
+                  </div>
 
-          <div class="areas three">
-            <div class="area">
-              <h4>Product delivery</h4>
-              <ul>
-                <li>100% on-time delivery, every year since 2023.</li>
-                <li>App launched in 6 countries, with private access for teams across 13+ regions.</li>
-                <li>Daily check-ins with the development partner on progress, risks and dependencies.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Solutioning &amp; UX</h4>
-              <ul>
-                <li>Enhanced the login experience with enterprise single sign-on (SSO) — 15% fewer login issues.</li>
-                <li>Enhanced account recovery and multi-device notification flows for a safer, smoother experience.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Requirements &amp; documentation</h4>
-              <ul>
-                <li>Business, functional and test documents, and SOPs.</li>
-                <li>Standard templates for change requests, FAQs and user guides — 35% better audit readiness.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Quality &amp; releases</h4>
-              <ul>
-                <li>Every iOS and Android build tested before it ships.</li>
-                <li>98% stable releases with zero critical bugs in the measured period.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Security &amp; compliance</h4>
-              <ul>
-                <li>Every security audit finding fixed, working with security and tech teams.</li>
-                <li>Trained ISO 9001 internal auditor and ISO contact point.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Support &amp; operations</h4>
-              <ul>
-                <li>200+ app issues solved — 98% answered on time, every one closed.</li>
-                <li>Spotting repeat issues and coaching first-line support — issues fixed 12% faster.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Data &amp; integration</h4>
-              <ul>
-                <li>Secure data transfers and master-data mapping between systems.</li>
-                <li>100% data consistency across connected systems.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Training &amp; enablement</h4>
-              <ul>
-                <li>5,000+ users trained on how the app works, including geo-fencing attendance.</li>
-                <li>Clear user guides and stakeholder documents — 20% more feature use. 10+ live demos.</li>
-              </ul>
-            </div>
-            <div class="area">
-              <h4>Cost optimisation</h4>
-              <ul>
-                <li>Infrastructure and storage cost analysis across three months of app usage.</li>
-                <li>Planning better infrastructure use and budget efficiency with IT and the development partner.</li>
-              </ul>
-            </div>
-          </div>
+                  <button type="button" class="btn btn-solid know-more" aria-expanded="false" aria-controls="exp-more" data-more>
+                    <span data-more-label>Know more</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
 
-          <details class="highlights">
-            <summary>
-              <span>Some of the key highlights of work done on the app</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <ul class="chips">
-              <li>Digital ID Card</li>
-              <li>Geo-fencing attendance</li>
-              <li>Enterprise SSO sign-in</li>
-              <li>Account recovery (PIN reset)</li>
-              <li>PIN &amp; biometric login</li>
-              <li>Multi-device login</li>
-              <li>Interactive notifications</li>
-              <li>Interactive banners</li>
-              <li>Team events &amp; celebrations</li>
-              <li>Leave cancellation</li>
-              <li>Development plans</li>
-              <li>Employee surveys</li>
-              <li>Awards &amp; nominations</li>
-              <li>Dark mode</li>
-              <li>Accessibility</li>
-              <li>Security &amp; stability updates</li>
-            </ul>
-          </details>
-        </article>
+                  <div class="more-panel" id="exp-more">
+                    <div class="more-inner">
+                      <div class="areas three">
+                        <div class="area">
+                          <h5>Product delivery</h5>
+                          <ul>
+                            <li>100% on-time delivery, every year since 2023.</li>
+                            <li>App launched in 6 countries, with private access for teams across 13+ regions.</li>
+                            <li>Daily check-ins with the development partner on progress, risks and dependencies.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Solutioning &amp; UX</h5>
+                          <ul>
+                            <li>Enhanced the login experience with enterprise single sign-on (SSO) — 15% fewer login issues.</li>
+                            <li>Enhanced account recovery and multi-device notification flows for a safer, smoother experience.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Requirements &amp; documentation</h5>
+                          <ul>
+                            <li>Business, functional and test documents, and SOPs.</li>
+                            <li>Standard templates for change requests, FAQs and user guides — 35% better audit readiness.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Quality &amp; releases</h5>
+                          <ul>
+                            <li>Every iOS and Android build tested before it ships.</li>
+                            <li>98% stable releases with zero critical bugs in the measured period.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Security &amp; compliance</h5>
+                          <ul>
+                            <li>Every security audit finding fixed, working with security and tech teams.</li>
+                            <li>Trained ISO 9001 internal auditor and ISO contact point.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Support &amp; operations</h5>
+                          <ul>
+                            <li>200+ app issues solved — 98% answered on time, every one closed.</li>
+                            <li>Spotting repeat issues and coaching first-line support — issues fixed 12% faster.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Data &amp; integration</h5>
+                          <ul>
+                            <li>Secure data transfers and master-data mapping between systems.</li>
+                            <li>100% data consistency across connected systems.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Training &amp; enablement</h5>
+                          <ul>
+                            <li>5,000+ users trained on how the app works, including geo-fencing attendance.</li>
+                            <li>Clear user guides and stakeholder documents — 20% more feature use. 10+ live demos.</li>
+                          </ul>
+                        </div>
+                        <div class="area">
+                          <h5>Cost optimisation</h5>
+                          <ul>
+                            <li>Infrastructure and storage cost analysis across three months of app usage.</li>
+                            <li>Planning better infrastructure use and budget efficiency with IT and the development partner.</li>
+                          </ul>
+                        </div>
+                      </div>
 
-        <!-- Social media, separate from the core role -->
-        <article class="role social reveal">
-          <p class="kicker">Skills beyond my day-to-day role</p>
-          <h3>Social media &amp; employer branding</h3>
-          <p class="role-intro">I managed the company LinkedIn page end to end — content planning, writing, engagement and tracking — turning technology, product and people stories into posts that grew an audience.</p>
-          <div class="mini-stats two">
-            <div><strong>3,500+</strong><span>followers, up from 1,376</span></div>
-            <div><strong>1,000+</strong><span>average impressions per post</span></div>
-          </div>
-          <ul class="chips skill-chips">
-            <li>Content strategy</li>
-            <li>Copywriting</li>
-            <li>Employer branding</li>
-            <li>Community engagement</li>
-            <li>Performance tracking</li>
-          </ul>
-        </article>
+                      <h5 class="kicker">Key highlights of work done on the app</h5>
+                      <ul class="chips">
+                        <li>Digital ID Card</li>
+                        <li>Geo-fencing attendance</li>
+                        <li>Enterprise SSO sign-in</li>
+                        <li>Account recovery (PIN reset)</li>
+                        <li>PIN &amp; biometric login</li>
+                        <li>Multi-device login</li>
+                        <li>Interactive notifications</li>
+                        <li>Interactive banners</li>
+                        <li>Team events &amp; celebrations</li>
+                        <li>Leave cancellation</li>
+                        <li>Development plans</li>
+                        <li>Employee surveys</li>
+                        <li>Awards &amp; nominations</li>
+                        <li>Dark mode</li>
+                        <li>Accessibility</li>
+                        <li>Security &amp; stability updates</li>
+                      </ul>
 
-        <!-- Earlier experience -->
-        <div class="earlier reveal">
-          <h3 class="kicker">Before technology</h3>
-          <div class="row">
-            <div>
-              <h3>Associate · Amazon</h3>
-              <p class="org">Handled high volumes of customer calls and emails in a structured, service-driven process — sharpening issue resolution, clear communication and process discipline.</p>
+                      <div class="earlier">
+                        <h5 class="kicker">Before technology</h5>
+                        <div class="row">
+                          <div>
+                            <h4>Associate · Amazon</h4>
+                            <p class="org">Handled high volumes of customer calls and emails in a structured, service-driven process — sharpening issue resolution, clear communication and process discipline.</p>
+                          </div>
+                          <span class="year">2020 — 2021</span>
+                        </div>
+                        <div class="row">
+                          <div>
+                            <h4>Officer – Security · IndiGo Airlines</h4>
+                            <p class="org">Kept the aerodrome secure and supported flight and passenger safety under strict aviation procedures — building operational discipline, attention to detail and calm under pressure.</p>
+                          </div>
+                          <span class="year">2018 — 2019</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
             </div>
-            <span class="year">2020 — 2021</span>
-          </div>
-          <div class="row">
-            <div>
-              <h3>Officer – Security · IndiGo Airlines</h3>
-              <p class="org">Kept the aerodrome secure and supported flight and passenger safety under strict aviation procedures — building operational discipline, attention to detail and calm under pressure.</p>
+          </article>
+
+          <!-- 02 Problems solved -->
+          <article class="acc" id="work">
+            <h3 class="acc-h">
+              <button type="button" class="acc-btn" id="acc-work-btn" aria-expanded="false" aria-controls="acc-work">
+                <span class="acc-num">02</span>
+                <span class="acc-text"><span class="acc-title">Problems solved</span><span class="acc-sub">Six stories with real numbers</span></span>
+                <svg class="acc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </h3>
+            <div class="acc-panel" id="acc-work" role="region" aria-labelledby="acc-work-btn">
+              <div class="acc-inner">
+                <div class="coverflow cf-dark cf-cards" data-coverflow data-cf-mode="cards" aria-roledescription="carousel" aria-label="Problems solved">
+                  <div class="cf-stage">
+                  <article class="card case cf-item">
+                    <p class="status">App feature · Rollout &amp; training</p>
+                    <h4>Geo-fencing attendance</h4>
+                    <p>Supported the rollout of the app’s geo-fencing attendance feature and trained business teams on it — and on how the app works, end to end.</p>
+                    <p class="result"><strong>Business teams</strong> trained · part of <strong>5,000+</strong> users trained on the app.</p>
+                  </article>
+                  <article class="card case cf-item">
+                    <p class="status">Global rollout</p>
+                    <h4>Taking the HR app to new countries</h4>
+                    <p>Managed the app's launch end to end in Canada, parts of the USA, Sweden, Thailand, Indonesia and China, and set up private access for teams across 13+ regions — with daily check-ins on risks and progress.</p>
+                    <p class="result"><strong>6 countries</strong> · <strong>100%</strong> on-time delivery since 2023.</p>
+                  </article>
+                  <article class="card case cf-item">
+                    <p class="status">Sign-in &amp; security</p>
+                    <h4>A simpler, safer login experience</h4>
+                    <p>Enhanced the app’s authentication with enterprise single sign-on (SSO), refreshed the login screen and user guides, improved account recovery, and closed every security audit finding.</p>
+                    <p class="result"><strong>15% fewer</strong> login issues · <strong>100%</strong> audit findings fixed.</p>
+                  </article>
+                  <article class="card case cf-item">
+                    <p class="status">Event app · End-to-end owner</p>
+                    <h4>Group Awards App</h4>
+                    <p>Managed and handled the complete app for a group-wide awards programme in FY 2025&#8209;26 — from solutioning and setup to running it live throughout the event, with on-ground support for attendees on iOS and Android.</p>
+                    <ul class="stack"><li>Event-day app operations</li><li>Live issue resolution</li><li>On-ground user support</li><li>Stakeholder coordination</li><li>Store &amp; release readiness</li></ul>
+                    <p class="result"><strong>1,060 downloads</strong> — 598 iOS, 462 Android.</p>
+                  </article>
+                  <article class="card case cf-item">
+                    <p class="status">Quality at scale</p>
+                    <h4>Releases people can trust</h4>
+                    <p>Tested every build, found the patterns behind repeat issues, and helped first-line support fix them faster.</p>
+                    <p class="result"><strong>98%</strong> stable releases · <strong>12% faster</strong> fixes · <strong>200+</strong> issues solved.</p>
+                  </article>
+                  <article class="card case cf-item">
+                    <p class="status">Enablement</p>
+                    <h4>Helping people actually use the app</h4>
+                    <p>Wrote clear user guides and stakeholder documents that make the app easy to use, created standard templates, ran live demos and trained employees.</p>
+                    <p class="result"><strong>20% more</strong> feature use · <strong>5,000+</strong> users trained · <strong>35%</strong> better audit readiness.</p>
+                  </article>
+                  </div>
+                  <p class="cf-caption" aria-live="polite" data-cf-caption></p>
+                  <div class="cf-controls">
+                    <button type="button" class="icon-btn" data-cf-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+                    <div class="cf-dots" data-cf-dots></div>
+                    <button type="button" class="icon-btn" data-cf-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <span class="year">2018 — 2019</span>
-          </div>
+          </article>
+
+          <!-- 03 Moments (Cover Flow) -->
+          <article class="acc" id="moments">
+            <h3 class="acc-h">
+              <button type="button" class="acc-btn" id="acc-mom-btn" aria-expanded="false" aria-controls="acc-mom">
+                <span class="acc-num">03</span>
+                <span class="acc-text"><span class="acc-title">Moments</span><span class="acc-sub">Beyond the desk</span></span>
+                <svg class="acc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </h3>
+            <div class="acc-panel" id="acc-mom" role="region" aria-labelledby="acc-mom-btn">
+              <div class="acc-inner">
+                <div class="coverflow cf-dark cf-photos" data-coverflow data-cf-mode="photos" aria-roledescription="carousel" aria-label="Moments">
+                  <div class="cf-stage">
+                    <figure class="cf-item cf-linkedin">
+                      <picture>
+                        <source srcset="assets/moment-linkedin.webp" type="image/webp">
+                        <img src="assets/moment-linkedin.jpg" width="1000" height="1000" loading="lazy"
+                             alt="Prasidha Jagtap celebrating a LinkedIn follower milestone on the company page">
+                      </picture>
+                      <figcaption><strong>First milestone.</strong> Celebrating a follower milestone on the company LinkedIn page I managed — later grown to 3,500+ followers.</figcaption>
+                    </figure>
+                    <figure class="cf-item cf-site">
+                      <picture>
+                        <source srcset="assets/moment-site-visit.webp" type="image/webp">
+                        <img src="assets/moment-site-visit.jpg" width="800" height="1200" loading="lazy"
+                             alt="Prasidha Jagtap on site, training users on the HR app">
+                      </picture>
+                      <figcaption><strong>On the ground.</strong> Training users on the HR app at a business unit’s site.</figcaption>
+                    </figure>
+                    <figure class="cf-item cf-summit">
+                      <picture>
+                        <source srcset="assets/moment-ai-summit.webp" type="image/webp">
+                        <img src="assets/moment-ai-summit.jpg" width="800" height="1067" loading="lazy"
+                             alt="Prasidha Jagtap at the ServiceNow AI Summit">
+                      </picture>
+                      <figcaption><strong>Always learning.</strong> At the ServiceNow AI Summit, following how AI is changing enterprise technology.</figcaption>
+                    </figure>
+                  </div>
+                  <p class="cf-caption" aria-live="polite" data-cf-caption></p>
+                  <div class="cf-controls">
+                    <button type="button" class="icon-btn" data-cf-prev aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+                    <div class="cf-dots" data-cf-dots></div>
+                    <button type="button" class="icon-btn" data-cf-next aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 04 Certifications & Education -->
+          <article class="acc" id="certifications">
+            <h3 class="acc-h">
+              <button type="button" class="acc-btn" id="acc-cert-btn" aria-expanded="false" aria-controls="acc-cert">
+                <span class="acc-num">04</span>
+                <span class="acc-text"><span class="acc-title">Certifications &amp; Education</span><span class="acc-sub">Always learning</span></span>
+                <svg class="acc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </h3>
+            <div class="acc-panel" id="acc-cert" role="region" aria-labelledby="acc-cert-btn">
+              <div class="acc-inner">
+                <div class="rows edu" id="education">
+                  <div class="row">
+                    <div>
+                      <h4>PG Diploma in Advanced Computing (PG-DAC)</h4>
+                      <p class="org">CDAC Pune · Full-stack development · 73%</p>
+                    </div>
+                    <span class="year">2023</span>
+                  </div>
+                  <div class="row">
+                    <div>
+                      <h4>B.E. Electronics &amp; Telecommunication Engineering</h4>
+                      <p class="org">St. Vincent Pallotti College of Engineering and Technology, Nagpur · CGPA 7.09</p>
+                    </div>
+                    <span class="year">2017</span>
+                  </div>
+                </div>
+
+                <div class="certs">
+                  <div class="cert-group">
+                    <h4>AI</h4>
+                    <ul>
+                      <li><strong>Artificial Intelligence Essentials</strong><span>University of Pennsylvania · 2026</span></li>
+                      <li><strong>Advanced Prompt Engineering for Everyone</strong><span>Vanderbilt University · 2025</span></li>
+                      <li><strong>Prompt Engineering for ChatGPT</strong><span>Vanderbilt University · 2022</span></li>
+                    </ul>
+                  </div>
+                  <div class="cert-group">
+                    <h4>Product &amp; UX</h4>
+                    <ul>
+                      <li><strong>Introduction to User Experience Design</strong><span>Georgia Institute of Technology · 2026</span></li>
+                      <li><strong>Business Analysis Fundamentals</strong><span>Microsoft · 2026</span></li>
+                      <li><strong>Agile Project Management with Jira Cloud</strong><span>LinkedIn · 2023</span></li>
+                      <li><strong>Business Analysis: Essential Tools and Techniques</strong><span>LinkedIn · 2023</span></li>
+                    </ul>
+                  </div>
+                  <div class="cert-group">
+                    <h4>Data</h4>
+                    <ul>
+                      <li><strong>Power BI: Dashboards for Beginners</strong><span>LinkedIn · 2025</span></li>
+                      <li><strong>Excel Basics for Data Analysis</strong><span>IBM · 2024</span></li>
+                      <li><strong>SQL (Basic)</strong><span>HackerRank · 2023</span></li>
+                      <li><strong>Learning Python</strong><span>LinkedIn · 2022</span></li>
+                    </ul>
+                  </div>
+                  <div class="cert-group">
+                    <h4>Quality &amp; customer</h4>
+                    <ul>
+                      <li><strong>Internal Auditor, ISO 9001:2015</strong><span>Corporate training institute · 2024</span></li>
+                      <li><strong>Customer Relationship Management</strong><span>Starweaver · 2024</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ===== SELECTED WORK (case studies) ===== -->
-    <section id="work" class="section">
+    <!-- ===== AI & THINGS I'VE BUILT (separate, featured) ===== -->
+    <section id="ai" class="section">
       <div class="wrap">
-        <p class="kicker reveal">Selected work</p>
-        <h2 class="reveal">Problems solved.</h2>
-
-        <div class="grid cases">
-          <article class="card case reveal">
-            <p class="status">App feature · Rollout &amp; training</p>
-            <h3>Geo-fencing attendance</h3>
-            <p>Supported the rollout of the app’s geo-fencing attendance feature and trained business teams on it — and on how the app works, end to end.</p>
-            <p class="result"><strong>Business teams</strong> trained · part of <strong>5,000+</strong> users trained on the app.</p>
-          </article>
-
-          <article class="card case reveal">
-            <p class="status">Global rollout</p>
-            <h3>Taking the HR app to new countries</h3>
-            <p>Managed the app's launch end to end in Canada, parts of the USA, Sweden, Thailand, Indonesia and China, and set up private access for teams across 13+ regions — with daily check-ins on risks and progress.</p>
-            <p class="result"><strong>6 countries</strong> · <strong>100%</strong> on-time delivery since 2023.</p>
-          </article>
-
-          <article class="card case reveal">
-            <p class="status">Sign-in &amp; security</p>
-            <h3>A simpler, safer login experience</h3>
-            <p>Enhanced the app’s authentication with enterprise single sign-on (SSO), refreshed the login screen and user guides, improved account recovery, and closed every security audit finding.</p>
-            <p class="result"><strong>15% fewer</strong> login issues · <strong>100%</strong> audit findings fixed.</p>
-          </article>
-
-          <article class="card case reveal">
-            <p class="status">Event app · End-to-end owner</p>
-            <h3>Group Awards App</h3>
-            <p>Managed and handled the complete app for a group-wide awards programme in FY 2025&#8209;26 — from solutioning and setup to running it live throughout the event, with on-ground support for attendees on iOS and Android.</p>
-            <ul class="stack"><li>Event-day app operations</li><li>Live issue resolution</li><li>On-ground user support</li><li>Stakeholder coordination</li><li>Store &amp; release readiness</li></ul>
-            <p class="result"><strong>1,060 downloads</strong> — 598 iOS, 462 Android.</p>
-          </article>
-
-          <article class="card case reveal">
-            <p class="status">Quality at scale</p>
-            <h3>Releases people can trust</h3>
-            <p>Tested every build, found the patterns behind repeat issues, and helped first-line support fix them faster.</p>
-            <p class="result"><strong>98%</strong> stable releases · <strong>12% faster</strong> fixes · <strong>200+</strong> issues solved.</p>
-          </article>
-
-          <article class="card case reveal">
-            <p class="status">Enablement</p>
-            <h3>Helping people actually use the app</h3>
-            <p>Wrote clear user guides and stakeholder documents that make the app easy to use, created standard templates, ran live demos and trained employees.</p>
-            <p class="result"><strong>20% more</strong> feature use · <strong>5,000+</strong> users trained · <strong>35%</strong> better audit readiness.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== AI ===== -->
-    <section id="ai" class="section alt">
-      <div class="wrap">
-        <p class="kicker reveal">AI</p>
+        <p class="kicker reveal">AI &amp; my work</p>
         <h2 class="reveal">AI, put to work.</h2>
         <p class="section-lead reveal">I don't just talk about AI — I use it to build, and I help teams find where it fits.</p>
 
-        <div class="grid">
+        <div class="grid ai-grid">
           <article class="card reveal">
             <h3>Build with AI</h3>
-            <p>I build working products with AI as my development partner — Seamless Dash, Word Vibe, the geo-tagging attendance prototype and this website, made with Claude Code.</p>
+            <p>I build working products with AI as my development partner — the geo-tagging attendance prototype, Seamless Dash, Word Vibe and this website, made with Claude Code.</p>
           </article>
           <article class="card reveal">
             <h3>Find the right use case</h3>
@@ -512,182 +650,110 @@
             <p>AI Essentials (University of Pennsylvania), Advanced Prompt Engineering and Prompt Engineering for ChatGPT (Vanderbilt University), and the ServiceNow AI Summit.</p>
           </article>
         </div>
-      </div>
-    </section>
 
-    <!-- ===== BUILT BY ME ===== -->
-    <section id="projects" class="section">
-      <div class="wrap">
-        <p class="kicker reveal">Built by me</p>
-        <h2 class="reveal">Things I've made.</h2>
-
-        <div class="grid projects-grid">
-          <article class="card project reveal">
-            <p class="status">Own initiative · Working prototype · Live feature in progress</p>
-            <h3>Geo-Tagging Attendance</h3>
-            <p>A GPS-based attendance web app I designed and built on my own — sign-in, shift start, live location capture and a submission summary, working on phones, tablets and desktop. It is the working prototype on which the live feature is now being built into the main HR app.</p>
-            <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Supabase</li><li>Geolocation</li></ul>
-          </article>
-
-          <article class="card project reveal">
-            <p class="status">Personal · Working prototype</p>
-            <h3>Seamless Dash</h3>
-            <p>A mobile-first endless-runner game I designed and built to show how play can drive app adoption — employee ID login, saved sessions, top-5 scores, power-ups, levels, trivia, sound and haptics.</p>
-            <ul class="stack"><li>HTML5 Canvas</li><li>JavaScript</li><li>Database</li><li>Analytics</li></ul>
-          </article>
-
-          <article class="card project reveal">
-            <p class="status">Live · Built with AI</p>
-            <h3>Word Vibe</h3>
-            <p>A browser word game taken from idea to product — concept, feature design, UI, database, security, testing and tuning.</p>
-            <ul class="stack"><li>JavaScript</li><li>Responsive UI</li><li>Database</li><li>AI-assisted</li></ul>
-            <a class="more" href="https://prasidhajagtap.github.io/word_vibe/" target="_blank" rel="noopener noreferrer">Play Word Vibe <span aria-hidden="true">›</span></a>
-          </article>
-
-          <article class="card project reveal">
-            <p class="status">Live · You're on it</p>
-            <h3>This website</h3>
-            <p>Designed and shipped with Claude Code — light and dark mode, search-ready, tested across phones, tablets and in-app browsers.</p>
-            <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Claude Code</li></ul>
-          </article>
+        <div id="projects" class="built">
+          <p class="kicker reveal">Built by me</p>
+          <h3 class="built-title reveal">Things I've made.</h3>
+          <div class="coverflow cf-dark cf-cards" data-coverflow data-cf-mode="cards" aria-roledescription="carousel" aria-label="Things I've made">
+            <div class="cf-stage">
+            <article class="card project cf-item">
+              <p class="status">Own initiative · Working prototype · Live feature in progress</p>
+              <h4>Geo-Tagging Attendance</h4>
+              <p>A GPS-based attendance web app I designed and built on my own — sign-in, shift start, live location capture and a submission summary, working on phones, tablets and desktop. It is the working prototype on which the live feature is now being built into the main HR app.</p>
+              <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Supabase</li><li>Geolocation</li></ul>
+            </article>
+            <article class="card project cf-item">
+              <p class="status">Personal · Working prototype</p>
+              <h4>Seamless Dash</h4>
+              <p>A mobile-first endless-runner game I designed and built to show how play can drive app adoption — employee ID login, saved sessions, top-5 scores, power-ups, levels, trivia, sound and haptics.</p>
+              <ul class="stack"><li>HTML5 Canvas</li><li>JavaScript</li><li>Database</li><li>Analytics</li></ul>
+            </article>
+            <article class="card project cf-item">
+              <p class="status">Live · Built with AI</p>
+              <h4>Word Vibe</h4>
+              <p>A browser word game taken from idea to product — concept, feature design, UI, database, security, testing and tuning.</p>
+              <ul class="stack"><li>JavaScript</li><li>Responsive UI</li><li>Database</li><li>AI-assisted</li></ul>
+              <a class="more" href="https://prasidhajagtap.github.io/word_vibe/" target="_blank" rel="noopener noreferrer">Play Word Vibe <span aria-hidden="true">›</span></a>
+            </article>
+            <article class="card project cf-item">
+              <p class="status">Live · You're on it</p>
+              <h4>This website</h4>
+              <p>Designed and shipped with Claude Code — light and dark mode, search-ready, tested across phones, tablets and in-app browsers.</p>
+              <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Claude Code</li></ul>
+            </article>
+            </div>
+            <p class="cf-caption" aria-live="polite" data-cf-caption></p>
+            <div class="cf-controls">
+              <button type="button" class="icon-btn" data-cf-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <div class="cf-dots" data-cf-dots></div>
+              <button type="button" class="icon-btn" data-cf-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== MOMENTS (photos) ===== -->
-    <section id="moments" class="section alt">
-      <div class="wrap">
-        <p class="kicker reveal">Moments</p>
-        <h2 class="reveal">Beyond the desk.</h2>
-
-        <div class="moments">
-          <figure class="moment reveal r-1">
-            <picture>
-              <source srcset="assets/moment-linkedin.webp" type="image/webp">
-              <img src="assets/moment-linkedin.jpg" width="1000" height="1000" loading="lazy"
-                   alt="Prasidha Jagtap celebrating a LinkedIn follower milestone on the company page">
-            </picture>
-            <figcaption><strong>First milestone.</strong> Celebrating a follower milestone on the company LinkedIn page I managed — later grown to 3,500+ followers.</figcaption>
-          </figure>
-          <figure class="moment reveal r-667">
-            <picture>
-              <source srcset="assets/moment-site-visit.webp" type="image/webp">
-              <img src="assets/moment-site-visit.jpg" width="800" height="1200" loading="lazy"
-                   alt="Prasidha Jagtap on site, training users on the HR app">
-            </picture>
-            <figcaption><strong>On the ground.</strong> Training users on the HR app at a business unit’s site.</figcaption>
-          </figure>
-          <figure class="moment reveal r-75">
-            <picture>
-              <source srcset="assets/moment-ai-summit.webp" type="image/webp">
-              <img src="assets/moment-ai-summit.jpg" width="800" height="1067" loading="lazy"
-                   alt="Prasidha Jagtap at the ServiceNow AI Summit">
-            </picture>
-            <figcaption><strong>Always learning.</strong> At the ServiceNow AI Summit, following how AI is changing enterprise technology.</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== SKILLS ===== -->
-    <section id="skills" class="section">
+    <!-- ===== SKILLS (tabs) ===== -->
+    <section id="skills" class="section alt">
       <div class="wrap">
         <p class="kicker reveal">Skills</p>
         <h2 class="reveal">The toolkit.</h2>
 
-        <div class="grid three">
-          <article class="card reveal">
+        <div class="tabs reveal" data-tabs>
+          <div class="tab-list" role="tablist" aria-label="Skill areas">
+            <button type="button" role="tab" id="tab-delivery" aria-controls="panel-delivery" aria-selected="true">Product delivery</button>
+            <button type="button" role="tab" id="tab-ux" aria-controls="panel-ux" aria-selected="false" tabindex="-1">Solutioning &amp; UX</button>
+            <button type="button" role="tab" id="tab-quality" aria-controls="panel-quality" aria-selected="false" tabindex="-1">Requirements &amp; quality</button>
+            <button type="button" role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1">AI &amp; emerging tech</button>
+            <button type="button" role="tab" id="tab-platforms" aria-controls="panel-platforms" aria-selected="false" tabindex="-1">Enterprise platforms</button>
+            <button type="button" role="tab" id="tab-build" aria-controls="panel-build" aria-selected="false" tabindex="-1">Build &amp; data</button>
+            <button type="button" role="tab" id="tab-social" aria-controls="panel-social" aria-selected="false" tabindex="-1">Social media</button>
+          </div>
+
+          <div class="tab-panel" role="tabpanel" id="panel-delivery" aria-labelledby="tab-delivery" tabindex="0">
             <h3>Product delivery</h3>
-            <p>Project planning &amp; tracking · Release management · International rollouts · Agile ways of working · Vendor &amp; stakeholder management</p>
-          </article>
-          <article class="card reveal">
+            <p>Taking features from plan to store release, across countries, teams and partners.</p>
+            <ul class="chips"><li>Project planning &amp; tracking</li><li>Release management</li><li>International rollouts</li><li>Agile ways of working</li><li>Risk &amp; dependency tracking</li><li>Vendor &amp; stakeholder management</li></ul>
+            <p class="tab-proof"><strong>100%</strong> on-time delivery since 2023 · app launched in <strong>6</strong> countries</p>
+          </div>
+          <div class="tab-panel" role="tabpanel" id="panel-ux" aria-labelledby="tab-ux" tabindex="0" hidden>
             <h3>Solutioning &amp; UX</h3>
-            <p>Feature solutioning · User journeys · Login &amp; security flows · UX design basics · User guides &amp; stakeholder documents · Demos &amp; walkthroughs</p>
-          </article>
-          <article class="card reveal">
+            <p>Designing features and user journeys that are simple, secure and easy to adopt.</p>
+            <ul class="chips"><li>Feature solutioning</li><li>User journeys</li><li>Login &amp; security flows</li><li>UX design basics</li><li>User guides &amp; stakeholder documents</li><li>Demos &amp; walkthroughs</li></ul>
+            <p class="tab-proof"><strong>15%</strong> fewer login issues after the SSO upgrade · <strong>10+</strong> live demos</p>
+          </div>
+          <div class="tab-panel" role="tabpanel" id="panel-quality" aria-labelledby="tab-quality" tabindex="0" hidden>
             <h3>Requirements &amp; quality</h3>
-            <p>Requirements analysis · BRD / FRD · Test documents · UAT &amp; SIT · Incident &amp; request management · SOPs &amp; user guides</p>
-          </article>
-          <article class="card reveal">
+            <p>Clear requirements in, stable releases out — with support that learns from every issue.</p>
+            <ul class="chips"><li>Requirements analysis</li><li>BRD / FRD</li><li>Test documents</li><li>UAT &amp; SIT</li><li>Incident &amp; request management</li><li>SOPs &amp; user guides</li></ul>
+            <p class="tab-proof"><strong>98%</strong> stable releases · <strong>200+</strong> issues solved · <strong>35%</strong> better audit readiness</p>
+          </div>
+          <div class="tab-panel" role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" tabindex="0" hidden>
             <h3>AI &amp; emerging tech</h3>
-            <p>Generative AI · Prompt engineering · RAG · LLMs · AI-assisted development (Claude Code) · Multi-model AI (OpenRouter)</p>
-          </article>
-          <article class="card reveal">
+            <p>Using AI as a tool — to build faster, and to find where it truly helps a business.</p>
+            <ul class="chips"><li>Generative AI</li><li>Prompt engineering</li><li>RAG</li><li>LLMs</li><li>AI-assisted development (Claude Code)</li><li>Multi-model AI (OpenRouter)</li></ul>
+            <p class="tab-proof"><strong>4</strong> products built with AI as a partner · <strong>3</strong> AI certifications</p>
+          </div>
+          <div class="tab-panel" role="tabpanel" id="panel-platforms" aria-labelledby="tab-platforms" tabindex="0" hidden>
             <h3>Enterprise platforms</h3>
-            <p>Microsoft Azure · Azure AD / SSO · AWS · PeopleSoft · SharePoint · Google Play Console · Apple App Store Connect</p>
-          </article>
-          <article class="card reveal">
+            <p>Day-to-day work across the systems behind a large enterprise HR app.</p>
+            <ul class="chips"><li>Microsoft Azure</li><li>Azure AD / SSO</li><li>AWS</li><li>PeopleSoft</li><li>SharePoint</li><li>Google Play Console</li><li>Apple App Store Connect</li></ul>
+            <p class="tab-proof">An enterprise HR app with <strong>54K+</strong> active users and <strong>1 lakh+</strong> downloads</p>
+          </div>
+          <div class="tab-panel" role="tabpanel" id="panel-build" aria-labelledby="tab-build" tabindex="0" hidden>
             <h3>Build &amp; data</h3>
-            <p>JavaScript · React · Node.js · Java · SQL · HTML5 / CSS · Supabase · Firebase · Python (basic) · Power BI · Excel · Jira</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== CERTIFICATIONS ===== -->
-    <section id="certifications" class="section alt">
-      <div class="wrap">
-        <p class="kicker reveal">Certifications</p>
-        <h2 class="reveal">Always learning.</h2>
-
-        <div class="certs">
-          <div class="cert-group reveal">
-            <h3>AI</h3>
-            <ul>
-              <li><strong>Artificial Intelligence Essentials</strong><span>University of Pennsylvania · 2026</span></li>
-              <li><strong>Advanced Prompt Engineering for Everyone</strong><span>Vanderbilt University · 2025</span></li>
-              <li><strong>Prompt Engineering for ChatGPT</strong><span>Vanderbilt University · 2022</span></li>
-            </ul>
+            <p>Hands-on enough to prototype my own ideas and talk shop with developers.</p>
+            <ul class="chips"><li>JavaScript</li><li>React</li><li>Node.js</li><li>Java</li><li>SQL</li><li>HTML5 / CSS</li><li>Supabase</li><li>Firebase</li><li>Python (basic)</li><li>Power BI</li><li>Excel</li><li>Jira</li></ul>
+            <p class="tab-proof">Full-stack training at CDAC Pune (PG-DAC) · <strong>4</strong> working products built</p>
           </div>
-          <div class="cert-group reveal">
-            <h3>Product &amp; UX</h3>
-            <ul>
-              <li><strong>Introduction to User Experience Design</strong><span>Georgia Institute of Technology · 2026</span></li>
-              <li><strong>Business Analysis Fundamentals</strong><span>Microsoft · 2026</span></li>
-              <li><strong>Agile Project Management with Jira Cloud</strong><span>LinkedIn · 2023</span></li>
-              <li><strong>Business Analysis: Essential Tools and Techniques</strong><span>LinkedIn · 2023</span></li>
-            </ul>
-          </div>
-          <div class="cert-group reveal">
-            <h3>Data</h3>
-            <ul>
-              <li><strong>Power BI: Dashboards for Beginners</strong><span>LinkedIn · 2025</span></li>
-              <li><strong>Excel Basics for Data Analysis</strong><span>IBM · 2024</span></li>
-              <li><strong>SQL (Basic)</strong><span>HackerRank · 2023</span></li>
-              <li><strong>Learning Python</strong><span>LinkedIn · 2022</span></li>
-            </ul>
-          </div>
-          <div class="cert-group reveal">
-            <h3>Quality &amp; customer</h3>
-            <ul>
-              <li><strong>Internal Auditor, ISO 9001:2015</strong><span>Corporate training institute · 2024</span></li>
-              <li><strong>Customer Relationship Management</strong><span>Starweaver · 2024</span></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== EDUCATION ===== -->
-    <section id="education" class="section">
-      <div class="wrap">
-        <p class="kicker reveal">Education</p>
-        <h2 class="reveal">Foundations.</h2>
-
-        <div class="rows">
-          <div class="row reveal">
-            <div>
-              <h3>PG Diploma in Advanced Computing (PG-DAC)</h3>
-              <p class="org">CDAC Pune · Full-stack development · 73%</p>
+          <div class="tab-panel" role="tabpanel" id="panel-social" aria-labelledby="tab-social" tabindex="0" hidden>
+            <h3>Social media &amp; employer branding</h3>
+            <p>A skill beyond my day-to-day role: I managed the company LinkedIn page end to end — content planning, writing, engagement and tracking — turning technology, product and people stories into posts that grew an audience.</p>
+            <div class="mini-stats two">
+              <div><strong>3,500+</strong><span>followers, up from 1,376</span></div>
+              <div><strong>1,000+</strong><span>average impressions per post</span></div>
             </div>
-            <span class="year">2023</span>
-          </div>
-          <div class="row reveal">
-            <div>
-              <h3>B.E. Electronics &amp; Telecommunication Engineering</h3>
-              <p class="org">St. Vincent Pallotti College of Engineering and Technology, Nagpur · CGPA 7.09</p>
-            </div>
-            <span class="year">2017</span>
+            <ul class="chips"><li>Content strategy</li><li>Copywriting</li><li>Employer branding</li><li>Community engagement</li><li>Performance tracking</li></ul>
           </div>
         </div>
       </div>
@@ -700,7 +766,7 @@
         <p class="lead reveal">Open to conversations on product ownership, product consulting, digital transformation and AI enablement. Based in Navi Mumbai, from Nagpur.</p>
         <div class="actions reveal">
           <button type="button" class="btn btn-invert" data-contact-open>Email me</button>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/prasidhajagtap" target="_blank" rel="noopener noreferrer me">LinkedIn</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/prasidhajagtap" target="_blank" rel="noopener noreferrer me" data-linkedin>LinkedIn</a>
           <a class="btn btn-ghost" href="assets/Prasidha-Jagtap-Resume.pdf" download data-resume>Résumé</a>
         </div>
       </div>
@@ -717,6 +783,19 @@
   <button type="button" class="icon-btn to-top" aria-label="Back to top" data-to-top>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
+
+  <!-- ===== LINKEDIN PROMPT (asks before opening the LinkedIn app) ===== -->
+  <div class="modal" id="li-modal" hidden>
+    <div class="modal-backdrop" data-li-close></div>
+    <div class="modal-card li-card" role="dialog" aria-modal="true" aria-labelledby="li-title">
+      <div class="li-logo" aria-hidden="true">in</div>
+      <h2 id="li-title">Open LinkedIn?</h2>
+      <p class="modal-note" data-li-note>View Prasidha’s profile in the LinkedIn app.</p>
+      <button type="button" class="btn btn-solid btn-block" data-li-app>Open LinkedIn app</button>
+      <button type="button" class="btn btn-block li-alt" data-li-web>Open in browser instead</button>
+      <button type="button" class="btn btn-block li-cancel" data-li-close>Cancel</button>
+    </div>
+  </div>
 
   <!-- ===== CONTACT FORM (opens the visitor's own email app; nothing is stored or sent by this site) ===== -->
   <div class="modal" id="contact-modal" hidden>
@@ -761,6 +840,6 @@
     </div>
   </div>
 
-  <script src="main.js?v=13" defer></script>
+  <script src="main.js?v=16" defer></script>
 </body>
 </html>
