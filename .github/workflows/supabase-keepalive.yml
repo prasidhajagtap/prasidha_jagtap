@@ -1,6 +1,7 @@
 # Free Supabase projects pause after 7 days with little activity.
 # This pings the database every 3 days so the visit counter stays awake.
-# Needs two repository secrets: SUPABASE_URL and SUPABASE_ANON_KEY.
+# Uses repository secrets or variables SUPABASE_URL / SUPABASE_ANON_KEY if set;
+# otherwise reads the same public values from the live site's site-config.js.
 name: Keep Supabase awake
 on:
   schedule:
@@ -13,11 +14,17 @@ jobs:
     steps:
       - name: Ping the counter database
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || vars.SUPABASE_ANON_KEY }}
         run: |
           if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
-            echo "Supabase not set up yet - nothing to do."; exit 0
+            CFG=$(curl -fsS "https://prasidhajagtap.github.io/prasidha_jagtap/site-config.js?nc=$(date +%s)")
+            SUPABASE_URL=$(printf '%s' "$CFG" | grep -o "https://[a-z0-9]*\.supabase\.co" | head -1)
+            SUPABASE_ANON_KEY=$(printf '%s' "$CFG" | grep -o "eyJ[A-Za-z0-9._-]*" | head -1)
+            echo "Using the public settings from the live site."
+          fi
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::No Supabase settings found."; exit 1
           fi
           curl -fsS -X POST "$SUPABASE_URL/rest/v1/rpc/ping" \
             -H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
