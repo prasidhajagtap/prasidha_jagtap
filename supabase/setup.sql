@@ -159,9 +159,8 @@ revoke all on function public._gate(text, text, integer) from public, anon, auth
 --   vid      random browser ID (kept in the visitor's browser; stored here only as a hash)
 --   new_visit true when a new browser session starts (or after 30 minutes idle)
 --   own      true on browsers where the owner has opened the admin panel
--- Returns 'limit' only for very fast refreshing (over 60 page opens in 10 minutes from one
--- network), so the site can ask that visitor to stop; otherwise 'ok' (the 20-new-browsers
--- cap below just stops counting, it never shows a message).
+-- Over 60 page opens in 10 minutes from one network (or a 21st new browser in a day) are
+-- simply not counted; the site never stops anyone from viewing the page.
 drop function if exists public.record_visit(boolean);
 drop function if exists public.record_visit(text, boolean, boolean);
 create or replace function public.record_visit(vid text, new_visit boolean default false, own boolean default false)

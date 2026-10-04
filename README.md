@@ -116,7 +116,7 @@ GitHub Actions (this repo) ──► pings Supabase every 3 days so the free pro
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are. |
 | `LICENSE` | All rights reserved. |
 
-**Cache version.** CSS and JS links carry `?v=NN` (currently `v=38`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
+**Cache version.** CSS and JS links carry `?v=NN` (currently `v=39`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
 
 ---
 
@@ -144,13 +144,13 @@ Every number is visible **only to the owner** on the admin page. Visitors never 
 ### Spam limits (per network, enforced in the database)
 | Action | Limit |
 |---|---|
-| Page views | 60 per 10 minutes |
+| Page views | 60 per 10 minutes are counted (viewing is never blocked) |
 | New browser IDs | 20 per day |
 | 👍 / 👎 votes | 3 per day |
 | Feedback forms | 3 per day |
 | Enquiry opens / sends | 5 each per day |
 
-Above the normal limit, a network's votes, feedback and enquiry clicks (up to 30 a day) are still saved but kept apart as **Needs review** on the admin page: they may be real people sharing an office or mobile network, or spam. Above 30 (or over 60 page opens in 10 minutes) the site shows a *“Whoa, speedy fingers!”* message asking the visitor to close the tab; **OK**, **Esc** or a tap anywhere on a phone tries to close it, and if the browser does not allow that the page is replaced by a plain *“Please close this tab”* screen. The visitor only ever learns *ok* or *limit*, never what was set aside. The network is taken from `cf-connecting-ip`, which Supabase's Cloudflare edge sets and a visitor cannot fake (`X-Forwarded-For` is only a fallback). Network addresses are **never stored**. Only a daily-changing one-way hash is kept, and it is deleted after 2 days.
+Above the normal limit, a network's votes, feedback and enquiry clicks (up to 30 a day) are still saved but kept apart as **Needs review** on the admin page: they may be real people sharing an office or mobile network, or spam. Above 30 the site shows a *“Whoa, speedy fingers!”* message asking the visitor to close the tab; **OK**, **Esc** or a tap anywhere on a phone tries to close it, and if the browser does not allow that the page is replaced by a plain *“Please close this tab”* screen. The visitor only ever learns *ok* or *limit*, never what was set aside. The network is taken from `cf-connecting-ip`, which Supabase's Cloudflare edge sets and a visitor cannot fake (`X-Forwarded-For` is only a fallback). Network addresses are **never stored**. Only a daily-changing one-way hash is kept, and it is deleted after 2 days.
 
 ---
 
@@ -172,7 +172,7 @@ Above the normal limit, a network's votes, feedback and enquiry clicks (up to 30
 ### Functions
 | Function | Who may call | Does |
 |---|---|---|
-| `record_visit(vid, new_visit, own)` | visitors | Counts a page open / visit / unique browser; answers `limit` only for very fast refreshing. |
+| `record_visit(vid, new_visit, own)` | visitors | Counts a page open / visit / unique browser (very fast refreshing is simply not counted; viewing is never blocked). |
 | `record_vote(vote)` | visitors | Adds 👍 or 👎; answers `ok` or `limit`. |
 | `submit_feedback(vote, answers, note)` | visitors | Saves cleaned feedback (marked *review* above the normal limit); answers `ok` or `limit`. |
 | `record_build(step)` | visitors | Counts enquiry `open` / `send`; answers `ok` or `limit`. |
