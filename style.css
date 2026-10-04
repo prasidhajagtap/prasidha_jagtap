@@ -445,18 +445,36 @@ h4.kicker { margin-bottom: 14px; }
 .copy-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 .email-out { margin: 4px 12px 4px 0; font-weight: 600; word-break: break-all; -webkit-user-select: all; user-select: all; }
 
-/* "Want a website of your own?" — a soft glowing pill under the contact buttons */
+/* "Want a website of your own?" — a glowing pill under the contact buttons that keeps
+   inviting a click: a light streak sweeps across it (every 3 s) and a blue ring ripples
+   out from it (every 2.4 s). Hover / press settles it; no motion for reduced-motion users. */
 .build-cta {
-  display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; padding: 11px 20px;
+  position: relative; display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; padding: 11px 20px;
   font: inherit; font-size: 16px; font-weight: 600; color: var(--dark-text);
-  border-radius: 980px; border: 1px solid rgba(98, 174, 248, 0.55);
-  background: linear-gradient(180deg, rgba(98, 174, 248, 0.18), rgba(28, 104, 216, 0.14));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 6px 20px rgba(28, 104, 216, 0.25);
+  border-radius: 980px; border: 1px solid rgba(98, 174, 248, 0.7);
+  background:
+    linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.32) 50%, transparent 60%) no-repeat,
+    linear-gradient(180deg, rgba(98, 174, 248, 0.24), rgba(28, 104, 216, 0.2));
+  background-size: 250% 100%, 100% 100%;
+  background-position: 150% 0, 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 6px 22px rgba(28, 104, 216, 0.35);
+  animation: cta-shine 3s ease-in-out infinite;
   transition: transform .2s, box-shadow .2s;
 }
+.build-cta::after {
+  content: ""; position: absolute; top: -1px; right: -1px; bottom: -1px; left: -1px; border-radius: inherit; pointer-events: none;
+  animation: cta-ripple 2.4s cubic-bezier(.2, .7, .3, 1) infinite;
+}
+@keyframes cta-shine { 0% { background-position: 150% 0, 0 0; } 45%, 100% { background-position: -50% 0, 0 0; } }
+@keyframes cta-ripple {
+  0%       { box-shadow: 0 0 0 0 rgba(98, 174, 248, 0.6); }
+  70%, 100% { box-shadow: 0 0 0 16px rgba(98, 174, 248, 0); }
+}
 .build-cta svg { width: 18px; height: 18px; color: #62aef8; }
-.build-cta:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 10px 26px rgba(28, 104, 216, 0.35); }
+.build-cta:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 12px 30px rgba(28, 104, 216, 0.5); }
 .build-cta:active { transform: translateY(1px); }
+.build-cta:hover::after, .build-cta:focus-visible::after, .build-cta:active::after { animation: none; }
+@media (prefers-reduced-motion: reduce) { .build-cta, .build-cta::after { animation: none; } }
 .mail-preview { margin: 0 0 20px; padding: 16px 18px; border-radius: 16px; background: var(--field); border: 1px solid var(--line); box-shadow: var(--sh-inset, none); font-size: 15px; }
 .mail-row { display: flex; gap: 10px; margin: 0 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
 .mail-row span { flex: 0 0 58px; color: var(--muted); }
