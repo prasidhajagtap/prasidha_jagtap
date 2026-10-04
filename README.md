@@ -61,7 +61,7 @@ It is hosted free on GitHub Pages. A small Supabase database (free plan) stores 
   - 👎 flow: *What would make it better?* → *Where should I start?* → *Who’s visiting today?* → optional note.
   - The last, optional note step has one button: **Skip**, which changes to **Send** once something is typed.
   - There is no close button: tapping anywhere outside the window (or pressing Esc) closes it at once. Only the 👍 / 👎 vote is kept; answers are saved only when the visitor finishes.
-  - The question is asked only once per browser. People who choose *“Yes, let’s talk”* are offered **Email me** at the end.
+  - The question is asked only once per browser. The last screen says thank you and has one **Done** button.
 - **Windows and the phone keyboard.** The feedback window, the contact form and the enquiry page always open in the middle of the screen. When the phone keyboard opens, the window re-centres in the part of the screen still visible (iPhone and Android, old and new) and the field being typed in is scrolled into view; on very small screens it switches to a compact layout.
 - **Self-playing carousels.** *Problems solved*, *Moments* and the *AI ring* start moving 0.5 s after they come into view, then change every 2 s and loop. They pause while the pointer, a finger or keyboard focus is on them and while a window is open; a pause / play button sits next to the dots; they never auto-play for people who ask their device for less motion.
 - **Résumé.** `assets/Prasidha-Jagtap-Resume.pdf` is the download.
@@ -116,7 +116,7 @@ GitHub Actions (this repo) ──► pings Supabase every 3 days so the free pro
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are. |
 | `LICENSE` | All rights reserved. |
 
-**Cache version.** CSS and JS links carry `?v=NN` (currently `v=36`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
+**Cache version.** CSS and JS links carry `?v=NN` (currently `v=37`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
 
 ---
 

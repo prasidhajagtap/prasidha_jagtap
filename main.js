@@ -950,18 +950,11 @@
       done.appendChild(tick); done.appendChild(h); done.appendChild(p);
       stage.appendChild(done);
       foot.hidden = false;
-      if (vote === 'up' && answers.intent === 'yes') {
-        nextB.textContent = 'Email me';
-        nextB.setAttribute('data-fb-mail', '');
-      } else nextB.textContent = 'Done';
+      nextB.textContent = 'Done';
       moving = false;
     }
     nextB.addEventListener('click', function () {
-      if (finished) {
-        var mail = nextB.hasAttribute('data-fb-mail'); close();
-        if (mail) { var m = document.querySelector('[data-contact-open]'); if (m) setTimeout(function () { m.click(); }, 300); }
-        return;
-      }
+      if (finished) { close(); return; }
       if (!(answers.note || '').trim()) answers.note = '';
       finish();
     });
