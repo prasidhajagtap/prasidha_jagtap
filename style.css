@@ -465,6 +465,17 @@ h4.kicker { margin-bottom: 14px; }
 .mail-alt a { color: #1c68d8; font-weight: 600; }
 [data-theme="dark"] .mail-alt a { color: #62aef8; }
 
+/* "Too many requests" message (shown only when the database's spam guard says 'limit') */
+.spam-stop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.spam-card { width: 100%; max-width: 400px; padding: 30px 26px 26px; border-radius: 24px; text-align: center;
+  background: var(--card); color: var(--text); box-shadow: var(--edge), 0 24px 60px rgba(0, 0, 0, 0.35); animation: fb-soft .3s var(--ease-out) both; }
+.spam-light { font-size: 52px; line-height: 1; }
+.spam-card h2 { margin: 14px 0 8px; font-size: 24px; letter-spacing: -0.02em; }
+.spam-card p { margin: 0 0 22px; color: var(--muted); line-height: 1.45; }
+.spam-card .btn { min-width: 140px; }
+body.spam-closed { min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; background: var(--bg); color: var(--text); font-size: 20px; font-weight: 600; }
+
 /* ============ Scroll fade-in ============ */
 .js .reveal {
   opacity: 0;
@@ -1523,6 +1534,6 @@ button:disabled, .icon-btn:disabled { cursor: default; }
 .modal.is-tight #contact-form label { margin-bottom: 8px; }
 .modal.is-tight #contact-form textarea { min-height: 72px; }
 @media (prefers-reduced-motion: reduce) {
-  .fb-ask, .fb-card, .fb-panel, .fb-chip, .fb-thumb { transition: none !important; animation: none !important; }
+  .fb-ask, .fb-card, .fb-panel, .fb-chip, .fb-thumb, .spam-card { transition: none !important; animation: none !important; }
   .fb-panel.to-left, .fb-panel.to-right { display: none; }
 }

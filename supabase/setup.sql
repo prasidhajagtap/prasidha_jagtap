@@ -34,6 +34,11 @@ alter table public.site_daily add column if not exists new_visitors integer not 
 alter table public.site_daily add column if not exists own_views integer not null default 0;     -- the owner's own page opens
 alter table public.site_daily add column if not exists build_opens integer not null default 0;   -- "Want a website?" opened
 alter table public.site_daily add column if not exists build_sends integer not null default 0;   -- "Send enquiry" tapped
+-- Above the normal per-network limit (up to 30 a day) actions are kept apart as "needs review"
+alter table public.site_daily add column if not exists review_likes integer not null default 0;
+alter table public.site_daily add column if not exists review_dislikes integer not null default 0;
+alter table public.site_daily add column if not exists review_opens integer not null default 0;
+alter table public.site_daily add column if not exists review_sends integer not null default 0;
 alter table public.site_daily enable row level security;
 
 -- Short-lived anti-spam log (hashed network + kind + time). No API access.
@@ -73,6 +78,7 @@ create table if not exists public.site_feedback (
   answers jsonb not null default '{}'::jsonb,
   note    text check (note is null or char_length(note) <= 300)
 );
+alter table public.site_feedback add column if not exists review boolean not null default false;   -- sent above the normal limit
 alter table public.site_feedback enable row level security;
 
 -- Who may read the numbers. No API access.
@@ -133,14 +139,33 @@ $$;
 revoke all on function public.ip_key_check() from public;
 grant execute on function public.ip_key_check() to anon, authenticated;
 
+-- Spam gate for votes, feedback and enquiry clicks (per network, per 24 hours):
+--   up to the normal limit  -> 'ok'      counted as usual
+--   above it, up to 30      -> 'review'  saved apart for the owner to look at
+--   above 30                -> 'limit'   nothing saved; the site shows a "please stop" message
+-- Visitors only ever hear 'ok' or 'limit', so a spammer cannot tell what was set aside.
+create or replace function public._gate(h text, k text, normal integer)
+returns text language plpgsql security definer set search_path = public as $$
+declare c integer;
+begin
+  select count(*) into c from public.site_hits where ip_hash = h and kind = k and at > now() - interval '1 day';
+  if c >= 30 then return 'limit'; end if;
+  insert into public.site_hits (ip_hash, kind) values (h, k);
+  return case when c >= normal then 'review' else 'ok' end;
+end $$;
+revoke all on function public._gate(text, text, integer) from public, anon, authenticated;
+
 -- Count one page open.
 --   vid      random browser ID (kept in the visitor's browser; stored here only as a hash)
 --   new_visit true when a new browser session starts (or after 30 minutes idle)
 --   own      true on browsers where the owner has opened the admin panel
--- Over the limits the call quietly does nothing.
+-- Returns 'limit' only for very fast refreshing (over 60 page opens in 10 minutes from one
+-- network), so the site can ask that visitor to stop; otherwise 'ok' (the 20-new-browsers
+-- cap below just stops counting, it never shows a message).
 drop function if exists public.record_visit(boolean);
+drop function if exists public.record_visit(text, boolean, boolean);
 create or replace function public.record_visit(vid text, new_visit boolean default false, own boolean default false)
-returns void language plpgsql security definer set search_path = public, extensions as $$
+returns text language plpgsql security definer set search_path = public, extensions as $$
 declare
   d   date := (now() at time zone 'Asia/Kolkata')::date;
   h   text := public._caller_hash();
@@ -149,10 +174,10 @@ declare
   is_new_today   boolean := false;
   cnt integer;
 begin
-  if vid is null or vid !~ '^[A-Za-z0-9-]{16,64}$' then return; end if;
+  if vid is null or vid !~ '^[A-Za-z0-9-]{16,64}$' then return 'ok'; end if;
   if (select count(*) from public.site_hits
       where ip_hash = h and kind = 'view' and at > now() - interval '10 minutes') >= 60 then
-    return;
+    return 'limit';
   end if;
   insert into public.site_hits (ip_hash, kind) values (h, 'view');
   vh := encode(extensions.digest(vid || '|pj-vid', 'sha256'), 'hex');
@@ -163,14 +188,14 @@ begin
       last_seen = now(), own = true;
     insert into public.site_daily (day, own_views) values (d, 1)
     on conflict (day) do update set own_views = site_daily.own_views + 1;
-    return;
+    return 'ok';
   end if;
 
   if not exists (select 1 from public.site_visitors where vid_hash = vh) then
     -- a flood of made-up browser IDs from one network is ignored
     if (select count(*) from public.site_hits where ip_hash = h and kind = 'newvid'
         and at > now() - interval '1 day') >= 20 then
-      return;
+      return 'ok';
     end if;
     insert into public.site_hits (ip_hash, kind) values (h, 'newvid');
     is_new_browser := true;
@@ -192,6 +217,7 @@ begin
   if random() < 0.02 then
     delete from public.site_hits where at < now() - interval '2 days';
   end if;
+  return 'ok';
 end $$;
 revoke all on function public.record_visit(text, boolean, boolean) from public;
 grant execute on function public.record_visit(text, boolean, boolean) to anon, authenticated;
@@ -213,34 +239,44 @@ grant execute on function public.site_summary() to authenticated;
 
 drop function if exists public.record_like();
 
--- Thumbs up / down: at most 3 votes per network per day
+-- Thumbs up / down: 3 per network per day count as usual (then needs review, then limit)
+drop function if exists public.record_vote(text);
 create or replace function public.record_vote(vote text)
-returns void language plpgsql security definer set search_path = public as $$
+returns text language plpgsql security definer set search_path = public as $$
 declare
   d date := (now() at time zone 'Asia/Kolkata')::date;
-  h text := public._caller_hash();
+  g text;
 begin
-  if vote not in ('up', 'down') then return; end if;
-  if (select count(*) from public.site_hits
-      where ip_hash = h and kind = 'vote' and at > now() - interval '1 day') >= 3 then
-    return;
+  if vote not in ('up', 'down') then return 'ok'; end if;
+  g := public._gate(public._caller_hash(), 'vote', 3);
+  if g = 'limit' then return 'limit'; end if;
+  if g = 'review' then
+    insert into public.site_daily (day, review_likes, review_dislikes)
+    values (d, case when vote = 'up' then 1 else 0 end, case when vote = 'down' then 1 else 0 end)
+    on conflict (day) do update
+      set review_likes = site_daily.review_likes + excluded.review_likes,
+          review_dislikes = site_daily.review_dislikes + excluded.review_dislikes;
+  else
+    insert into public.site_daily (day, likes, dislikes)
+    values (d, case when vote = 'up' then 1 else 0 end, case when vote = 'down' then 1 else 0 end)
+    on conflict (day) do update
+      set likes = site_daily.likes + excluded.likes,
+          dislikes = site_daily.dislikes + excluded.dislikes;
   end if;
-  insert into public.site_hits (ip_hash, kind) values (h, 'vote');
-  insert into public.site_daily (day, likes, dislikes)
-  values (d, case when vote = 'up' then 1 else 0 end, case when vote = 'down' then 1 else 0 end)
-  on conflict (day) do update
-    set likes = site_daily.likes + excluded.likes,
-        dislikes = site_daily.dislikes + excluded.dislikes;
+  return 'ok';
 end $$;
 revoke all on function public.record_vote(text) from public;
 grant execute on function public.record_vote(text) to anon, authenticated;
 
 -- Feedback answers: only known questions and answer codes are kept;
--- the note is trimmed, cleaned and capped. At most 3 per network per day.
+-- the note is trimmed, cleaned and capped. 3 per network per day are normal, then they are
+-- marked "review", then limit.
+drop function if exists public.submit_feedback(text, jsonb, text);
+drop function if exists public.submit_feedback(text, jsonb, text, text);
 create or replace function public.submit_feedback(vote text, answers jsonb default '{}'::jsonb, note text default null)
-returns void language plpgsql security definer set search_path = public as $$
+returns text language plpgsql security definer set search_path = public as $$
 declare
-  h text := public._caller_hash();
+  g text;
   allowed jsonb := '{
     "stood_out": ["experience","problems","ai","design","skills"],
     "who":       ["recruiter","manager","peer","friend","exploring"],
@@ -251,11 +287,9 @@ declare
   clean jsonb := '{}'::jsonb;
   k text; v text; n text;
 begin
-  if vote not in ('up', 'down') then return; end if;
-  if (select count(*) from public.site_hits
-      where ip_hash = h and kind = 'feedback' and at > now() - interval '1 day') >= 3 then
-    return;
-  end if;
+  if vote not in ('up', 'down') then return 'ok'; end if;
+  g := public._gate(public._caller_hash(), 'feedback', 3);
+  if g = 'limit' then return 'limit'; end if;
   if jsonb_typeof(answers) = 'object' then
     for k, v in select key, value #>> '{}' from jsonb_each(answers) loop
       if allowed ? k and allowed -> k ? v then clean := clean || jsonb_build_object(k, v); end if;
@@ -263,33 +297,39 @@ begin
   end if;
   n := nullif(btrim(regexp_replace(coalesce(note, ''), '[[:cntrl:]<>]', ' ', 'g')), '');
   if n is not null then n := left(n, 300); end if;
-  insert into public.site_hits (ip_hash, kind) values (h, 'feedback');
-  insert into public.site_feedback (vote, answers, note) values (vote, clean, n);
+  insert into public.site_feedback (vote, answers, note, review) values (vote, clean, n, g = 'review');
+  return 'ok';
 end $$;
 revoke all on function public.submit_feedback(text, jsonb, text) from public;
 grant execute on function public.submit_feedback(text, jsonb, text) to anon, authenticated;
 
 -- "Want a website of your own?": step is 'open' (page opened) or 'send' (Send
--- enquiry / Gmail / Outlook tapped). At most 5 of each per network per day.
+-- enquiry / Gmail / Outlook tapped). 5 of each per network per day are normal, then
+-- needs review, then limit.
+drop function if exists public.record_build(text);
 create or replace function public.record_build(step text)
-returns void language plpgsql security definer set search_path = public as $$
+returns text language plpgsql security definer set search_path = public as $$
 declare
   d date := (now() at time zone 'Asia/Kolkata')::date;
-  h text := public._caller_hash();
-  k text;
+  g text;
 begin
-  if step not in ('open', 'send') then return; end if;
-  k := 'build_' || step;
-  if (select count(*) from public.site_hits
-      where ip_hash = h and kind = k and at > now() - interval '1 day') >= 5 then
-    return;
+  if step not in ('open', 'send') then return 'ok'; end if;
+  g := public._gate(public._caller_hash(), 'build_' || step, 5);
+  if g = 'limit' then return 'limit'; end if;
+  if g = 'review' then
+    insert into public.site_daily (day, review_opens, review_sends)
+    values (d, case when step = 'open' then 1 else 0 end, case when step = 'send' then 1 else 0 end)
+    on conflict (day) do update
+      set review_opens = site_daily.review_opens + excluded.review_opens,
+          review_sends = site_daily.review_sends + excluded.review_sends;
+  else
+    insert into public.site_daily (day, build_opens, build_sends)
+    values (d, case when step = 'open' then 1 else 0 end, case when step = 'send' then 1 else 0 end)
+    on conflict (day) do update
+      set build_opens = site_daily.build_opens + excluded.build_opens,
+          build_sends = site_daily.build_sends + excluded.build_sends;
   end if;
-  insert into public.site_hits (ip_hash, kind) values (h, k);
-  insert into public.site_daily (day, build_opens, build_sends)
-  values (d, case when step = 'open' then 1 else 0 end, case when step = 'send' then 1 else 0 end)
-  on conflict (day) do update
-    set build_opens = site_daily.build_opens + excluded.build_opens,
-        build_sends = site_daily.build_sends + excluded.build_sends;
+  return 'ok';
 end $$;
 revoke all on function public.record_build(text) from public;
 grant execute on function public.record_build(text) to anon, authenticated;

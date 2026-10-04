@@ -7,6 +7,60 @@
 // browsers and in-app browsers (LinkedIn, WhatsApp, Instagram, Gmail).
 (function () {
   var root = document.documentElement;
+
+  // ---------- Talking to the database (visits, votes, feedback, enquiry clicks) ----------
+  // Each call answers 'ok' or 'limit'. 'limit' means this network has sent far too many
+  // today (the database's spam guard), so the visitor is asked to stop.
+  var api = window.SITE_COUNTER || {};
+  function callApi(fn, body) {
+    if (!api.url || !api.anonKey || navigator.webdriver || !window.fetch) return;
+    try {
+      fetch(api.url.replace(/\/$/, '') + '/rest/v1/rpc/' + fn, {
+        method: 'POST', keepalive: true,
+        headers: { 'apikey': api.anonKey, 'Authorization': 'Bearer ' + api.anonKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (res) { if (res === 'limit') stopSpam(); })
+        .catch(function () {});
+    } catch (e) {}
+  }
+
+  // "Too many requests" message. OK, Esc, or a tap anywhere on a touch screen tries to
+  // close the tab; browsers only allow that for some tabs, so if it stays open the page
+  // is replaced by a plain "please close this tab" screen.
+  var spamShown = false;
+  function stopSpam() {
+    if (spamShown) return;
+    spamShown = true;
+    var open = document.querySelectorAll('.modal, .fb-sheet');
+    for (var i = 0; i < open.length; i++) open[i].hidden = true;
+    var box = document.createElement('div');
+    box.className = 'spam-stop';
+    box.setAttribute('role', 'alertdialog'); box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-labelledby', 'spam-title'); box.setAttribute('aria-describedby', 'spam-text');
+    var card = document.createElement('div'); card.className = 'spam-card';
+    var light = document.createElement('div'); light.className = 'spam-light'; light.setAttribute('aria-hidden', 'true'); light.textContent = '🚦';
+    var h = document.createElement('h2'); h.id = 'spam-title'; h.textContent = 'Whoa, speedy fingers!';
+    var p = document.createElement('p'); p.id = 'spam-text';
+    p.textContent = 'You’ve sent a lot today. Please take a break and close this tab. You’re welcome back tomorrow.';
+    var ok = document.createElement('button'); ok.type = 'button'; ok.className = 'btn btn-solid btn-3d'; ok.textContent = 'OK';
+    card.appendChild(light); card.appendChild(h); card.appendChild(p); card.appendChild(ok);
+    box.appendChild(card); document.body.appendChild(box);
+    root.classList.add('modal-open');
+    ok.focus();
+    function leave() {
+      try { window.close(); } catch (e) {}
+      setTimeout(function () {                                         // still open: the browser said no
+        document.body.textContent = '';
+        document.body.className = 'spam-closed';
+        var msg = document.createElement('p'); msg.textContent = '🚦 Please close this tab.';
+        document.body.appendChild(msg);
+      }, 300);
+    }
+    ok.addEventListener('click', leave);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') leave(); });
+    box.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') leave(); });
+  }
   // Signature for anyone who opens the developer console
   try {
     if (window.console && console.log) console.log('%cDesigned & developed by Prasidha Jagtap%c\n© ' + new Date().getFullYear() + ' Prasidha Jagtap. All rights reserved.\nhttps://prasidhajagtap.github.io/prasidha_jagtap/',
@@ -199,17 +253,10 @@
     // Count interest for the admin page: "open" and "send", once each per page load.
     // The owner's own browsers and automated browsers are not counted.
     function tally(step) {
-      var cfg = window.SITE_COUNTER || {};
-      if (counted[step] || !cfg.url || !cfg.anonKey || navigator.webdriver || !window.fetch) return;
+      if (counted[step]) return;
       counted[step] = true;
       try { if (localStorage.getItem('pj_owner') === '1') return; } catch (e) {}
-      try {
-        fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/record_build', {
-          method: 'POST', keepalive: true,
-          headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ step: step })
-        }).catch(function () {});
-      } catch (e) {}
+      callApi('record_build', { step: step });
     }
     build.querySelector('[data-build-subject]').textContent = B_SUBJECT;
     build.querySelector('[data-build-body]').textContent = B_BODY;
@@ -757,8 +804,7 @@
   // session (new tab session or 30 minutes idle). Browsers where the owner has
   // opened the admin panel are counted separately. Automated browsers are skipped.
   (function () {
-    var cfg = window.SITE_COUNTER || {};
-    if (!cfg.url || !cfg.anonKey || navigator.webdriver || !window.fetch) return;
+    if (!api.url || !api.anonKey || navigator.webdriver || !window.fetch) return;
     var vid = null, newVisit = true, own = false, now = Date.now();
     try {
       vid = localStorage.getItem('pj_vid');
@@ -773,13 +819,7 @@
       localStorage.setItem('pj_last', String(now));
       own = localStorage.getItem('pj_owner') === '1';
     } catch (e) { return; }
-    try {
-      fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/record_visit', {
-        method: 'POST', keepalive: true,
-        headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ vid: vid, new_visit: newVisit, own: own })
-      }).catch(function () {});
-    } catch (e) {}
+    callApi('record_visit', { vid: vid, new_visit: newVisit, own: own });
   })();
 
   // ---------- Feedback: one quiet question at "Let's talk", then 3–4 quick taps ----------
@@ -789,23 +829,11 @@
     var ask = document.querySelector('[data-fb-ask]'), sheet = document.getElementById('fb-sheet');
     var contact = document.getElementById('contact');
     if (!ask || !sheet || !contact) return;
-    var cfg = window.SITE_COUNTER || {};
-    var live = !!(cfg.url && cfg.anonKey), demo = !!cfg.demo;
-    if (!live && !demo) return;                       // nothing to send to: stay hidden
+    if (!(api.url && api.anonKey) && !api.demo) return;   // nothing to send to: stay hidden
     var seen = null;
     try { seen = localStorage.getItem('pj_fb'); } catch (e) {}
     if (seen) return;                                 // asked once per device
     function remember(v) { try { localStorage.setItem('pj_fb', v); } catch (e) {} }
-    function send(fn, body) {
-      if (!live || navigator.webdriver || !window.fetch) return;
-      try {
-        fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/' + fn, {
-          method: 'POST', keepalive: true,
-          headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        }).catch(function () {});
-      } catch (e) {}
-    }
     // A soft "tick" on each tap and a gentle two-note chime at the end. Made by the
     // browser (Web Audio): no sound file, very quiet, and only ever after a tap.
     var actx = null;
@@ -862,7 +890,7 @@
     for (var t = 0; t < thumbs.length; t++) thumbs[t].addEventListener('click', function () {
       vote = this.getAttribute('data-vote');
       sound('tick');
-      send('record_vote', { vote: vote });
+      callApi('record_vote', { vote: vote });
       remember('voted');
       this.classList.add('picked');
       ask.querySelector('[data-fb-ask-text]').textContent = vote === 'up' ? 'Thank you! ❤️' : 'Thanks — noted.';
@@ -937,7 +965,7 @@
       finished = true; at = steps.length; bar(); cheer.textContent = '';
       sound('done');
       var a = {}; for (var k in answers) if (k !== 'note' && answers.hasOwnProperty(k)) a[k] = answers[k];
-      send('submit_feedback', { vote: vote, answers: a, note: (answers.note || '').trim().slice(0, 300) || null });
+      callApi('submit_feedback', { vote: vote, answers: a, note: (answers.note || '').trim().slice(0, 300) || null });
       remember('done');
       var old = stage.querySelector('.fb-panel'); if (old) old.className = 'fb-panel to-left';
       setTimeout(function () { if (old && old.parentNode) old.parentNode.removeChild(old); }, 240);
