@@ -75,8 +75,8 @@ Visitor's browser
    │      index.html · style.css · main.js · theme-init.js · site-config.js · assets/
    │
    └─► Supabase database (project vibbknwnszoescejukud)
-          visitors may ONLY call 5 functions:
-          record_visit · record_vote · submit_feedback · record_build · ping
+          visitors may ONLY call: record_visit · record_vote ·
+          submit_feedback · record_build · ping · ip_key_check (self-test)
           they cannot read anything
 
 Owner (Prasidha) ──► Admin / stats page (separate repository: prasidha_resume_page_admin)
@@ -113,7 +113,7 @@ GitHub Actions (this repo) ──► pings Supabase every 3 days so the free pro
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are. |
 | `LICENSE` | All rights reserved. |
 
-**Cache version.** CSS and JS links carry `?v=NN` (currently `v=32`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
+**Cache version.** CSS and JS links carry `?v=NN` (currently `v=33`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
 
 ---
 
@@ -147,7 +147,7 @@ Every number is visible **only to the owner** on the admin page. Visitors never 
 | Feedback forms | 3 per day |
 | Enquiry opens / sends | 5 each per day |
 
-Over a limit, the call quietly does nothing. Network addresses are **never stored**. Only a daily-changing one-way hash is kept, and it is deleted after 2 days.
+Over a limit, the call quietly does nothing. The network is taken from `cf-connecting-ip`, which Supabase's Cloudflare edge sets and a visitor cannot fake (`X-Forwarded-For` is only a fallback). Network addresses are **never stored**. Only a daily-changing one-way hash is kept, and it is deleted after 2 days.
 
 ---
 
@@ -174,6 +174,7 @@ Over a limit, the call quietly does nothing. Network addresses are **never store
 | `submit_feedback(vote, answers, note)` | visitors | Saves cleaned feedback. |
 | `record_build(step)` | visitors | Counts enquiry `open` / `send`. |
 | `ping()` | visitors | Returns 1, used by the keep-awake job. |
+| `ip_key_check()` | visitors | Harmless self-test: shows the caller short fingerprints of their own address headers, to prove a faked header can't change the spam-limit key. |
 | `site_summary()` | admin only | All-time unique, returning and own browsers. |
 | `is_site_admin()` | signed-in users | Checks the email against `site_admins`. |
 

@@ -1,13 +1,13 @@
 -- ============================================================
 -- Visits, likes and feedback for prasidhajagtap.github.io/prasidha_jagtap
--- © 2026 Prasidha Jagtap. Designed & developed by Prasidha Jagtap.
+-- © 2026 Prasidha Jagtap. All rights reserved. Designed & developed by Prasidha Jagtap.
 -- Run once in Supabase → SQL Editor. Safe to run again.
 -- Before running, replace YOUR_ADMIN_EMAIL below with the email
 -- you will use to sign in to the admin page.
 --
 -- Security model
 --  * Visitors (anon key) can ONLY call record_visit / record_vote / submit_feedback /
---    record_build / ping.
+--    record_build / ping / ip_key_check (a harmless self-test, see below).
 --    They cannot read, change or delete any table.
 --  * Only the admin email can read the totals (row-level security).
 --  * Unique visitors: each browser makes its own random ID; it is stored
@@ -101,14 +101,37 @@ drop policy if exists "admin reads feedback" on public.site_feedback;
 create policy "admin reads feedback" on public.site_feedback
   for select to authenticated using (public.is_site_admin());
 
+-- The caller's network address. cf-connecting-ip is set by Supabase's Cloudflare edge
+-- and cannot be faked by the visitor; X-Forwarded-For can be, so it is only a fallback.
+create or replace function public._caller_ip()
+returns text language sql stable security definer set search_path = public as $$
+  select coalesce(
+    nullif(btrim(current_setting('request.headers', true)::json ->> 'cf-connecting-ip'), ''),
+    nullif(btrim(split_part(current_setting('request.headers', true)::json ->> 'x-forwarded-for', ',', 1)), ''),
+    'unknown');
+$$;
+revoke all on function public._caller_ip() from public, anon, authenticated;
+
 -- Daily-changing one-way hash of the caller's network address
 create or replace function public._caller_hash()
 returns text language sql stable security definer set search_path = public, extensions as $$
   select encode(extensions.digest(
-    coalesce(split_part(current_setting('request.headers', true)::json ->> 'x-forwarded-for', ',', 1), 'unknown')
-    || '|' || ((now() at time zone 'Asia/Kolkata')::date)::text || '|pj-site', 'sha256'), 'hex');
+    public._caller_ip() || '|' || ((now() at time zone 'Asia/Kolkata')::date)::text || '|pj-site', 'sha256'), 'hex');
 $$;
 revoke all on function public._caller_hash() from public, anon, authenticated;
+
+-- Security self-test: shows the caller only short one-way fingerprints of the
+-- address headers *they* sent (never anyone else's, never a real address), so the
+-- owner can confirm a faked X-Forwarded-For no longer changes the spam-limit key.
+create or replace function public.ip_key_check()
+returns jsonb language sql stable security definer set search_path = public, extensions as $$
+  select jsonb_build_object(
+    'key',        left(encode(extensions.digest(public._caller_ip() || '|pj-check', 'sha256'), 'hex'), 12),
+    'has_cf',     (current_setting('request.headers', true)::json ->> 'cf-connecting-ip') is not null,
+    'xff_first',  left(encode(extensions.digest(coalesce(btrim(split_part(current_setting('request.headers', true)::json ->> 'x-forwarded-for', ',', 1)), '') || '|pj-check', 'sha256'), 'hex'), 12));
+$$;
+revoke all on function public.ip_key_check() from public;
+grant execute on function public.ip_key_check() to anon, authenticated;
 
 -- Count one page open.
 --   vid      random browser ID (kept in the visitor's browser; stored here only as a hash)
