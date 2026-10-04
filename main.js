@@ -243,6 +243,30 @@
     });
   }
 
+  // ---------- Every window sits in the middle of what is visible, above the keyboard ----------
+  // Phones shrink the *visible* area when the keyboard opens (iPhone and newer Android
+  // only shrink this "visual viewport", older Android resizes the whole page). Each open
+  // window is fitted to that visible area, so its card stays centred above the keyboard,
+  // and a focused field is scrolled into the middle of the card.
+  var vv = window.visualViewport;
+  function fitDialogs() {
+    var open = document.querySelectorAll('.modal:not([hidden]), .fb-sheet:not([hidden])');
+    var h = vv ? vv.height : window.innerHeight;
+    for (var i = 0; i < open.length; i++) {
+      open[i].classList.toggle('is-tight', h < 480);                 // little room (keyboard open): compact layout
+      if (vv) { open[i].style.top = vv.offsetTop + 'px'; open[i].style.height = vv.height + 'px'; open[i].style.bottom = 'auto'; }
+      else { open[i].style.top = ''; open[i].style.height = ''; open[i].style.bottom = ''; }
+    }
+  }
+  if (vv) { vv.addEventListener('resize', fitDialogs); vv.addEventListener('scroll', fitDialogs); }
+  window.addEventListener('resize', fitDialogs);
+  new MutationObserver(fitDialogs).observe(root, { attributes: true, attributeFilter: ['class'] });   // a window opened or closed
+  document.addEventListener('focusin', function (e) {
+    var el = e.target;
+    if (!el || !/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || !el.closest || !el.closest('.modal, .fb-sheet')) return;
+    setTimeout(function () { fitDialogs(); try { el.scrollIntoView({ block: 'center', behavior: 'auto' }); } catch (x) { el.scrollIntoView(false); } }, 320);   // after the keyboard has opened
+  });
+
   // Show / copy the address (for in-app browsers or devices with no email app)
   var copyBtn = document.querySelector('[data-email-copy]');
   var emailText = document.querySelector('[data-email-text]');
@@ -455,6 +479,55 @@
     for (var ne = 0; ne < numEls.length; ne++) if (/\d/.test(numEls[ne].textContent)) no.observe(numEls[ne]);
   }
 
+  // ---------- Carousels play by themselves ----------
+  // Starts 0.5 s after a carousel comes into view, then moves on every 2 s and wraps
+  // round. Holds while the pointer, a finger or keyboard focus is on it, while the tab is
+  // hidden or a window is open, and never runs for people who ask for less motion.
+  // The pause / play button lets anyone stop it (WCAG 2.2.2).
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function svgIcon(cls, d) {
+    var s = document.createElementNS(SVGNS, 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true'); s.setAttribute('class', cls);
+    var p = document.createElementNS(SVGNS, 'path'); p.setAttribute('d', d); s.appendChild(p); return s;
+  }
+  var EVERY = 2000;                                              // time on each slide
+  function autoplay(box, next) {
+    if (!('IntersectionObserver' in window)) return;
+    var stopped = noMotion, inView = false, held = false, timer = null;
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'icon-btn cf-play';
+    btn.appendChild(svgIcon('i-pause', 'M8 5h3v14H8zM13 5h3v14h-3z'));
+    btn.appendChild(svgIcon('i-play', 'M8 5l11 7-11 7z'));
+    var controls = box.querySelector('.cf-controls');
+    if (controls) controls.appendChild(btn);
+    function paint() {
+      btn.setAttribute('aria-label', stopped ? 'Play slideshow' : 'Pause slideshow');
+      btn.setAttribute('aria-pressed', stopped ? 'false' : 'true');
+      box.classList.toggle('is-stopped', stopped);
+    }
+    function blocked() { return held || document.hidden || root.classList.contains('modal-open'); }
+    function plan(wait) {
+      clearTimeout(timer);
+      if (stopped || !inView) return;
+      timer = setTimeout(function tick() {
+        if (!blocked()) next();
+        timer = setTimeout(tick, EVERY);
+      }, wait);
+    }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); stopped = !stopped; paint(); plan(EVERY); });
+    new IntersectionObserver(function (en) {
+      var v = en[en.length - 1].isIntersecting;
+      if (v && !inView) { inView = true; plan(500); } else if (!v) { inView = false; clearTimeout(timer); }
+    }, { threshold: 0.5 }).observe(box);
+    box.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') held = true; });
+    box.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { held = false; plan(EVERY); } });
+    box.addEventListener('pointerdown', function () { held = true; });
+    box.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') { held = false; plan(EVERY); } });
+    box.addEventListener('pointercancel', function () { held = false; plan(EVERY); });
+    box.addEventListener('focusin', function () { held = true; });
+    box.addEventListener('focusout', function (e) { if (!box.contains(e.relatedTarget)) { held = false; plan(EVERY); } });
+    paint();
+  }
+
   // ---------- Cover Flow (iPod style): Problems solved, Moments ----------
   function initCoverFlow(cf) {
     var items = cf.querySelectorAll('.cf-item');
@@ -538,6 +611,7 @@
     cf.classList.add('cf-ready');
     fit();
     layout();
+    autoplay(cf, function () { go(active >= items.length - 1 ? 0 : active + 1); });
   }
   var flows = document.querySelectorAll('[data-coverflow]');
   for (var fl = 0; fl < flows.length; fl++) initCoverFlow(flows[fl]);
@@ -643,6 +717,7 @@
     ring.classList.add('ring-ready');
     measure();
     layout(false);
+    autoplay(ring, function () { go(active >= n - 1 ? 0 : active + 1); });
   }
   var rings = document.querySelectorAll('[data-ring]');
   for (var rg = 0; rg < rings.length; rg++) initRing(rings[rg]);
@@ -731,6 +806,28 @@
         }).catch(function () {});
       } catch (e) {}
     }
+    // A soft "tick" on each tap and a gentle two-note chime at the end. Made by the
+    // browser (Web Audio): no sound file, very quiet, and only ever after a tap.
+    var actx = null;
+    function tone(freq, start, len, vol) {
+      var t = actx.currentTime + start, o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t); o.stop(t + len + 0.02);
+    }
+    function sound(kind) {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        if (!actx) actx = new AC();
+        if (actx.state === 'suspended' && actx.resume) actx.resume();
+        if (kind === 'done') { tone(880, 0, 0.18, 0.05); tone(1320, 0.11, 0.26, 0.05); }
+        else tone(1200, 0, 0.07, 0.045);
+      } catch (e) {}
+    }
     var WHO = { key: 'who', q: 'Who’s visiting today?', type: 'chips', opts: [['recruiter', 'Recruiter / HR'], ['manager', 'Hiring manager'], ['peer', 'Colleague / peer'], ['friend', 'Friend or family'], ['exploring', 'Just exploring']] };
     var FLOWS = {
       up: [
@@ -751,7 +848,7 @@
     var $ = function (s) { return sheet.querySelector(s); };
     var stage = $('[data-fb-stage]'), prog = $('[data-fb-progress]'), cheer = $('[data-fb-cheer]');
     var nextB = $('[data-fb-next]'), foot = $('[data-fb-foot]');
-    var confirmBox = $('[data-fb-confirm]'), lastFocus = null;
+    var lastFocus = null;
 
     // Show the question only once "Let's talk" is properly in view
     if ('IntersectionObserver' in window) {
@@ -764,6 +861,7 @@
     var thumbs = ask.querySelectorAll('[data-vote]');
     for (var t = 0; t < thumbs.length; t++) thumbs[t].addEventListener('click', function () {
       vote = this.getAttribute('data-vote');
+      sound('tick');
       send('record_vote', { vote: vote });
       remember('voted');
       this.classList.add('picked');
@@ -806,6 +904,7 @@
           b.setAttribute('aria-checked', answers[st.key] === o[0] ? 'true' : 'false'); b.textContent = o[1];
           b.addEventListener('click', function () {
             if (moving) return;
+            sound('tick');
             answers[st.key] = o[0];
             var all = grp.querySelectorAll('.fb-chip');
             for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-checked', all[i] === b ? 'true' : 'false');
@@ -836,6 +935,7 @@
     }
     function finish() {
       finished = true; at = steps.length; bar(); cheer.textContent = '';
+      sound('done');
       var a = {}; for (var k in answers) if (k !== 'note' && answers.hasOwnProperty(k)) a[k] = answers[k];
       send('submit_feedback', { vote: vote, answers: a, note: (answers.note || '').trim().slice(0, 300) || null });
       remember('done');
@@ -866,18 +966,9 @@
       finish();
     });
 
-    // Leaving early: a friendly nudge first (only before the required answers are done)
-    function tryClose() {
-      var left = steps.length - 1 - at;            // the last step (note) is optional
-      if (finished || left <= 0) { if (!finished && left <= 0) finish(); close(); return; }
-      $('[data-fb-confirm-text]').textContent = 'So close! Only ' + left + ' quick tap' + (left > 1 ? 's' : '') + ' left.';
-      confirmBox.hidden = false; foot.hidden = true;
-      $('[data-fb-stay]').focus();
-    }
-    var closers = sheet.querySelectorAll('[data-fb-close]');
-    for (var c = 0; c < closers.length; c++) closers[c].addEventListener('click', tryClose);
-    $('[data-fb-stay]').addEventListener('click', function () { confirmBox.hidden = true; foot.hidden = steps[at].type !== 'note'; });
-    $('[data-fb-leave]').addEventListener('click', function () { confirmBox.hidden = true; close(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) tryClose(); });
+    // Tap anywhere outside the card (or press Esc) to leave: the window closes at once and
+    // only the 👍 / 👎 vote is kept; answers are sent only when the flow is finished.
+    sheet.querySelector('[data-fb-close]').addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) close(); });
   })();
 })();
