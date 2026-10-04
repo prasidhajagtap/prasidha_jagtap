@@ -109,6 +109,7 @@ GitHub Actions (this repo) ──► pings Supabase every 3 days so the free pro
 | `site-config.js` | Public Supabase URL and **anon (public) key**. Leave both empty to switch off the counter, feedback and enquiry counting. |
 | `supabase/setup.sql` | The full database setup: tables, security rules, spam limits and functions. Safe to run again (it upgrades in place). |
 | `.github/workflows/supabase-keepalive.yml` | Pings Supabase every 3 days (see [section 7](#7-keep-awake-job)). |
+| `.github/workflows/keepalive-commit.yml` | On the 1st of each month commits today's date to `.github/last-keepalive`, so GitHub never switches off the scheduled keep-awake job (it does that after 60 days without a commit). Touches no website file. |
 | `assets/` | `prasidha.webp/.jpg` (main photo), `prasidha-avatar.webp/.jpg` (header photo), `moment-*.webp/.jpg` (Moments carousel), `og-image.jpg` (1200×630 share image), `Prasidha-Jagtap-Resume.pdf`, `fonts/inter-latin.woff2` (self-hosted Inter variable font, weights 400–700). |
 | `404.html` | “Page not found” page with its own strict security policy. |
 | `robots.txt`, `sitemap.xml` | Tell search engines they may index the site and where the page list is. |
