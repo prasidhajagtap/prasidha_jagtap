@@ -10,7 +10,8 @@
 
   // ---------- Talking to the database (visits, votes, feedback, enquiry clicks) ----------
   // Each call answers 'ok' or 'limit'. 'limit' means this network has sent far too many
-  // today (the database's spam guard), so the visitor is asked to stop.
+  // votes, feedback or enquiry clicks today (the database's spam guard), so the visitor is
+  // asked to stop. Page views never stop anyone: the site can always be opened.
   var api = window.SITE_COUNTER || {};
   function callApi(fn, body) {
     if (!api.url || !api.anonKey || navigator.webdriver || !window.fetch) return;
@@ -20,7 +21,7 @@
         headers: { 'apikey': api.anonKey, 'Authorization': 'Bearer ' + api.anonKey, 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       }).then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (res) { if (res === 'limit') stopSpam(); })
+        .then(function (res) { if (res === 'limit' && fn !== 'record_visit') stopSpam(); })
         .catch(function () {});
     } catch (e) {}
   }
