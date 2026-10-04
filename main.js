@@ -189,6 +189,42 @@
     });
   }
 
+  // ---------- "Want a website of your own?": a ready-made enquiry, one tap to send ----------
+  var build = document.getElementById('build-modal');
+  if (build) {
+    var B_SUBJECT = 'Enquiry: a website like yours';
+    var B_BODY = 'Hello Prasidha,\n\nI saw your website and I would like to build a similar website.\n\n' +
+                 'Please get back to me to discuss the details.\n\nKind regards,';
+    var bLast = null, enc = encodeURIComponent;
+    build.querySelector('[data-build-subject]').textContent = B_SUBJECT;
+    build.querySelector('[data-build-body]').textContent = B_BODY;
+    var crlf = B_BODY.replace(/\n/g, '\r\n');
+    var bLinks = build.querySelectorAll('[data-build-web]');
+    function openBuild() {
+      bLast = document.activeElement;
+      // Web-mail links get the address only now, so it is never in the page source
+      for (var i = 0; i < bLinks.length; i++) {
+        bLinks[i].href = bLinks[i].getAttribute('data-build-web') === 'gmail'
+          ? 'https://mail.google.com/mail/u/0/?tf=cm&to=' + enc(emailAddress()) + '&su=' + enc(B_SUBJECT) + '&body=' + enc(B_BODY)
+          : 'https://outlook.live.com/mail/0/deeplink/compose?to=' + enc(emailAddress()) + '&subject=' + enc(B_SUBJECT) + '&body=' + enc(B_BODY);
+      }
+      build.hidden = false; root.classList.add('modal-open');
+      var s = build.querySelector('[data-build-send]'); setTimeout(function () { s.focus(); }, 50);
+    }
+    function closeBuild() {
+      build.hidden = true; root.classList.remove('modal-open');
+      if (bLast && bLast.focus) bLast.focus();
+    }
+    var bo = document.querySelectorAll('[data-build-open]');
+    for (var bi = 0; bi < bo.length; bi++) bo[bi].addEventListener('click', openBuild);
+    var bc = build.querySelectorAll('[data-build-close]');
+    for (var bj = 0; bj < bc.length; bj++) bc[bj].addEventListener('click', closeBuild);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !build.hidden) closeBuild(); });
+    build.querySelector('[data-build-send]').addEventListener('click', function () {
+      window.location.href = 'mailto:' + emailAddress() + '?subject=' + enc(B_SUBJECT) + '&body=' + enc(crlf);
+    });
+  }
+
   // Show / copy the address (for in-app browsers or devices with no email app)
   var copyBtn = document.querySelector('[data-email-copy]');
   var emailText = document.querySelector('[data-email-text]');
