@@ -623,26 +623,36 @@
   }
 
   // ---------- Visit counter (Supabase; off until site-config.js is filled in) ----------
-  // Sends one "view" per page open, and marks the first visit of the day from this
-  // device as a "visitor". No cookies, no personal data: only today's date is kept
-  // in this browser. Automated browsers and devices marked "don't count me" are skipped.
+  // Every page open counts. Each browser gets a random ID (nothing personal) so
+  // unique and returning visitors can be told apart; a "visit" is a browser
+  // session (new tab session or 30 minutes idle). Browsers where the owner has
+  // opened the admin panel are counted separately. Automated browsers are skipped.
   (function () {
     var cfg = window.SITE_COUNTER || {};
     if (!cfg.url || !cfg.anonKey || navigator.webdriver || !window.fetch) return;
-    var newVisitor = false;
+    var vid = null, newVisit = true, own = false, now = Date.now();
     try {
-      if (localStorage.getItem('pj_nocount') === '1') return;
-      var d = new Date(), today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-      if (localStorage.getItem('pj_seen') !== today) { newVisitor = true; localStorage.setItem('pj_seen', today); }
-    } catch (e) {}
+      vid = localStorage.getItem('pj_vid');
+      if (!vid || !/^[A-Za-z0-9-]{16,64}$/.test(vid)) {
+        var r = new Uint8Array(16); (window.crypto || window.msCrypto).getRandomValues(r);
+        vid = Array.prototype.map.call(r, function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+        localStorage.setItem('pj_vid', vid);
+      }
+      var last = Number(localStorage.getItem('pj_last') || 0);
+      newVisit = !sessionStorage.getItem('pj_sid') || now - last > 30 * 60 * 1000;
+      if (newVisit) sessionStorage.setItem('pj_sid', String(now));
+      localStorage.setItem('pj_last', String(now));
+      own = localStorage.getItem('pj_owner') === '1';
+    } catch (e) { return; }
     try {
       fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/record_visit', {
         method: 'POST', keepalive: true,
         headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ new_visitor: newVisitor })
+        body: JSON.stringify({ vid: vid, new_visit: newVisit, own: own })
       }).catch(function () {});
     } catch (e) {}
   })();
+
   // ---------- Feedback: one quiet question at "Let's talk", then 3–4 quick taps ----------
   // Duolingo-style: a progress bar, one question at a time, cheerful nudges, every
   // required answer filled before moving on, and a small celebration at the end.
