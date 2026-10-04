@@ -31,7 +31,7 @@
   --card: #ffffff;
   --solid: #1d1d1f;      /* main button */
   --solid-text: #ffffff;
-  --nav: rgba(255, 255, 255, 0.72);
+  --nav: rgba(255, 255, 255, 0.88);
   --nav-line: rgba(0, 0, 0, 0.08);
   --field: #ffffff;
   --dark-bg: #000000;
@@ -49,7 +49,7 @@
   --card: #1c1c1e;
   --solid: #f5f5f7;
   --solid-text: #000000;
-  --nav: rgba(22, 22, 23, 0.72);
+  --nav: rgba(22, 22, 23, 0.88);
   --nav-line: rgba(255, 255, 255, 0.1);
   --field: #1c1c1e;
   --dark-bg: #161617;
@@ -1455,6 +1455,7 @@ button:disabled, .icon-btn:disabled { cursor: default; }
 .fb-progress span.full::after { width: 100%; }
 .fb-progress span.now::after { width: 18%; }
 .fb-cheer { min-height: 20px; margin: 14px 0 0; font-size: 13px; font-weight: 600; color: var(--ipod-solid, #1c68d8); }
+:root[data-theme="dark"] .fb-cheer { color: #62aef8; }                 /* lighter blue keeps 4.5:1 contrast on the dark card */
 .fb-stage { position: relative; margin-top: 4px; overflow: hidden; }
 .fb-panel { position: relative; transition: transform .22s var(--ease-out), opacity .18s ease; }
 .fb-panel.from-right { animation: fb-in-r .26s var(--ease-out) both; }

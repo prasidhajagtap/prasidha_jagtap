@@ -1,3 +1,4 @@
+# Designed & developed by Prasidha Jagtap · © 2026 Prasidha Jagtap. All rights reserved.
 # Free Supabase projects pause after 7 days with little activity.
 # This pings the database every 3 days so the visit counter stays awake.
 # Uses repository secrets or variables SUPABASE_URL / SUPABASE_ANON_KEY if set;

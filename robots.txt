@@ -1,3 +1,5 @@
+# prasidhajagtap.github.io/prasidha_jagtap — designed & developed by Prasidha Jagtap.
+# © 2026 Prasidha Jagtap. All rights reserved.
 User-agent: *
 Allow: /
 
