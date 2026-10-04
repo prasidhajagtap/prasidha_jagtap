@@ -1,7 +1,17 @@
+/*!
+ * Prasidha Jagtap — personal website
+ * Designed & developed by Prasidha Jagtap · https://prasidhajagtap.github.io/prasidha_jagtap/
+ * © 2026 Prasidha Jagtap. All rights reserved. Not licensed for reuse.
+ */
 // Written in plain, widely supported JavaScript so it runs in all modern
 // browsers and in-app browsers (LinkedIn, WhatsApp, Instagram, Gmail).
 (function () {
   var root = document.documentElement;
+  // Signature for anyone who opens the developer console
+  try {
+    if (window.console && console.log) console.log('%cDesigned & developed by Prasidha Jagtap%c\n© ' + new Date().getFullYear() + ' Prasidha Jagtap. All rights reserved.\nhttps://prasidhajagtap.github.io/prasidha_jagtap/',
+      'font: 600 15px -apple-system, Segoe UI, sans-serif; color: #1d1d1f; padding: 6px 0;', 'font: 12px -apple-system, Segoe UI, sans-serif; color: #6e6e73;');
+  } catch (e) {}
   // Normally theme-init.js sets this; if that small file failed to load, set it here so the layout still works
   if (!/(^|\s)js(\s|$)/.test(root.className)) root.className += ' js';
 
@@ -285,8 +295,7 @@
   });
 
   // ==========================================================
-  // v14: stacked chapters, journey, rolling numbers, Cover Flow,
-  //      skill tabs and the LinkedIn app prompt
+  // Chapters, journey, rolling numbers, carousels and skill tabs
   // ==========================================================
   var noMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function closestAcc(el) { while (el && el !== document) { if (el.classList && el.classList.contains('acc')) return el; el = el.parentNode; } return null; }
@@ -349,7 +358,7 @@
   }
 
   // ---------- Rolling numbers (bold figures count up on scroll) ----------
-  var NUM_SEL = '.stat strong, .mini-stats strong, .result strong, .tab-proof strong';
+  var NUM_SEL = '.stat strong, .mini-stats strong, .result strong';
   var numEls = document.querySelectorAll(NUM_SEL);
   var canRoll = !!window.requestAnimationFrame;
   function rollNumber(el) {
@@ -392,7 +401,7 @@
     for (var ne = 0; ne < numEls.length; ne++) if (/\d/.test(numEls[ne].textContent)) no.observe(numEls[ne]);
   }
 
-  // ---------- Cover Flow (iPod style): Moments, Problems solved, Things I've made ----------
+  // ---------- Cover Flow (iPod style): Problems solved, Moments ----------
   function initCoverFlow(cf) {
     var items = cf.querySelectorAll('.cf-item');
     if (!items.length) return;
@@ -613,4 +622,198 @@
     }
   }
 
+  // ---------- Visit counter (Supabase; off until site-config.js is filled in) ----------
+  // Sends one "view" per page open, and marks the first visit of the day from this
+  // device as a "visitor". No cookies, no personal data: only today's date is kept
+  // in this browser. Automated browsers and devices marked "don't count me" are skipped.
+  (function () {
+    var cfg = window.SITE_COUNTER || {};
+    if (!cfg.url || !cfg.anonKey || navigator.webdriver || !window.fetch) return;
+    var newVisitor = false;
+    try {
+      if (localStorage.getItem('pj_nocount') === '1') return;
+      var d = new Date(), today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+      if (localStorage.getItem('pj_seen') !== today) { newVisitor = true; localStorage.setItem('pj_seen', today); }
+    } catch (e) {}
+    try {
+      fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/record_visit', {
+        method: 'POST', keepalive: true,
+        headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ new_visitor: newVisitor })
+      }).catch(function () {});
+    } catch (e) {}
+  })();
+  // ---------- Feedback: one quiet question at "Let's talk", then 3–4 quick taps ----------
+  // Duolingo-style: a progress bar, one question at a time, cheerful nudges, every
+  // required answer filled before moving on, and a small celebration at the end.
+  (function () {
+    var ask = document.querySelector('[data-fb-ask]'), sheet = document.getElementById('fb-sheet');
+    var contact = document.getElementById('contact');
+    if (!ask || !sheet || !contact) return;
+    var cfg = window.SITE_COUNTER || {};
+    var live = !!(cfg.url && cfg.anonKey), demo = !!cfg.demo;
+    if (!live && !demo) return;                       // nothing to send to: stay hidden
+    var seen = null;
+    try { seen = localStorage.getItem('pj_fb'); } catch (e) {}
+    if (seen) return;                                 // asked once per device
+    function remember(v) { try { localStorage.setItem('pj_fb', v); } catch (e) {} }
+    function send(fn, body) {
+      if (!live || navigator.webdriver || !window.fetch) return;
+      try {
+        fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/' + fn, {
+          method: 'POST', keepalive: true,
+          headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }).catch(function () {});
+      } catch (e) {}
+    }
+    var WHO = { key: 'who', q: 'Who’s visiting today?', type: 'chips', opts: [['recruiter', 'Recruiter / HR'], ['manager', 'Hiring manager'], ['peer', 'Colleague / peer'], ['friend', 'Friend or family'], ['exploring', 'Just exploring']] };
+    var FLOWS = {
+      up: [
+        { key: 'stood_out', q: 'Nice! What stood out most?', type: 'chips', opts: [['experience', 'Experience & impact'], ['problems', 'Problems solved'], ['ai', 'AI & things built'], ['design', 'Design & feel'], ['skills', 'Skills']] },
+        WHO,
+        { key: 'intent', q: 'Would you like to connect?', type: 'chips', opts: [['yes', 'Yes, let’s talk'], ['later', 'Maybe later'], ['browsing', 'Just browsing']] },
+        { key: 'note', q: 'Anything you’d add?', type: 'note', ph: 'A line of feedback (optional)' }
+      ],
+      down: [
+        { key: 'reason', q: 'Thanks for being honest. What didn’t work?', type: 'select', opts: [['long', 'Too long to read'], ['hard_to_find', 'Hard to find information'], ['design', 'Design or look'], ['not_relevant', 'Not relevant to my role'], ['broken', 'Something didn’t work'], ['other', 'Something else']] },
+        { key: 'improve', q: 'What should I improve first?', type: 'chips', opts: [['content', 'Content'], ['design', 'Design'], ['speed', 'Speed'], ['phone', 'Phone view'], ['clarity', 'Clarity']] },
+        WHO,
+        { key: 'note', q: 'How could it be better?', type: 'note', ph: 'Tell me in a line (optional)' }
+      ]
+    };
+    var CHEER = ['Just 3 quick taps ✨', 'Nice! 2 more to go', 'Last tap!', 'Optional — add a line or skip'];
+    var vote = null, steps = [], at = 0, answers = {}, finished = false;
+    var $ = function (s) { return sheet.querySelector(s); };
+    var stage = $('[data-fb-stage]'), prog = $('[data-fb-progress]'), cheer = $('[data-fb-cheer]');
+    var nextB = $('[data-fb-next]'), skipB = $('[data-fb-skip]'), foot = $('[data-fb-foot]');
+    var confirmBox = $('[data-fb-confirm]'), lastFocus = null;
+
+    // Show the question only once "Let's talk" is properly in view
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        if (en[en.length - 1].isIntersecting) { ask.hidden = false; requestAnimationFrame(function () { ask.classList.add('in'); }); io.disconnect(); }
+      }, { threshold: 0.35 });
+      io.observe(contact);
+    } else { ask.hidden = false; ask.classList.add('in'); }
+
+    var thumbs = ask.querySelectorAll('[data-vote]');
+    for (var t = 0; t < thumbs.length; t++) thumbs[t].addEventListener('click', function () {
+      vote = this.getAttribute('data-vote');
+      send('record_vote', { vote: vote });
+      remember('voted');
+      this.classList.add('picked');
+      ask.querySelector('[data-fb-ask-text]').textContent = vote === 'up' ? 'Thank you! ❤️' : 'Thanks — noted.';
+      for (var j = 0; j < thumbs.length; j++) thumbs[j].disabled = true;
+      setTimeout(open, 450);
+    });
+
+    function open() {
+      steps = FLOWS[vote]; at = 0; answers = {}; finished = false;
+      prog.textContent = '';
+      for (var i = 0; i < steps.length; i++) prog.appendChild(document.createElement('span'));
+      lastFocus = document.activeElement;
+      sheet.hidden = false; root.classList.add('modal-open');
+      requestAnimationFrame(function () { sheet.classList.add('in'); });
+      render(1);
+    }
+    function close() {
+      sheet.classList.remove('in'); root.classList.remove('modal-open');
+      setTimeout(function () { sheet.hidden = true; }, 250);
+      ask.classList.add('done');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function bar() {
+      var segs = prog.children;
+      for (var i = 0; i < segs.length; i++) segs[i].className = i < at ? 'full' : (i === at ? 'now' : '');
+    }
+    function render(dir) {
+      var st = steps[at];
+      bar(); cheer.textContent = CHEER[Math.min(at, CHEER.length - 1)];
+      var panel = document.createElement('div');
+      panel.className = 'fb-panel ' + (dir < 0 ? 'from-left' : 'from-right');
+      var h = document.createElement('h2'); h.className = 'fb-q'; h.id = 'fb-title'; h.textContent = st.q; panel.appendChild(h);
+      var old = stage.querySelector('.fb-panel');
+      if (old) { old.removeAttribute('id'); var oh = old.querySelector('#fb-title'); if (oh) oh.removeAttribute('id'); old.className = 'fb-panel ' + (dir < 0 ? 'to-right' : 'to-left'); setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 320); }
+      if (st.type === 'chips') {
+        var grp = document.createElement('div'); grp.className = 'fb-chips'; grp.setAttribute('role', 'radiogroup'); grp.setAttribute('aria-labelledby', 'fb-title');
+        st.opts.forEach(function (o) {
+          var b = document.createElement('button'); b.type = 'button'; b.className = 'fb-chip'; b.setAttribute('role', 'radio');
+          b.setAttribute('aria-checked', answers[st.key] === o[0] ? 'true' : 'false'); b.textContent = o[1];
+          b.addEventListener('click', function () {
+            answers[st.key] = o[0];
+            var all = grp.querySelectorAll('.fb-chip');
+            for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-checked', all[i] === b ? 'true' : 'false');
+            nextB.disabled = false;
+          });
+          grp.appendChild(b);
+        });
+        panel.appendChild(grp);
+      } else if (st.type === 'select') {
+        var lab = document.createElement('label'); lab.className = 'fb-select';
+        var sel = document.createElement('select'); sel.setAttribute('aria-labelledby', 'fb-title');
+        var ph = document.createElement('option'); ph.value = ''; ph.textContent = 'Choose one…'; ph.disabled = true; ph.selected = !answers[st.key]; sel.appendChild(ph);
+        st.opts.forEach(function (o) { var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; if (answers[st.key] === o[0]) op.selected = true; sel.appendChild(op); });
+        sel.addEventListener('change', function () { answers[st.key] = sel.value; nextB.disabled = !sel.value; });
+        lab.appendChild(sel); panel.appendChild(lab);
+      } else {
+        var ta = document.createElement('textarea'); ta.className = 'fb-note'; ta.maxLength = 300; ta.rows = 3; ta.placeholder = st.ph; ta.setAttribute('aria-labelledby', 'fb-title');
+        ta.value = answers.note || '';
+        var cnt = document.createElement('span'); cnt.className = 'fb-count'; cnt.textContent = ta.value.length + ' / 300';
+        ta.addEventListener('input', function () { answers.note = ta.value; cnt.textContent = ta.value.length + ' / 300'; nextB.disabled = !ta.value.trim(); });
+        panel.appendChild(ta); panel.appendChild(cnt);
+      }
+      stage.appendChild(panel);
+      var isNote = st.type === 'note';
+      skipB.hidden = !isNote;
+      nextB.textContent = isNote ? 'Send' : 'Continue';
+      nextB.disabled = isNote ? !(answers.note || '').trim() : !answers[st.key];
+      setTimeout(function () { var f = panel.querySelector('.fb-chip, select, textarea'); if (f && f.focus) f.focus({ preventScroll: true }); }, 60);
+    }
+    function finish() {
+      finished = true; at = steps.length; bar(); cheer.textContent = '';
+      var a = {}; for (var k in answers) if (k !== 'note' && answers.hasOwnProperty(k)) a[k] = answers[k];
+      send('submit_feedback', { vote: vote, answers: a, note: (answers.note || '').trim().slice(0, 300) || null });
+      remember('done');
+      var old = stage.querySelector('.fb-panel'); if (old) old.className = 'fb-panel to-left';
+      setTimeout(function () { if (old && old.parentNode) old.parentNode.removeChild(old); }, 320);
+      var done = document.createElement('div'); done.className = 'fb-panel fb-done from-right';
+      var tick = document.createElement('div'); tick.className = 'fb-tick'; tick.setAttribute('aria-hidden', 'true');
+      var h = document.createElement('h2'); h.className = 'fb-q'; h.id = 'fb-title';
+      h.textContent = vote === 'up' ? 'Thank you! 🎉' : 'Thank you 🙏';
+      var p = document.createElement('p'); p.className = 'fb-sub';
+      p.textContent = vote === 'up' ? 'Your feedback just made my day.' : 'Honest feedback helps me make this better.';
+      done.appendChild(tick); done.appendChild(h); done.appendChild(p);
+      stage.appendChild(done);
+      skipB.hidden = true;
+      if (vote === 'up' && answers.intent === 'yes') {
+        nextB.textContent = 'Email me';
+        nextB.setAttribute('data-fb-mail', '');
+      } else nextB.textContent = 'Done';
+      nextB.disabled = false;
+    }
+    nextB.addEventListener('click', function () {
+      if (finished) {
+        var mail = nextB.hasAttribute('data-fb-mail'); close();
+        if (mail) { var m = document.querySelector('[data-contact-open]'); if (m) setTimeout(function () { m.click(); }, 300); }
+        return;
+      }
+      if (at < steps.length - 1) { at++; render(1); } else finish();
+    });
+    skipB.addEventListener('click', function () { if (!finished) { answers.note = ''; finish(); } });
+
+    // Leaving early: a friendly nudge first (only before the required answers are done)
+    function tryClose() {
+      var left = steps.length - 1 - at;            // the last step (note) is optional
+      if (finished || left <= 0) { if (!finished && left <= 0) finish(); close(); return; }
+      $('[data-fb-confirm-text]').textContent = 'So close! Only ' + left + ' quick tap' + (left > 1 ? 's' : '') + ' left.';
+      confirmBox.hidden = false; foot.hidden = true;
+      $('[data-fb-stay]').focus();
+    }
+    var closers = sheet.querySelectorAll('[data-fb-close]');
+    for (var c = 0; c < closers.length; c++) closers[c].addEventListener('click', tryClose);
+    $('[data-fb-stay]').addEventListener('click', function () { confirmBox.hidden = true; foot.hidden = false; });
+    $('[data-fb-leave]').addEventListener('click', function () { confirmBox.hidden = true; foot.hidden = false; close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) tryClose(); });
+  })();
 })();

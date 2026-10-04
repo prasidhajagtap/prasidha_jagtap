@@ -1,3 +1,8 @@
+/*!
+ * Prasidha Jagtap — personal website
+ * Designed & developed by Prasidha Jagtap · https://prasidhajagtap.github.io/prasidha_jagtap/
+ * © 2026 Prasidha Jagtap. All rights reserved. Not licensed for reuse.
+ */
 // Runs before the page paints (kept in its own file so the page can use a strict security policy).
 // 1) Light by default, dark only if the visitor chose it before.
 // 2) Stop other websites from showing this page inside a frame (clickjacking protection).

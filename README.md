@@ -1,54 +1,40 @@
 # Prasidha Jagtap — personal website
 
-A one-page, Apple-style personal site. Plain HTML + CSS + a little JavaScript, no build step.
+Designed & developed by **Prasidha Jagtap**. © 2026 Prasidha Jagtap — all rights reserved (see `LICENSE`).
 
-**Live (draft):** https://prasidhajagtap.github.io/prasidha_jagtap/
+**Live:** https://prasidhajagtap.github.io/prasidha_jagtap/
+
+A one-page, Apple-style personal site. Plain HTML + CSS + JavaScript, no build step, no third-party code.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `index.html` | All the content, SEO tags and structured data |
-| `style.css` | The look — light by default, dark mode via the toggle, phone layout |
-| `main.js` | Theme toggle, phone menu, scroll fade-in, contact form, résumé button check |
-| `assets/` | Photos (WebP + JPG fallback) and the social share image `og-image.jpg` |
-| `404.html` | "Page not found" page |
-| `robots.txt`, `sitemap.xml` | For search engines |
-| `.nojekyll` | Tells GitHub Pages to serve files as they are |
+| `index.html` | All content, search-engine tags and structured data |
+| `style.css` | The look — light/dark, depth, carousels, phone layout |
+| `main.js` | Menu, chapters, carousels, tabs, bookmarks, rolling numbers, contact form, visit counter, feedback |
+| `theme-init.js` | Runs first: light/dark choice and frame (clickjacking) protection |
+| `site-config.js` | Public Supabase URL + anon key (empty = counter and feedback off) |
+| `supabase/setup.sql` | Database tables, security rules and spam limits for visits, votes and feedback |
+| `.github/workflows/supabase-keepalive.yml` | Pings Supabase every 3 days so the free project never pauses |
+| `assets/` | Photos (WebP + JPG), share image, résumé PDF, self-hosted Inter font |
+| `404.html`, `robots.txt`, `sitemap.xml`, `.nojekyll` | Not-found page and search-engine files |
 
-To show the **Download résumé** button, add `assets/Prasidha-Jagtap-Resume.pdf`. The button appears by itself once the file exists.
+## Publishing
 
-## Put it online — GitHub Pages (free)
-
-1. Merge the work into `main`.
-2. On GitHub: **Settings → Pages → Build and deployment**.
-3. Source: **Deploy from a branch** → Branch: `main` → Folder: `/ (root)` → **Save**.
-4. After 1–2 minutes it is live at https://prasidhajagtap.github.io/prasidha_jagtap/
-
-## Moving to another address later (e.g. Cloudflare Pages)
-
-Replace `https://prasidhajagtap.github.io/prasidha_jagtap/` with the new address in:
-`index.html`, `robots.txt`, `sitemap.xml` and `404.html`.
-
-Cloudflare Pages steps: **Workers & Pages → Create application → Pages → Import an existing Git repository** →
-pick this repo → Framework preset **None**, build command **empty**, output directory **/** → **Save and Deploy**.
-
-## Get found on Google
-
-1. Add the site in **Google Search Console** (URL-prefix property) and submit `sitemap.xml`.
-2. Do the same in **Bing Webmaster Tools**.
-3. Link the site from your LinkedIn (Contact info + Featured) and GitHub profile.
+Every merge to `main` publishes through GitHub Pages (Settings → Pages → Deploy from a branch → `main` / root).
+If a change doesn't appear after ~2 minutes, open **Actions → pages build and deployment → Re-run**.
+Bump the `?v=` number on the CSS/JS links when those files change so browsers fetch the new version.
 
 ## Security
 
-- Strict Content-Security-Policy (in `index.html`): only this site's files and Google Fonts can load.
-- `theme-init.js` hides the page if another website tries to show it inside a frame.
-- Outgoing links use `noopener noreferrer`; no inline scripts or styles.
-- The email address is assembled by script (not written in the page) to keep it away from spam bots.
-- Right-click and view-source shortcuts are blocked as a light deterrent only; the code is still public in this repository.
-- Keep two-factor authentication on the GitHub account — account takeover is the main real risk for a static site.
+- Strict Content-Security-Policy on every page: only this site's own files may load (plus the Supabase counter API). No inline scripts, no third-party scripts or fonts.
+- Frame protection, `noopener noreferrer` on outside links, obfuscated email, spam-trap field on the contact form.
+- Visit counter and feedback: visitors can only *add* a count, a vote or a short answer set through database functions; they can't read or change anything. Only the admin email can read totals. Per-network limits stop flooding; network addresses are stored only as a daily-changing one-way hash for 2 days.
+- The stats page lives in a separate repository. Admin sign-in is a one-time email link (no password to guess); new sign-ups are disabled in Supabase.
+- Keep **two-factor authentication** on the GitHub and Supabase accounts — account takeover is the main real risk for a static site.
+- Never put the Supabase `service_role` / secret key anywhere in this repository.
 
-## Updating the site
+## Ownership marks
 
-Every merge to `main` publishes automatically. If a change does not appear after ~2 minutes,
-open **Actions → pages build and deployment** and click **Re-run**, or push any small change.
+Author/copyright meta tags, structured-data creator, file header notices, a developer-console signature and Author/Copyright metadata inside every image identify Prasidha Jagtap as the designer and developer.

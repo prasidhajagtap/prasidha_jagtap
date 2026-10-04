@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://prasidhajagtap.github.io/prasidha_jagtap/</loc>
-    <lastmod>2026-09-29</lastmod>
+    <lastmod>2026-10-04</lastmod>
     <image:image><image:loc>https://prasidhajagtap.github.io/prasidha_jagtap/assets/prasidha.jpg</image:loc></image:image>
     <image:image><image:loc>https://prasidhajagtap.github.io/prasidha_jagtap/assets/moment-linkedin.jpg</image:loc></image:image>
     <image:image><image:loc>https://prasidhajagtap.github.io/prasidha_jagtap/assets/moment-site-visit.jpg</image:loc></image:image>
@@ -11,6 +11,6 @@
   </url>
   <url>
     <loc>https://prasidhajagtap.github.io/prasidha_jagtap/assets/Prasidha-Jagtap-Resume.pdf</loc>
-    <lastmod>2026-09-29</lastmod>
+    <lastmod>2026-10-04</lastmod>
   </url>
 </urlset>
