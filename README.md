@@ -116,7 +116,7 @@ GitHub Actions (this repo) ──► pings Supabase every 3 days so the free pro
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are. |
 | `LICENSE` | All rights reserved. |
 
-**Cache version.** CSS and JS links carry `?v=NN` (currently `v=39`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
+**Cache version.** CSS and JS links carry `?v=NN` (currently `v=40`). Raise the number whenever `style.css`, `main.js`, `theme-init.js` or `site-config.js` changes, so browsers fetch the new copy.
 
 ---
 
