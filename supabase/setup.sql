@@ -9,9 +9,13 @@
 --  * Visitors (anon key) can ONLY call record_visit / record_vote / submit_feedback / ping.
 --    They cannot read, change or delete any table.
 --  * Only the admin email can read the totals (row-level security).
---  * Spam protection: per-network limits, unique visitors decided on the
---    server. Network addresses are never stored — only a one-way hash that
---    changes every day, deleted after 2 days.
+--  * Unique visitors: each browser makes its own random ID; it is stored
+--    here only as a one-way hash. Visits = browser sessions (30 min idle).
+--  * The owner's browsers (where the admin panel was opened) are counted
+--    separately, so they never inflate the visitor numbers.
+--  * Spam protection: per-network limits on views and on new browser IDs.
+--    Network addresses are never stored — only a daily-changing one-way
+--    hash, deleted after 2 days.
 -- ============================================================
 
 create extension if not exists pgcrypto with schema extensions;
@@ -24,6 +28,9 @@ create table if not exists public.site_daily (
   likes    integer not null default 0
 );
 alter table public.site_daily add column if not exists dislikes integer not null default 0;
+alter table public.site_daily add column if not exists visits integer not null default 0;        -- sessions
+alter table public.site_daily add column if not exists new_visitors integer not null default 0;  -- first-ever browsers
+alter table public.site_daily add column if not exists own_views integer not null default 0;     -- the owner's own page opens
 alter table public.site_daily enable row level security;
 
 -- Short-lived anti-spam log (hashed network + kind + time). No API access.
@@ -33,9 +40,27 @@ create table if not exists public.site_hits (
   at      timestamptz not null default now()
 );
 alter table public.site_hits drop constraint if exists site_hits_kind_check;
-alter table public.site_hits add constraint site_hits_kind_check check (kind in ('view', 'visitor', 'vote', 'feedback'));
+alter table public.site_hits add constraint site_hits_kind_check check (kind in ('view', 'visitor', 'newvid', 'vote', 'feedback'));
 create index if not exists site_hits_lookup on public.site_hits (ip_hash, kind, at);
 alter table public.site_hits enable row level security;
+
+-- One row per browser (random ID made by the browser, stored here only as a hash)
+create table if not exists public.site_visitors (
+  vid_hash   text primary key,
+  first_seen timestamptz not null default now(),
+  last_seen  timestamptz not null default now(),
+  views      integer not null default 0,
+  visits     integer not null default 0,
+  own        boolean not null default false
+);
+alter table public.site_visitors enable row level security;
+-- Which browsers came on which day (for daily unique visitors)
+create table if not exists public.site_visitor_days (
+  vid_hash text not null,
+  day      date not null,
+  primary key (vid_hash, day)
+);
+alter table public.site_visitor_days enable row level security;
 
 -- Feedback answers (only short codes from fixed lists + an optional note)
 create table if not exists public.site_feedback (
@@ -54,7 +79,8 @@ insert into public.site_admins (email) values (lower('YOUR_ADMIN_EMAIL'))
   on conflict do nothing;
 
 -- Visitors and signed-in users get no direct table rights at all
-revoke all on public.site_daily, public.site_hits, public.site_admins, public.site_feedback from anon, authenticated;
+revoke all on public.site_daily, public.site_hits, public.site_admins, public.site_feedback,
+              public.site_visitors, public.site_visitor_days from anon, authenticated;
 grant select on public.site_daily, public.site_feedback to authenticated;   -- still filtered by the policies below
 
 create or replace function public.is_site_admin()
@@ -81,37 +107,83 @@ returns text language sql stable security definer set search_path = public, exte
 $$;
 revoke all on function public._caller_hash() from public, anon, authenticated;
 
--- Add one view (and one unique visitor, once per network per day).
--- Over the limit, the call quietly does nothing.
-create or replace function public.record_visit(new_visitor boolean default false)
-returns void language plpgsql security definer set search_path = public as $$
+-- Count one page open.
+--   vid      random browser ID (kept in the visitor's browser; stored here only as a hash)
+--   new_visit true when a new browser session starts (or after 30 minutes idle)
+--   own      true on browsers where the owner has opened the admin panel
+-- Over the limits the call quietly does nothing.
+drop function if exists public.record_visit(boolean);
+create or replace function public.record_visit(vid text, new_visit boolean default false, own boolean default false)
+returns void language plpgsql security definer set search_path = public, extensions as $$
 declare
-  d  date := (now() at time zone 'Asia/Kolkata')::date;
-  h  text := public._caller_hash();
-  is_new boolean := false;
+  d   date := (now() at time zone 'Asia/Kolkata')::date;
+  h   text := public._caller_hash();
+  vh  text;
+  is_new_browser boolean := false;
+  is_new_today   boolean := false;
+  cnt integer;
 begin
+  if vid is null or vid !~ '^[A-Za-z0-9-]{16,64}$' then return; end if;
   if (select count(*) from public.site_hits
       where ip_hash = h and kind = 'view' and at > now() - interval '10 minutes') >= 60 then
     return;
   end if;
   insert into public.site_hits (ip_hash, kind) values (h, 'view');
-  if new_visitor and not exists (select 1 from public.site_hits
-      where ip_hash = h and kind = 'visitor' and at > now() - interval '1 day'
-        and (at at time zone 'Asia/Kolkata')::date = d) then
-    insert into public.site_hits (ip_hash, kind) values (h, 'visitor');
-    is_new := true;
+  vh := encode(extensions.digest(vid || '|pj-vid', 'sha256'), 'hex');
+
+  if own then
+    insert into public.site_visitors (vid_hash, views, visits, own) values (vh, 1, case when new_visit then 1 else 0 end, true)
+    on conflict (vid_hash) do update set views = site_visitors.views + 1, visits = site_visitors.visits + excluded.visits,
+      last_seen = now(), own = true;
+    insert into public.site_daily (day, own_views) values (d, 1)
+    on conflict (day) do update set own_views = site_daily.own_views + 1;
+    return;
   end if;
-  insert into public.site_daily (day, views, visitors)
-  values (d, 1, case when is_new then 1 else 0 end)
-  on conflict (day) do update
-    set views = site_daily.views + 1,
-        visitors = site_daily.visitors + excluded.visitors;
+
+  if not exists (select 1 from public.site_visitors where vid_hash = vh) then
+    -- a flood of made-up browser IDs from one network is ignored
+    if (select count(*) from public.site_hits where ip_hash = h and kind = 'newvid'
+        and at > now() - interval '1 day') >= 20 then
+      return;
+    end if;
+    insert into public.site_hits (ip_hash, kind) values (h, 'newvid');
+    is_new_browser := true;
+  end if;
+  insert into public.site_visitors (vid_hash, views, visits) values (vh, 1, case when new_visit or is_new_browser then 1 else 0 end)
+  on conflict (vid_hash) do update set views = site_visitors.views + 1,
+    visits = site_visitors.visits + excluded.visits, last_seen = now();
+  insert into public.site_visitor_days (vid_hash, day) values (vh, d) on conflict do nothing;
+  get diagnostics cnt = row_count;
+  is_new_today := cnt > 0;
+  insert into public.site_daily (day, views, visits, visitors, new_visitors)
+  values (d, 1, case when new_visit or is_new_browser then 1 else 0 end,
+          case when is_new_today then 1 else 0 end, case when is_new_browser then 1 else 0 end)
+  on conflict (day) do update set
+    views = site_daily.views + 1,
+    visits = site_daily.visits + excluded.visits,
+    visitors = site_daily.visitors + excluded.visitors,
+    new_visitors = site_daily.new_visitors + excluded.new_visitors;
   if random() < 0.02 then
     delete from public.site_hits where at < now() - interval '2 days';
   end if;
 end $$;
-revoke all on function public.record_visit(boolean) from public;
-grant execute on function public.record_visit(boolean) to anon, authenticated;
+revoke all on function public.record_visit(text, boolean, boolean) from public;
+grant execute on function public.record_visit(text, boolean, boolean) to anon, authenticated;
+
+-- Totals only the admin can ask for (all-time unique and returning browsers)
+create or replace function public.site_summary()
+returns table (unique_visitors bigint, returning_visitors bigint, own_browsers bigint)
+language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_site_admin() then return; end if;
+  return query select
+    count(*) filter (where not own),
+    count(*) filter (where not own and visits > 1),
+    count(*) filter (where own)
+  from public.site_visitors;
+end $$;
+revoke all on function public.site_summary() from public, anon;
+grant execute on function public.site_summary() to authenticated;
 
 drop function if exists public.record_like();
 
