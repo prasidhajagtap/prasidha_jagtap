@@ -48,8 +48,8 @@
   <meta name="format-detection" content="telephone=no">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='32' y='44' font-family='-apple-system,Helvetica,Arial' font-size='34' font-weight='700' fill='%23fff' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="assets/prasidha.jpg">
-  <link rel="stylesheet" href="style.css?v=30">
-  <script src="theme-init.js?v=30"></script>
+  <link rel="stylesheet" href="style.css?v=31">
+  <script src="theme-init.js?v=31"></script>
 
   <!-- ===== Structured data: tells Google and AI search who this page is about ===== -->
   <script type="application/ld+json">
@@ -686,6 +686,10 @@
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/prasidhajagtap" target="_blank" rel="noopener noreferrer me">LinkedIn</a>
           <a class="btn btn-ghost" href="assets/Prasidha-Jagtap-Resume.pdf" download data-resume>Résumé</a>
         </div>
+        <button type="button" class="build-cta reveal" data-build-open>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+          Want a website of your own?
+        </button>
         <!-- Feedback: a quiet question, shown once, only after reaching this section -->
         <div class="fb-ask" data-fb-ask hidden>
           <span data-fb-ask-text>Enjoying the profile?</span>
@@ -793,7 +797,26 @@
     </div>
   </div>
 
-  <script src="site-config.js?v=30" defer></script>
-  <script src="main.js?v=30" defer></script>
+  <!-- ===== WEBSITE ENQUIRY (message is ready; one tap opens the visitor's email app) ===== -->
+  <div class="modal" id="build-modal" hidden>
+    <div class="modal-backdrop" data-build-close></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="build-title">
+      <button type="button" class="icon-btn modal-close" aria-label="Close" data-build-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <h2 id="build-title">Let’s build yours</h2>
+      <p class="modal-note">Your message is ready — nothing to fill in. Tap <b>Send enquiry</b> and it opens in your email app.</p>
+      <div class="mail-preview">
+        <p class="mail-row"><span>To</span>Prasidha Jagtap</p>
+        <p class="mail-row"><span>Subject</span><b data-build-subject></b></p>
+        <p class="mail-body" data-build-body></p>
+      </div>
+      <button type="button" class="btn btn-solid btn-3d btn-block" data-build-send>Send enquiry</button>
+      <p class="mail-alt">No email app? Open it in <a href="#" target="_blank" rel="noopener noreferrer" data-build-web="gmail">Gmail</a> or <a href="#" target="_blank" rel="noopener noreferrer" data-build-web="outlook">Outlook</a>.</p>
+    </div>
+  </div>
+
+  <script src="site-config.js?v=31" defer></script>
+  <script src="main.js?v=31" defer></script>
 </body>
 </html>
