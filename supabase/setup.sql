@@ -6,7 +6,8 @@
 -- you will use to sign in to the admin page.
 --
 -- Security model
---  * Visitors (anon key) can ONLY call record_visit / record_vote / submit_feedback / ping.
+--  * Visitors (anon key) can ONLY call record_visit / record_vote / submit_feedback /
+--    record_build / ping.
 --    They cannot read, change or delete any table.
 --  * Only the admin email can read the totals (row-level security).
 --  * Unique visitors: each browser makes its own random ID; it is stored
@@ -31,6 +32,8 @@ alter table public.site_daily add column if not exists dislikes integer not null
 alter table public.site_daily add column if not exists visits integer not null default 0;        -- sessions
 alter table public.site_daily add column if not exists new_visitors integer not null default 0;  -- first-ever browsers
 alter table public.site_daily add column if not exists own_views integer not null default 0;     -- the owner's own page opens
+alter table public.site_daily add column if not exists build_opens integer not null default 0;   -- "Want a website?" opened
+alter table public.site_daily add column if not exists build_sends integer not null default 0;   -- "Send enquiry" tapped
 alter table public.site_daily enable row level security;
 
 -- Short-lived anti-spam log (hashed network + kind + time). No API access.
@@ -40,7 +43,7 @@ create table if not exists public.site_hits (
   at      timestamptz not null default now()
 );
 alter table public.site_hits drop constraint if exists site_hits_kind_check;
-alter table public.site_hits add constraint site_hits_kind_check check (kind in ('view', 'visitor', 'newvid', 'vote', 'feedback'));
+alter table public.site_hits add constraint site_hits_kind_check check (kind in ('view', 'visitor', 'newvid', 'vote', 'feedback', 'build_open', 'build_send'));
 create index if not exists site_hits_lookup on public.site_hits (ip_hash, kind, at);
 alter table public.site_hits enable row level security;
 
@@ -242,6 +245,31 @@ begin
 end $$;
 revoke all on function public.submit_feedback(text, jsonb, text) from public;
 grant execute on function public.submit_feedback(text, jsonb, text) to anon, authenticated;
+
+-- "Want a website of your own?": step is 'open' (page opened) or 'send' (Send
+-- enquiry / Gmail / Outlook tapped). At most 5 of each per network per day.
+create or replace function public.record_build(step text)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  d date := (now() at time zone 'Asia/Kolkata')::date;
+  h text := public._caller_hash();
+  k text;
+begin
+  if step not in ('open', 'send') then return; end if;
+  k := 'build_' || step;
+  if (select count(*) from public.site_hits
+      where ip_hash = h and kind = k and at > now() - interval '1 day') >= 5 then
+    return;
+  end if;
+  insert into public.site_hits (ip_hash, kind) values (h, k);
+  insert into public.site_daily (day, build_opens, build_sends)
+  values (d, case when step = 'open' then 1 else 0 end, case when step = 'send' then 1 else 0 end)
+  on conflict (day) do update
+    set build_opens = site_daily.build_opens + excluded.build_opens,
+        build_sends = site_daily.build_sends + excluded.build_sends;
+end $$;
+revoke all on function public.record_build(text) from public;
+grant execute on function public.record_build(text) to anon, authenticated;
 
 -- Tiny check-in used by the GitHub keep-awake job
 create or replace function public.ping()

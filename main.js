@@ -195,7 +195,22 @@
     var B_SUBJECT = 'Enquiry: a website like yours';
     var B_BODY = 'Hello Prasidha,\n\nI saw your website and I would like to build a similar website.\n\n' +
                  'Please get back to me to discuss the details.\n\nKind regards,';
-    var bLast = null, enc = encodeURIComponent;
+    var bLast = null, enc = encodeURIComponent, counted = {};
+    // Count interest for the admin page: "open" and "send", once each per page load.
+    // The owner's own browsers and automated browsers are not counted.
+    function tally(step) {
+      var cfg = window.SITE_COUNTER || {};
+      if (counted[step] || !cfg.url || !cfg.anonKey || navigator.webdriver || !window.fetch) return;
+      counted[step] = true;
+      try { if (localStorage.getItem('pj_owner') === '1') return; } catch (e) {}
+      try {
+        fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/record_build', {
+          method: 'POST', keepalive: true,
+          headers: { 'apikey': cfg.anonKey, 'Authorization': 'Bearer ' + cfg.anonKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ step: step })
+        }).catch(function () {});
+      } catch (e) {}
+    }
     build.querySelector('[data-build-subject]').textContent = B_SUBJECT;
     build.querySelector('[data-build-body]').textContent = B_BODY;
     var crlf = B_BODY.replace(/\n/g, '\r\n');
@@ -203,6 +218,7 @@
     function openBuild() {
       bLast = document.activeElement;
       // Web-mail links get the address only now, so it is never in the page source
+      tally('open');
       for (var i = 0; i < bLinks.length; i++) {
         bLinks[i].href = bLinks[i].getAttribute('data-build-web') === 'gmail'
           ? 'https://mail.google.com/mail/u/0/?tf=cm&to=' + enc(emailAddress()) + '&su=' + enc(B_SUBJECT) + '&body=' + enc(B_BODY)
@@ -220,7 +236,9 @@
     var bc = build.querySelectorAll('[data-build-close]');
     for (var bj = 0; bj < bc.length; bj++) bc[bj].addEventListener('click', closeBuild);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !build.hidden) closeBuild(); });
+    for (var bk = 0; bk < bLinks.length; bk++) bLinks[bk].addEventListener('click', function () { tally('send'); });
     build.querySelector('[data-build-send]').addEventListener('click', function () {
+      tally('send');
       window.location.href = 'mailto:' + emailAddress() + '?subject=' + enc(B_SUBJECT) + '&body=' + enc(crlf);
     });
   }
