@@ -654,8 +654,8 @@
   })();
 
   // ---------- Feedback: one quiet question at "Let's talk", then 3–4 quick taps ----------
-  // Duolingo-style: a progress bar, one question at a time, cheerful nudges, every
-  // required answer filled before moving on, and a small celebration at the end.
+  // Duolingo-style: a progress bar, one question at a time, cheerful nudges and a small
+  // celebration at the end. No Continue button: picking an answer moves on by itself.
   (function () {
     var ask = document.querySelector('[data-fb-ask]'), sheet = document.getElementById('fb-sheet');
     var contact = document.getElementById('contact');
@@ -686,17 +686,17 @@
         { key: 'note', q: 'Anything you’d add?', type: 'note', ph: 'A line of feedback (optional)' }
       ],
       down: [
-        { key: 'reason', q: 'Thanks for being honest. What didn’t work?', type: 'select', opts: [['long', 'Too long to read'], ['hard_to_find', 'Hard to find information'], ['design', 'Design or look'], ['not_relevant', 'Not relevant to my role'], ['broken', 'Something didn’t work'], ['other', 'Something else']] },
-        { key: 'improve', q: 'What should I improve first?', type: 'chips', opts: [['content', 'Content'], ['design', 'Design'], ['speed', 'Speed'], ['phone', 'Phone view'], ['clarity', 'Clarity']] },
+        { key: 'reason', q: 'Thanks for being honest! What would make it better?', type: 'chips', opts: [['long', 'Shorter and quicker to read'], ['hard_to_find', 'Easier to find things'], ['design', 'A fresher look'], ['not_relevant', 'More about my field'], ['broken', 'A fix — something didn’t work'], ['other', 'Something else']] },
+        { key: 'improve', q: 'Great tip! Where should I start?', type: 'chips', opts: [['content', 'The content'], ['design', 'The design'], ['speed', 'Loading speed'], ['phone', 'The phone view'], ['clarity', 'Clearer wording']] },
         WHO,
         { key: 'note', q: 'How could it be better?', type: 'note', ph: 'Tell me in a line (optional)' }
       ]
     };
     var CHEER = ['Just 3 quick taps ✨', 'Nice! 2 more to go', 'Last tap!', 'Optional — add a line or skip'];
-    var vote = null, steps = [], at = 0, answers = {}, finished = false;
+    var vote = null, steps = [], at = 0, answers = {}, finished = false, moving = false;
     var $ = function (s) { return sheet.querySelector(s); };
     var stage = $('[data-fb-stage]'), prog = $('[data-fb-progress]'), cheer = $('[data-fb-cheer]');
-    var nextB = $('[data-fb-next]'), skipB = $('[data-fb-skip]'), foot = $('[data-fb-foot]');
+    var nextB = $('[data-fb-next]'), foot = $('[data-fb-foot]');
     var confirmBox = $('[data-fb-confirm]'), lastFocus = null;
 
     // Show the question only once "Let's talk" is properly in view
@@ -719,7 +719,7 @@
     });
 
     function open() {
-      steps = FLOWS[vote]; at = 0; answers = {}; finished = false;
+      steps = FLOWS[vote]; at = 0; answers = {}; finished = false; moving = false;
       prog.textContent = '';
       for (var i = 0; i < steps.length; i++) prog.appendChild(document.createElement('span'));
       lastFocus = document.activeElement;
@@ -744,41 +744,41 @@
       panel.className = 'fb-panel ' + (dir < 0 ? 'from-left' : 'from-right');
       var h = document.createElement('h2'); h.className = 'fb-q'; h.id = 'fb-title'; h.textContent = st.q; panel.appendChild(h);
       var old = stage.querySelector('.fb-panel');
-      if (old) { old.removeAttribute('id'); var oh = old.querySelector('#fb-title'); if (oh) oh.removeAttribute('id'); old.className = 'fb-panel ' + (dir < 0 ? 'to-right' : 'to-left'); setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 320); }
+      if (old) { old.removeAttribute('id'); var oh = old.querySelector('#fb-title'); if (oh) oh.removeAttribute('id'); old.className = 'fb-panel ' + (dir < 0 ? 'to-right' : 'to-left'); setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 240); }
       if (st.type === 'chips') {
         var grp = document.createElement('div'); grp.className = 'fb-chips'; grp.setAttribute('role', 'radiogroup'); grp.setAttribute('aria-labelledby', 'fb-title');
         st.opts.forEach(function (o) {
           var b = document.createElement('button'); b.type = 'button'; b.className = 'fb-chip'; b.setAttribute('role', 'radio');
           b.setAttribute('aria-checked', answers[st.key] === o[0] ? 'true' : 'false'); b.textContent = o[1];
           b.addEventListener('click', function () {
+            if (moving) return;
             answers[st.key] = o[0];
             var all = grp.querySelectorAll('.fb-chip');
             for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-checked', all[i] === b ? 'true' : 'false');
-            nextB.disabled = false;
+            next();
           });
           grp.appendChild(b);
         });
         panel.appendChild(grp);
-      } else if (st.type === 'select') {
-        var lab = document.createElement('label'); lab.className = 'fb-select';
-        var sel = document.createElement('select'); sel.setAttribute('aria-labelledby', 'fb-title');
-        var ph = document.createElement('option'); ph.value = ''; ph.textContent = 'Choose one…'; ph.disabled = true; ph.selected = !answers[st.key]; sel.appendChild(ph);
-        st.opts.forEach(function (o) { var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; if (answers[st.key] === o[0]) op.selected = true; sel.appendChild(op); });
-        sel.addEventListener('change', function () { answers[st.key] = sel.value; nextB.disabled = !sel.value; });
-        lab.appendChild(sel); panel.appendChild(lab);
       } else {
         var ta = document.createElement('textarea'); ta.className = 'fb-note'; ta.maxLength = 300; ta.rows = 3; ta.placeholder = st.ph; ta.setAttribute('aria-labelledby', 'fb-title');
         ta.value = answers.note || '';
         var cnt = document.createElement('span'); cnt.className = 'fb-count'; cnt.textContent = ta.value.length + ' / 300';
-        ta.addEventListener('input', function () { answers.note = ta.value; cnt.textContent = ta.value.length + ' / 300'; nextB.disabled = !ta.value.trim(); });
+        ta.addEventListener('input', function () { answers.note = ta.value; cnt.textContent = ta.value.length + ' / 300'; noteLabel(); });
         panel.appendChild(ta); panel.appendChild(cnt);
       }
       stage.appendChild(panel);
-      var isNote = st.type === 'note';
-      skipB.hidden = !isNote;
-      nextB.textContent = isNote ? 'Send' : 'Continue';
-      nextB.disabled = isNote ? !(answers.note || '').trim() : !answers[st.key];
-      setTimeout(function () { var f = panel.querySelector('.fb-chip, select, textarea'); if (f && f.focus) f.focus({ preventScroll: true }); }, 60);
+      // Only the last, optional step has a button: "Skip" when empty, "Send" once typed
+      foot.hidden = st.type !== 'note';
+      if (st.type === 'note') noteLabel();
+      setTimeout(function () { moving = false; var f = panel.querySelector('.fb-chip, textarea'); if (f && f.focus) f.focus({ preventScroll: true }); }, 60);
+    }
+    function noteLabel() { nextB.textContent = (answers.note || '').trim() ? 'Send' : 'Skip'; }
+    // Short pause so the tapped answer visibly lights up, then slide on
+    function next() {
+      if (moving || finished) return;
+      moving = true;
+      setTimeout(function () { if (at < steps.length - 1) { at++; render(1); } else finish(); }, 160);
     }
     function finish() {
       finished = true; at = steps.length; bar(); cheer.textContent = '';
@@ -786,7 +786,7 @@
       send('submit_feedback', { vote: vote, answers: a, note: (answers.note || '').trim().slice(0, 300) || null });
       remember('done');
       var old = stage.querySelector('.fb-panel'); if (old) old.className = 'fb-panel to-left';
-      setTimeout(function () { if (old && old.parentNode) old.parentNode.removeChild(old); }, 320);
+      setTimeout(function () { if (old && old.parentNode) old.parentNode.removeChild(old); }, 240);
       var done = document.createElement('div'); done.className = 'fb-panel fb-done from-right';
       var tick = document.createElement('div'); tick.className = 'fb-tick'; tick.setAttribute('aria-hidden', 'true');
       var h = document.createElement('h2'); h.className = 'fb-q'; h.id = 'fb-title';
@@ -795,12 +795,12 @@
       p.textContent = vote === 'up' ? 'Your feedback just made my day.' : 'Honest feedback helps me make this better.';
       done.appendChild(tick); done.appendChild(h); done.appendChild(p);
       stage.appendChild(done);
-      skipB.hidden = true;
+      foot.hidden = false;
       if (vote === 'up' && answers.intent === 'yes') {
         nextB.textContent = 'Email me';
         nextB.setAttribute('data-fb-mail', '');
       } else nextB.textContent = 'Done';
-      nextB.disabled = false;
+      moving = false;
     }
     nextB.addEventListener('click', function () {
       if (finished) {
@@ -808,9 +808,9 @@
         if (mail) { var m = document.querySelector('[data-contact-open]'); if (m) setTimeout(function () { m.click(); }, 300); }
         return;
       }
-      if (at < steps.length - 1) { at++; render(1); } else finish();
+      if (!(answers.note || '').trim()) answers.note = '';
+      finish();
     });
-    skipB.addEventListener('click', function () { if (!finished) { answers.note = ''; finish(); } });
 
     // Leaving early: a friendly nudge first (only before the required answers are done)
     function tryClose() {
@@ -822,8 +822,8 @@
     }
     var closers = sheet.querySelectorAll('[data-fb-close]');
     for (var c = 0; c < closers.length; c++) closers[c].addEventListener('click', tryClose);
-    $('[data-fb-stay]').addEventListener('click', function () { confirmBox.hidden = true; foot.hidden = false; });
-    $('[data-fb-leave]').addEventListener('click', function () { confirmBox.hidden = true; foot.hidden = false; close(); });
+    $('[data-fb-stay]').addEventListener('click', function () { confirmBox.hidden = true; foot.hidden = steps[at].type !== 'note'; });
+    $('[data-fb-leave]').addEventListener('click', function () { confirmBox.hidden = true; close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) tryClose(); });
   })();
 })();
